@@ -1,0 +1,52 @@
+XML1:
+
+<! DOCTYPE A [
+	<! ELEMENT A (C+,B+) >
+	<! ELEMENT C (A|D) >
+	<! ELEMENT B (A|E) >
+	<! ELEMENT D EMPTY >
+	<! ELEMENT E EMPTY >
+]>
+
+XML2:
+
+<! DOCTYPE B [
+	<! ELEMENT B (C+,E,B+,C+,E) >
+	<! ELEMENT C EMPTY >
+	<! ELEMENT E EMPTY >
+]>
+
+XML3:
+<! DOCTYPE A [
+	<! ELEMENT A (C+, B+ C) >
+	<! ELEMENT B EMPTY >
+	<! ELEMENT C EMPTY >
+]>
+
+XML4:
+<! DOCTYPE B [
+	<! ELEMENT B (C, B, C, B, E, D+, E) >
+	<! ELEMENT C EMPTY >
+	<! ELEMENT D EMPTY >
+	<! ELEMENT E EMPTY >
+]>
+
+
+XML5:
+<! DOCTYPE A [
+	<! ELEMENT A (A, EMPTY)? >
+]>
+
+XML6: 
+<! DOCTYPE A [
+	<! ELEMENT A (C+) >
+	<! ATTLIST id CDATA IMPLIED >
+	<! ATTLIST C friend CDATA>
+]>
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+1) 
+- /descendent::a/child::b
+- //cc[following-sibling::a]
+- //d/following::c
+- //d[following::b[child::c[following-sibling::a]]]
+- //d
+- vide - parent de d ne peut pas avoir c et e
+
+2) 
+- //a/following::b --> //a/ancestor::*/following-sibling::* | //a/following-sibling::*/decendant-or-self::b
+- //a/preceding::b --> //a/ancestor::*/preceding-sibling::* | //a/preceding-sibling::*/decendant-or-self::b
+
+3) 
+- 
+
+
+4) 
+<FILMS>
+<FILM>
+  <TITRE>Vertigo</TITRE>
+  <ANNEE idref = "1">1958</ANNEE>
+  <ANNEE idref = "2">1958</ANNEE>
+</FILM>
+</FILMS>
+
+5. 

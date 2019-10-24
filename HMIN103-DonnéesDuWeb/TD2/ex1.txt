@@ -1,0 +1,17 @@
+1) /FILMS/FILM/TITRES
+2) /FILMS/FILM[ANNEE=1990]/TITRE
+3) /FILMS/FILM[TITRE="Alien"]/RESUME
+4) /FILMS/FILM[last()]
+5) /FILMS/FILM[ANNEE = 1990][last()]
+6) /FILMS/FILM[boolean(/FILMS/FILM/RESUME)]/TITRE
+7) /FILMS/FILM[TITRE="Vertigo"]/ROLES
+8) //ARTISTE[@id = /FILMS/FILM[TITRE="Vertigo"]/ROLES/ROLE/@idref]
+9) //ARTISTE[@id = /FILMS/FILM[TITRE="Vertigo"]/MES/@idref]
+10) /FILMS/FILM[MES/@idref = //ARTISTE[@id=//FILMS/FILM[TITRE="Vertigo"]/MES/@idref]/@id]
+11) /FILMS/FILM/TITRE[contains(., 'V')]
+12) /FILMS/FILM[ROLES/ROLE/@idref = //ARTISTE[ACTNOM="Willis"][ACTPNOM = "Bruce"]/@id]/TITRE
+13) /FILMS/FILM[TITRE = "Reservoir dogs"]/ROLES/ROLE[@idref = //ARTISTE[ACTNOM="Keitel"][ACTPNOM="Harvey"]/@id]
+14) /FILMS/FILM[TITRE = "Reservoir dogs"]/ROLES[ROLE/@idref = //ARTISTE[ACTNOM="Keitel"][ACTPNOM="Harvey"]/@id]/ROLE[not(@idref = //ARTISTE[ACTNOM="Keitel"][ACTPNOM="Harvey"]/@id)]
+15) /descendant::*[count(*) = 3]
+16) //*[contains(name(),"TI")]
+17) (/FILMS/FILM[TITRE="Shining"]/preceding-sibling::*)[last()]

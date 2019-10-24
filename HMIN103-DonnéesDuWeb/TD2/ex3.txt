@@ -1,0 +1,9 @@
+1) //train[voiture/bar]/@numero
+
+2) //usager[@id = //train/voiture/resa/@id]/@nom
+
+3) /gare/train/voiture[count(resa) >= 2]/@numero 
+
+4) 
+
+5) /gare/usager[not(@id=/gare/train/voiture/resa/@id)]/@nom

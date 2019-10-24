@@ -1,0 +1,29 @@
+1)
+for $x in //train
+  where $x/voiture/bar
+    return $x/@numero
+
+2)
+for $x in //usager
+  where $x/@id = //voiture/resa/@id
+    return $x/@nom
+
+3)
+(for $x in //resa
+  order by $x/@numero 
+  return $x)[1]
+
+4)
+for $x in //train
+  let $c := count($x/voiture/resa)
+  where $c >= 2
+    return $x/@numero
+
+5)
+    
+
+6)
+let $y := //train/voiture
+for $x in //usager
+  where not($y/resa/@id=($x/@id))
+      return $x

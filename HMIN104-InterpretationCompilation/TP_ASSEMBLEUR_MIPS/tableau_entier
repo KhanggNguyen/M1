@@ -1,0 +1,86 @@
+#tableau_entier.asm
+
+.data
+my_array: .space 12 #reserver 12 octets
+espace: .asciiz " \n"
+
+
+.text
+	addi $s0, $zero, 4 	#initialiser $s0 = 4
+	addi $s1, $zero, 8	#initialiser $s1 = 10
+	addi $s2, $zero, 12	#initialiser $s2 = 12
+	
+	#index $t0 = 0
+	addi $t0, $zero, 0 
+	
+	
+	sw $s0, my_array($t0)		#mettre valeur de $s0 dans 1er 4 octets de my_array 
+		addi $t0, $t0, 4 	#incrementer l'octet à 8 = 2e case
+	sw $s1, my_array($t0)		#on peut remplacer sw + addi par sw $s0, 4($t0)
+		addi $t0, $t0, 4
+	sw $s2, my_array($t0)
+	
+	#print 1er case du tableau
+	lw $t6, my_array($t0) 		#lire la valeur de l'adresse $t0 du tableau dans $t6
+	li $v0, 1 			#prepare à imprimer entier
+	addi $a0, $t6, 0		#mettre la valeur dans $a0
+	syscall
+	li $v0, 4
+	la $a0, espace
+	syscall
+	
+	#print
+	addi $t0, $t0, -4
+	lw $t6, my_array($t0)
+	li $v0, 1
+	addi $a0, $t6, 0
+	syscall
+	li $v0, 4
+	la $a0, espace
+	syscall
+	
+	addi $t0, $t0, -4
+	lw $t6, my_array($t0)
+	li $v0, 1
+	addi $a0, $t6, 0
+	syscall
+	li $v0, 4
+	la $a0, espace
+	syscall
+	
+	#---------------------------------------------------
+	#pour permuter 1er case et 3e case
+	
+	sw $s2, my_array($t0)		#mettre valeur de $s0 dans 1er 4 octets de my_array
+	addi $t0, $t0, 4
+	sw $s0, my_array($t0)		#incrementer l'octet à 8 = 2e case
+	addi $t0, $t0, 4
+	sw $s1, my_array($t0)
+	
+	#print 1er case du tableau
+	lw $t6, my_array($t0) 		#lire la valeur de l'adresse $t0 du tableau dans $t6
+	li $v0, 1 			#prepare à imprimer entier
+	addi $a0, $t6, 0		#mettre la valeur dans $a0
+	syscall
+	li $v0, 4
+	la $a0, espace
+	syscall
+	
+	#print
+	addi $t0, $t0, -4
+	lw $t6, my_array($t0)
+	li $v0, 1
+	addi $a0, $t6, 0
+	syscall
+	li $v0, 4
+	la $a0, espace
+	syscall
+
+	
+	addi $t0, $t0, -4
+	lw $t6, my_array($t0)
+	li $v0, 1
+	addi $a0, $t6, 0
+	syscall
+	
+	

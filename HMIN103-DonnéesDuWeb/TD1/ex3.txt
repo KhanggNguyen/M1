@@ -1,0 +1,33 @@
+<!DOCTYPE tweet [
+	<! ELEMENT tweet (date, coordonnées?, corps, imagesvideos, OS, nbre-retweet) >
+	<! ATTLIST tweet tid ID  #REQUIRED >
+	<! ATTLIST tweet reponse-tweet CDATA #REQUIRED >
+	<! ELEMENT date EMPTY>
+	<! ATTLIST date type CDATA #REQUIRED >
+	<! ELEMENT coordonnées EMPTY>
+	<! ATTLIST coordonnées ville CDATA #IMPLIED >
+	<! ATTLIST coordonnées pays CDATA #IMPLIED > 
+	<! ELEMENT corps (texteethashtag, utilisateur) >
+	<! ELEMENT imagesvideos EMPTY>
+	<! ATTLIST imagesvideos references CDATA #IMPLIED >
+	<! ELEMENT OS EMPTY >
+	<! ATTLIST OS description CDATA #IMPLIED >
+	<! ELEMENT nombre-retweet (#PCDATA) >
+
+
+	<! ELEMENT texteethashtag (taille, couleur, type, langue) >
+	<! ELEMENT taille (#PCDATA) >
+	<! ELEMENT couleur (#PCDATA) >
+	<! ELEMENT type (#PCDATA) >
+	<! ELEMENT langue (#PCDATA) >
+	
+	<! ELEMENT utilisateur (nom, description, photo, abonnement, abonnées) >
+	<! ATTLIST utilisateur id ID  #REQUIRED >
+	<! ATTLIST utilisateur references #REQUIRED >
+	<! ELEMENT nom (#PCDATA) >
+	<! ELEMENT description (#PCDATA) >
+	<! ELEMENT photo (#PCDATA) >
+	<! ELEMENT abonnement (#PCDATA) >
+	<! ELEMENT abonnées (#PCDATA) >
+
+]>

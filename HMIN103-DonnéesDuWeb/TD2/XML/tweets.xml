@@ -1,0 +1,176 @@
+<tweeter>
+	<tweet id="t42">
+		<corps>
+			<message> .@example absolutely smashed it at #mtvlivelockdown! Catch him at the official @clubmtvuk after party tonight @ 10pm </message>
+			<hashtags>
+				<hashtag> #mtvlivelockdown </hashtag>
+			</hashtags>     
+			<references>
+			</references>
+			<taille> 8.5 </taille>
+			<type> Comic Sans MS </type>
+		 	<langue> English </langue>
+		 	<couleur>Noir</couleur>
+		</corps>
+	   	<url></url>
+	  	<OS> Windows 10 </OS>
+	  	<posGeo>
+			<pays> Etats-Unis </pays>
+	       		<ville> Miami </ville>
+			<coordonnees> -80.130045, 25.790654 </coordonnees>
+	   	</posGeo>
+	 	<Date>
+			<fuseauHoraire> UTC−4 </fuseauHoraire>
+		    1912310
+	   	</Date>
+	 	<retweet> 1 </retweet>
+
+	  	<auteur idref="u41">
+			<lien> https://twitter.com/MTVMusicUK/ </lien>
+	 	</auteur>
+	</tweet>
+
+	<tweet id="t12">
+		<corps>
+			<message>  #I&lt;3XML </message>
+			<hashtags>
+				<hashtag> #I&lt;3XML </hashtag>
+			</hashtags>     
+			<references></references>
+			<taille> 8.5 </taille>
+			<type> Comic Sans MS </type>
+		 	<langue> English </langue>
+		 	<couleur>Noir</couleur>
+		</corps>
+	   	<url></url>
+	  	<OS> Windows 10 </OS>
+	  	<posGeo>
+			<pays> Etats-Unis </pays>
+	       		<ville> Miami </ville>
+			<coordonnees> -80.130045, 25.790654 </coordonnees>
+	   	</posGeo>
+	 	<Date>
+			<fuseauHoraire> UTC−4 </fuseauHoraire>
+		    1912330
+	   	</Date>
+	 	<retweet> 0 </retweet>
+
+	  	<auteur idref="u22">
+			<lien> https://twitter.com/MTVMusicUK/ </lien>
+	 	</auteur>
+	</tweet>
+
+	<tweet id="t13">
+		<corps>
+			<message> no hashtag </message>  
+			<references>
+				<reference idref="t42"> retweet </reference>
+			</references>
+			<taille> 8.5 </taille>
+			<type> Comic Sans MS </type>
+		 	<langue> English </langue>
+		 	<couleur>Noir</couleur>
+		</corps>
+	   	<url></url>
+	  	<OS> Windows 10 </OS>
+	  	<posGeo>
+			<pays> Etats-Unis </pays>
+	       		<ville> Miami </ville>
+			<coordonnees> -80.130045, 25.790654 </coordonnees>
+	   	</posGeo>
+	 	<Date>
+			<fuseauHoraire> UTC−4 </fuseauHoraire>
+		    1912300
+	   	</Date>
+	 	<retweet> 0 </retweet>
+
+	  	<auteur idref="u41">
+			<lien> https://twitter.com/TF1/</lien>
+	 	</auteur>
+	</tweet>
+
+	<tweet id="t14">
+		<corps>
+			<message> .@example absolutely smashed it at #mtvlivelockdown! Catch him at the official @clubmtvuk after party tonight @ 10pm </message>
+			<hashtags>
+				<hashtag> #mtvlivelockdown </hashtag>
+			</hashtags>     
+			<references></references>
+			<taille> 8.5 </taille>
+			<type> Comic Sans MS </type>
+		 	<langue> English </langue>
+		 	<couleur>Noir</couleur>
+		</corps>
+	   	<url></url>
+	  	<OS> Windows 10 </OS>
+	  	<posGeo>
+			<pays> Etats-Unis </pays>
+	       		<ville> Miami </ville>
+			<coordonnees> -80.130045, 25.790654 </coordonnees>
+	   	</posGeo>
+	 	<Date>
+			<fuseauHoraire> UTC−4 </fuseauHoraire>
+		    1912366
+	   	</Date>
+	 	<retweet> 0 </retweet>
+
+	  	<auteur idref="u42">
+			<lien> https://twitter.com/ClubMTVUK/ </lien>
+	 	</auteur>
+	</tweet>
+	
+	<tweet id="t15">
+		<corps>
+			<message> .@example absolutely smashed it at #mtvlivelockdown! Catch him at the official @clubmtvuk after party tonight @ 10pm </message>
+			<hashtags>
+				<hashtag> #mtvlivelockdown </hashtag>
+			</hashtags>     
+			<references>
+			</references>
+			<taille> 8.5 </taille>
+			<type> Comic Sans MS </type>
+		 	<langue> English </langue>
+		 	<couleur>Noir</couleur>
+		</corps>
+	   	<url></url>
+	  	<OS> Windows 10 </OS>
+	  	<posGeo>
+			<pays> Etats-Unis </pays>
+	       		<ville> Miami </ville>
+			<coordonnees> -80.130045, 25.790654 </coordonnees>
+	   	</posGeo>
+	 	<Date>
+			<fuseauHoraire> UTC−4 </fuseauHoraire>
+		    1912302
+	   	</Date>
+	 	<retweet> 10524 </retweet>
+
+	  	<auteur idref="u41">
+			<lien> https://twitter.com/TF1/ </lien>
+	 	</auteur>
+	</tweet>
+
+	<utilisateur id="u22">
+		<nom> MTV Music </nom>
+		<description> Official account </description>
+		<photo>  https://twitter.com/MTVMusicUK/profile_picture.png </photo>
+		<nbfollowers> 18000 </nbfollowers>
+		<nbfollowed> 257 </nbfollowed>
+	</utilisateur>
+	
+	<utilisateur id="u41">
+		<nom> TF1 </nom>
+		<description> Official Account TF1 </description>
+		<photo>  https://twitter.com/TF1/profile_picture.png </photo>
+		<nbfollowers> 30000 </nbfollowers>
+		<nbfollowed> 123 </nbfollowed>
+	</utilisateur>
+
+	<utilisateur id="u42">
+		<nom>ClubMTVUK</nom>
+	    <description> clubmtvuk </description>
+	    <photo>  https://twitter.com/clubmtvuk/profile_picture.png </photo>
+	    <nbfollowers> 27589 </nbfollowers>
+	    <nbfollowed> 332 </nbfollowed>
+	</utilisateur>
+</tweeter>

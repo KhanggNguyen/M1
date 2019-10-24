@@ -1,0 +1,13 @@
+1) /recettes/recette/@nom
+
+2) //recette[@nomCourt="Chiffonnade"]/materiel/ingredient
+
+3) //recette[./materiel/ingredient[contains(., 'persil')]]/@nom
+
+4) //child::*[contains(.,'persil')]/@nom
+
+5) //recette[materiel[count(ingredient) > 2][contains(.,"oeuf")]]/@nom
+
+6) //recette[materiel/ingredient[position()=3][contains(.,"oeuf")]]/@nom
+
+7) //recettes/recette[last()]
