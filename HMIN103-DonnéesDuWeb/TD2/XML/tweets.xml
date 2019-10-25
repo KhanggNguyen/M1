@@ -4,8 +4,12 @@
 			<message> .@example absolutely smashed it at #mtvlivelockdown! Catch him at the official @clubmtvuk after party tonight @ 10pm </message>
 			<hashtags>
 				<hashtag> #mtvlivelockdown </hashtag>
+				<hashtag> #heheXD!</hashtag>
+				<hashtag> #I&lt;3XML</hashtag>
 			</hashtags>     
 			<references>
+				<reference idref="u96"></reference>
+				<reference idref="u33"></reference>
 			</references>
 			<taille> 8.5 </taille>
 			<type> Comic Sans MS </type>
@@ -23,10 +27,10 @@
 			<fuseauHoraire> UTC−4 </fuseauHoraire>
 		    1912310
 	   	</Date>
-	 	<retweet> 1 </retweet>
+	 	<retweet> 2 </retweet>
 
 	  	<auteur idref="u41">
-			<lien> https://twitter.com/MTVMusicUK/ </lien>
+			<lien> https://twitter.com/TF1/ </lien>
 	 	</auteur>
 	</tweet>
 
@@ -62,9 +66,9 @@
 
 	<tweet id="t13">
 		<corps>
-			<message> no hashtag </message>  
+			<reponse idref="t42"/>
+			<message>reponds à la tweet 42 1er fois </message>  
 			<references>
-				<reference idref="t42"> retweet </reference>
 			</references>
 			<taille> 8.5 </taille>
 			<type> Comic Sans MS </type>
@@ -84,18 +88,63 @@
 	   	</Date>
 	 	<retweet> 0 </retweet>
 
-	  	<auteur idref="u41">
-			<lien> https://twitter.com/TF1/</lien>
+	  	<auteur idref="u33">
+			<lien> https://twitter.com/My/</lien>
 	 	</auteur>
 	</tweet>
 
-	<tweet id="t14">
+	<retweet id="rt14">
 		<corps>
-			<message> .@example absolutely smashed it at #mtvlivelockdown! Catch him at the official @clubmtvuk after party tonight @ 10pm </message>
-			<hashtags>
-				<hashtag> #mtvlivelockdown </hashtag>
-			</hashtags>     
-			<references></references>
+			<references>
+				<reference idref="t42"></reference>
+			</references>
+		</corps>
+	   	<url></url>
+	  	<OS> Windows 10 </OS>
+	  	<posGeo>
+			<pays> Etats-Unis </pays>
+	       		<ville> Miami </ville>
+			<coordonnees> -80.130045, 25.790654 </coordonnees>
+	   	</posGeo>
+	 	<Date>
+			<fuseauHoraire> UTC−4 </fuseauHoraire>
+		    1912366
+	   	</Date>
+
+	  	<auteur idref="u22">
+			<lien> https://twitter.com/ClubMTVUK/ </lien>
+	 	</auteur>
+	</retweet>
+
+	<retweet id="rt15">
+		<corps>   
+			<references>
+				<reference idref="t42"></reference>
+			</references>
+		</corps>
+	   	<url></url>
+	  	<OS> Windows 10 </OS>
+	  	<posGeo>
+			<pays> Etats-Unis </pays>
+	       		<ville> Miami </ville>
+			<coordonnees> -80.130045, 25.790654 </coordonnees>
+	   	</posGeo>
+	 	<Date>
+			<fuseauHoraire> UTC−4 </fuseauHoraire>
+		    1912366
+	   	</Date>
+
+	  	<auteur idref="u96">
+			<lien> https://twitter.com/Khang/ </lien>
+	 	</auteur>
+	</retweet>
+
+	<tweet id="t16">
+		<corps>
+			<reponse idref="t42"/>
+			<message> reponds à la tweet 42  </message>  
+			<references>
+			</references>
 			<taille> 8.5 </taille>
 			<type> Comic Sans MS </type>
 		 	<langue> English </langue>
@@ -110,12 +159,12 @@
 	   	</posGeo>
 	 	<Date>
 			<fuseauHoraire> UTC−4 </fuseauHoraire>
-		    1912366
+		    1912306
 	   	</Date>
 	 	<retweet> 0 </retweet>
 
 	  	<auteur idref="u42">
-			<lien> https://twitter.com/ClubMTVUK/ </lien>
+			<lien> https://twitter.com/TF1/</lien>
 	 	</auteur>
 	</tweet>
 	
@@ -143,7 +192,7 @@
 			<fuseauHoraire> UTC−4 </fuseauHoraire>
 		    1912302
 	   	</Date>
-	 	<retweet> 10524 </retweet>
+	 	<retweet>0</retweet>
 
 	  	<auteur idref="u41">
 			<lien> https://twitter.com/TF1/ </lien>
@@ -171,6 +220,22 @@
 	    <description> clubmtvuk </description>
 	    <photo>  https://twitter.com/clubmtvuk/profile_picture.png </photo>
 	    <nbfollowers> 27589 </nbfollowers>
+	    <nbfollowed> 332 </nbfollowed>
+	</utilisateur>
+
+	<utilisateur id="u96">
+		<nom>Khang</nom>
+	    <description> Utilisateur banale </description>
+	    <photo>  https://twitter.com/Khang/profile_picture.png </photo>
+	    <nbfollowers> 27589 </nbfollowers>
+	    <nbfollowed> 332 </nbfollowed>
+	</utilisateur>
+
+	<utilisateur id="u33">
+		<nom>My</nom>
+	    <description> Utilisateur X </description>
+	    <photo>  https://twitter.com/My/profile_picture.png </photo>
+	    <nbfollowers> 99999 </nbfollowers>
 	    <nbfollowed> 332 </nbfollowed>
 	</utilisateur>
 </tweeter>
