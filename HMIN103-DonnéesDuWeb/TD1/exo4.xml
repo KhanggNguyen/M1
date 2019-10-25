@@ -1,0 +1,27 @@
+<tweet>
+	<id>t100</id>
+	<corps>
+		<texte>
+			<taille>130</taille>
+			<couleur>noir</couleur>
+			<type>sans-serif</type>
+			<langue>anglais</langue>
+		</texte>
+
+		<utilisateur>
+			<identifiant>uid100</identifiant>
+			<nom>MTV Music</nom>
+			<reférence url="tweeter.com/MTVMusicUK"/>
+			<photo url="url-de-photo.com"/>
+			<description>ceci est une description </description>
+			<abonnés>10234</abonnés>
+			<abonnement>101</abonnement>
+		</utilisateur>
+	</corps>
+
+	<date type="secondes">11:00:00</date>
+	<coordonnées>
+		<ville>London</ville>
+		<pays>Angleterre</pays>
+	</coordonnées>
+</tweet>

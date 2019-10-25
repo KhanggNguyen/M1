@@ -1,0 +1,40 @@
+<!DOCTYPE tweet [
+
+<!ELEMENT tweet (corps,url*,OS*,posGeo*,date, retweets, auteur)>
+    <!ATTLIST idT ID #REQUIRED>
+<!ELEMENT corps (message, hashtags,references,taille,type,langue,couleur)>
+    <!ELEMENT message (#PCDATA)>
+<!ELEMENT hashtags (hashtag)*>
+<!ELEMENT hashtag (#PCDATA)>
+<!ELEMENT references (reference)*>
+<!ATTLIST idR IDREF CDATA #REQUIRED>
+<!ELEMENT reference (#PCDATA)>
+<!ELEMENT taille (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT langue (#PCDATA)>
+<!ELEMENT couleur (#PCDATA)>
+<!ELEMENT url (image,video)*>
+    <!ELEMENT image (#PCDATA)>
+<!ELEMENT video (#PCDATA)>
+<!ELEMENT OS (#PCDATA)>
+<!ELEMENT posGeo(pays, ville, coordonnees)>
+    <!ELEMENT pays (#PCDATA)>
+<!ELEMENT ville (#PCDATA)>
+<!ELEMENT coordonnees (#PCDATA)>
+<!ELEMENT date (fuseauHoraire, nbsecondes)>
+    <!ELEMENT fuseauHoraire (#PCDATA)>
+<!ELEMENT nbsecondes (#PCDATA)>
+<!ELEMENT retweets (#PCDATA)>
+<!ELEMENT auteur (nom, lien)>
+<!ATTLIST idA IDREF #IMPLIED>
+<!ELEMENT nom (#PCDATA)> 
+<!ELEMENT lien (#PCDATA)> 
+
+<!ELEMENT utilisateur (description, photo, nbfollowers, nbfollowed)
+<!ATTLIST idU ID #REQUIRED>
+    <!ELEMENT description (#PCDATA)> 
+<!ELEMENT photo (#PCDATA)>
+<!ELEMENT nbfollowers (#PCDATA)>
+<!ELEMENT nbfollowed (#PCDATA)>
+
+]>

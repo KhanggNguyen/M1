@@ -1,0 +1,49 @@
+<tweet id="11">
+    <corps>
+<message> .@example absolutely smashed it at #mtvlivelockdown! Catch him at the official @clubmtvuk after party tonight @ 10pm </message>
+        <hashtags>
+        <hashtag> #mtvlivelockdown </hashtag>
+        </hashtags>     
+        <references>
+        	<reference id="34"> @clubmtvuk </reference>
+        </references>
+        <taille> 8.5 </taille>
+        <type> Comic Sans MS </type>
+ <langue> English </langue>
+ <couleur>Noir</couleur>
+   </corps>
+
+   <url></url>
+   <OS> Windows 10 </OS>
+  <posGeo>
+<pays> Etats-Unis </pays>
+       <ville> Miami </ville>
+        <coordonnees> -80.130045, 25.790654 </coordonnees>
+   </posGeo>
+
+  <date>
+<fuseauHoraire> UTC−4 </fuseauHoraire>
+       <nbsecondes> 1912354 </nbsecondes>
+   </date>
+ <retweet> 10524 </retweet>
+
+  <auteur id="22">
+        <nom> MTVMusicUK </nom>
+        <lien> https://twitter.com/MTVMusicUK/ </lien>
+  </auteur>
+
+</tweet>
+
+<utilisateur id="22">
+        <description> Official account </description>
+        <photo>  https://twitter.com/MTVMusicUK/profile_picture.png </photo>
+        <nbfollowers> 18000 </nbfollowers>
+        <nbfollowed> 257 </nbfollowed>
+</utilisateur>
+
+<utilisateur id="34">
+    <description> clubmtvuk </description>
+    <photo>  https://twitter.com/clubmtvuk/profile_picture.png </photo>
+    <nbfollowers> 27589 </nbfollowers>
+    <nbfollowed> 332 </nbfollowed>
+</utilisateur>
