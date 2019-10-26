@@ -1,4 +1,6 @@
 //Coloriage.java
+//NGUYEN HUU KHANG
+//TRAN THI TRA MY
 
 package HMIN104.TP_Coloriage;
 
