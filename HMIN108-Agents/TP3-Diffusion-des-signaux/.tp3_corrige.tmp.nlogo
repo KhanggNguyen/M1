@@ -1,117 +1,169 @@
-globals [food-sources]
+breed [lapins lapin]
+breed [loups loup]
 
-patches-own [
- ;; chemical             ;; amount of chemical on this patch
-  chemical1
-  chemical2
-  source
-]
+turtles-own [ctask vitesse champ-vision espace-vitale]
+patches-own [odeurM odeurF]
 
+lapins-own [male?]
 
-turtles-own
-[
-  peak? ;; indicates whether a turtle has reached a "peak",
-        ;; that is, it can no longer go "uphill" from where it stands
-]
-
-;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Setup procedures ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;
+; ENVIRONNEMENT ET COMPORTEMENTS
 
 to setup
-  ;; (for this model to work with NetLogo's new plotting features,
-  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
-  ;; the beginning of your setup procedure and reset-ticks at the end
-  ;; of the procedure.)
-  __clear-all-and-reset-ticks
-  set-default-shape turtles "bug"
-  ask patches [set pcolor black]
-  ask n-of location-number patches [set source 1 set pcolor green set chemical1 (chemical-max / 1.3)]
-  ask n-of location-number patches [set source 2 set pcolor red set chemical2 (chemical-max / 1.3)]
-  repeat diffusion-turn [diffuse-food-chemicals]
-  setup-turtles
-  ask patches [recolor-patch ]
+  clear-all
+
+  create-lapins nb-lapins [
+    set shape "rabbit"
+    setxy random-xcor random-ycor
+    set vitesse 1
+    set champ-vision 5
+    set espace-vitale 2
+
+
+    ifelse random-float 1 < taux-lapins-males [
+      set male? true
+      set color blue
+    ][
+      set male? false
+      set color pink
+    ]
+
+    set ctask "cherche-partenaire"
+  ]
+
+  create-loups nb-loups [
+    set shape "wolf"
+    set size 2
+    setxy random-xcor random-ycor
+    set vitesse 0.8
+    set champ-vision 5
+    set espace-vitale 2
+    set color red
+
+    set ctask "cherche-lapin"
+  ]
+
+  reset-ticks
 end
 
-to setup-turtles
-  ;; put some turtles on patch centers in the landscape
-  ask n-of turtles-number patches [
-    sprout 1 [
-      set peak? false
-      set color yellow
-      ;; pen-down
+
+
+to go
+  ask lapins [run ctask]
+
+  diffuse odeurM taux-diffusion
+  diffuse odeurF taux-diffusion
+
+  ask patches [colore]
+  ask loups [run ctask]
+  ask patches [evapore]
+
+  tick
+end
+
+to vadrouille
+  lt random 50
+  rt random 50
+  fd vitesse
+end
+
+to evapore
+  set odeurM odeurM - (odeurM * taux-evaporation)
+  set odeurF odeurF - (odeurF * taux-evaporation)
+end
+
+to colore
+  ifelse odeurM > odeurF [
+    set pcolor scale-color blue odeurM 1 (odeur-max / 1.3)
+  ][
+    set pcolor scale-color pink odeurF 1 (odeur-max / 1.3)
+  ]
+end
+
+; LAPINS
+
+to depose-odeur
+  ifelse male? [
+    set odeurM odeurM + odeur-max
+  ][
+    set odeurF odeurF + odeur-max
+  ]
+end
+
+to-report odeur-partenaire?
+  ifelse male? [
+    report odeurF > 1
+  ][
+    report odeurM > 1
+  ]
+end
+
+to remonte-odeur-partenaire
+  let p nobody
+  ifelse male? [
+    set p max-one-of neighbors [odeurF]
+  ][
+    set p max-one-of neighbors [odeurM]
+  ]
+  face p
+  fd vitesse
+end
+
+to cherche-partenaire
+  let l min-one-of loups in-radius champ-vision [distance myself]
+  ifelse l != nobody [ ; un loup est proche
+    set heading (- towards l)
+    fd vitesse
+  ][
+    depose-odeur
+    ifelse odeur-partenaire? [
+      remonte-odeur-partenaire
+      garde-espace-vitale
+    ][
+      vadrouille
     ]
   ]
 end
 
-
-to diffuse-food-chemicals
-  diffuse chemical1 (diffusion-rate / 100)
-  diffuse chemical2 (diffusion-rate / 100)
+to garde-espace-vitale
+  let p min-one-of other breed in-radius espace-vitale [distance myself]
+  if p != nobody [ ; un lapins est dans mon espace vital
+    let temp heading
+    set heading towards p
+    bk espace-vitale - distance p
+    set heading temp
+  ]
 end
 
-to setup-patches
+; LOUPS
+
+to-report odeur?
+  report max (list odeurM odeurF) > 1
 end
 
-to recolor-patch
-  if (source != 1 and source != 2)[
-    ifelse (chemical1 > 0 or chemical2 > 0)
-       [ifelse (chemical1 > chemical2)
-         [ set pcolor scale-color green chemical1 0.1 5]
-         [ set pcolor scale-color red chemical2 0.1 5]
-       ]
-       [set pcolor black]
-   ]
+to remonte-odeur
+  let p max-one-of neighbors [max (list odeurM odeurF)]
+  face p
+  fd vitesse
 end
 
-to wiggle
-  rt random 50
-  lt random 50
-end
-
-
-;;;;;;;;;;;;;;;;;;;;;
-;;; Go procedures ;;;
-;;;;;;;;;;;;;;;;;;;;;
-
-to go  ;; forever button
-  ;; diffuse chemical (diffusion-rate / 100)
-  ;; stop when all turtles are on peak
-  if all? turtles [peak?]
-    [ stop ]
-  ask turtles [ follow-chemical]
-  ask patches [ evaporate ]
-  ask patches [ recolor-patch ]
-  tick
-end
-
-to evaporate
-  set chemical1 chemical1 * (100 - evaporation-rate1) / 100  ;; slowly evaporate chemical
-  set chemical2 chemical2 * (100 - evaporation-rate2) / 100  ;; slowly evaporate chemical
-end
-
-to follow-chemical
-    ifelse (chemical1 <= chemical-min and chemical2 <= chemical-min)
-      [wiggle fd 1]
-      [ifelse (chemical1 <= chemical2)
-        [let old-patch patch-here
-          uphill chemical2
-          if old-patch = patch-here [ set peak? true ]]
-        [let old-patch patch-here
-          uphill chemical1
-          if old-patch = patch-here [ set peak? true ]
-          ]
-        ]
+to cherche-lapin
+  ifelse odeur? [
+    remonte-odeur
+    garde-espace-vitale
+  ][
+    vadrouille
+    garde-espace-vitale
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-257
+210
 10
-762
-516
+647
+448
 -1
 -1
-7.0
+13.0
 1
 10
 1
@@ -121,21 +173,21 @@ GRAPHICS-WINDOW
 1
 1
 1
--35
-35
--35
-35
-1
-1
+-16
+16
+-16
+16
+0
+0
 1
 ticks
 30.0
 
 BUTTON
-30
-70
-110
-103
+11
+40
+84
+73
 NIL
 setup
 NIL
@@ -148,26 +200,11 @@ NIL
 NIL
 1
 
-SLIDER
-20
-215
-210
-248
-diffusion-rate
-diffusion-rate
-0.0
-99.0
-99.0
-1.0
-1
-NIL
-HORIZONTAL
-
 BUTTON
-120
-70
-195
-103
+17
+102
+80
+135
 NIL
 go
 T
@@ -181,119 +218,169 @@ NIL
 1
 
 SLIDER
-20
-168
-210
-201
-location-number
-location-number
+720
+93
+892
+126
+odeur-max
+odeur-max
+0
+100
+50.0
 1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+675
+26
+847
+59
+taux-diffusion
+taux-diffusion
+0
+1
+0.5
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+715
+174
+894
+207
+taux-evaporation
+taux-evaporation
+0
+1
+0.1
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+982
+28
+1154
+61
+nb-lapins
+nb-lapins
+0
+400
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+993
+110
+1165
+143
+nb-loups
+nb-loups
+0
 50
-1.0
+5.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-20
-263
-212
-296
-chemical-max
-chemical-max
-100
-2000
-930.0
-10
+988
+203
+1170
+236
+taux-lapins-males
+taux-lapins-males
+0
+1
+0.5
+0.01
 1
 NIL
 HORIZONTAL
 
-SLIDER
-20
-125
-210
-158
-diffusion-turn
-diffusion-turn
-1
-100
-73.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
+PLOT
 21
-313
-214
-346
-turtles-number
-turtles-number
-1
-500
-166.0
-1
-1
+492
+221
+642
+population-loups
 NIL
-HORIZONTAL
-
-SLIDER
-23
-360
-211
-393
-chemical-min
-chemical-min
-0
-10
-1.2
-0.2
-1
 NIL
-HORIZONTAL
-
-SLIDER
-22
-405
-194
-438
-evaporation-rate1
-evaporation-rate1
-0
-20
 0.0
-1.0
-1
-NIL
-HORIZONTAL
-
-SLIDER
-22
-450
-194
-483
-evaporation-rate2
-evaporation-rate2
-0
-20
+10.0
 0.0
-1.0
-1
+10.0
+true
+false
+"" ""
+PENS
+"loups" 1.0 0 -16777216 true "" "plot count loups"
+
+PLOT
+272
+499
+472
+649
+population-lapins
 NIL
-HORIZONTAL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"males" 1.0 0 -16777216 true "" "plot count lapins with [male? = true]"
+"femelle" 1.0 0 -7500403 true "" "plot count lapins with [male? = false]"
+"total" 1.0 0 -2674135 true "" "plot count lapins"
 
 @#$#@#$#@
-Qu'est ce que c'est
+## WHAT IS IT?
 
-D�monstration du fonctionnement de suivi de potentiel par uphill. Des fourmis suivent des odeurs et remontent un gradient d'odeur..
+(a general understanding of what the model is trying to show or explain)
 
-Comment l'utiliser
+## HOW IT WORKS
 
-Quelques param�tres concernant l'�vaporation et la diffusion des odeurs.  
-Le param�tre chemical-min qui donne la sensibilit� minimale des agents.. 
+(what rules the agents use to create the overall behavior of the model)
+
+## HOW TO USE IT
+
+(how to use the model, including a description of each of the items in the Interface tab)
+
+## THINGS TO NOTICE
+
+(suggested things for the user to notice while running the model)
+
+## THINGS TO TRY
+
+(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+
+## EXTENDING THE MODEL
+
+(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+
+## NETLOGO FEATURES
+
+(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+
+## RELATED MODELS
+
+(models in the NetLogo Models Library and elsewhere which are of related interest)
+
+## CREDITS AND REFERENCES
+
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
 @#$#@#$#@
 default
 true
@@ -487,6 +574,22 @@ Polygon -7500403 true true 135 105 90 60 45 45 75 105 135 135
 Polygon -7500403 true true 165 105 165 135 225 105 255 45 210 60
 Polygon -7500403 true true 135 90 120 45 150 15 180 45 165 90
 
+sheep
+false
+15
+Circle -1 true true 203 65 88
+Circle -1 true true 70 65 162
+Circle -1 true true 150 105 120
+Polygon -7500403 true false 218 120 240 165 255 165 278 120
+Circle -7500403 true false 214 72 67
+Rectangle -1 true true 164 223 179 298
+Polygon -1 true true 45 285 30 285 30 240 15 195 45 210
+Circle -1 true true 3 83 150
+Rectangle -1 true true 65 221 80 296
+Polygon -1 true true 195 285 210 285 210 240 240 210 195 210
+Polygon -7500403 true false 276 85 285 105 302 99 294 83
+Polygon -7500403 true false 219 85 210 105 193 99 201 83
+
 square
 false
 0
@@ -571,13 +674,20 @@ Line -7500403 true 40 84 269 221
 Line -7500403 true 40 216 269 79
 Line -7500403 true 84 40 221 269
 
+wolf
+false
+0
+Polygon -16777216 true false 253 133 245 131 245 133
+Polygon -7500403 true true 2 194 13 197 30 191 38 193 38 205 20 226 20 257 27 265 38 266 40 260 31 253 31 230 60 206 68 198 75 209 66 228 65 243 82 261 84 268 100 267 103 261 77 239 79 231 100 207 98 196 119 201 143 202 160 195 166 210 172 213 173 238 167 251 160 248 154 265 169 264 178 247 186 240 198 260 200 271 217 271 219 262 207 258 195 230 192 198 210 184 227 164 242 144 259 145 284 151 277 141 293 140 299 134 297 127 273 119 270 105
+Polygon -7500403 true true -1 195 14 180 36 166 40 153 53 140 82 131 134 133 159 126 188 115 227 108 236 102 238 98 268 86 269 92 281 87 269 103 269 113
+
 x
 false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

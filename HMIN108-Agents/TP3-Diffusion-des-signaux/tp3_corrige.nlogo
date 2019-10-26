@@ -1,116 +1,169 @@
-breed [ lapins lapin]
-breed [ loups loup ]
+breed [lapins lapin]
+breed [loups loup]
 
-lapins-own[
- max-odeur
-]
-patches-own[
- odeur
- source
-]
+turtles-own [ctask vitesse champ-vision espace-vitale]
+patches-own [odeurM odeurF]
+
+lapins-own [male?]
+
+; ENVIRONNEMENT ET COMPORTEMENTS
 
 to setup
-  ;; (for this model to work with NetLogo's new plotting features,
-  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
-  ;; the beginning of your setup procedure and reset-ticks at the end
-  ;; of the procedure.)
-  __clear-all-and-reset-ticks
+  clear-all
 
-  ;; place les tortues de maniere aleatoire
-  create-loups nombre-loups [
-    set shape "wolf"
-    set color red
-    setxy random-xcor random-ycor
-    set size 15 ;; pour mieux voir les tortues
-  ]
-  create-lapins nombre-lapins [
+  create-lapins nb-lapins [
     set shape "rabbit"
-    set color green
     setxy random-xcor random-ycor
-    set size 15 ;; pour mieux voir les tortues
+    set vitesse 1
+    set champ-vision 5
+    set espace-vitale 2
+
+
+    ifelse random-float 1 < taux-lapins-males [
+      set male? true
+      set color blue
+    ][
+      set male? false
+      set color pink
+    ]
+
+    set ctask "cherche-partenaire"
   ]
+
+  create-loups nb-loups [
+    set shape "wolf"
+    set size 2
+    setxy random-xcor random-ycor
+    set vitesse 0.8
+    set champ-vision 5
+    set espace-vitale 2
+    set color red
+
+    set ctask "cherche-lapin"
+  ]
+
+  reset-ticks
 end
 
-to agiter-loup
-  rt random 10
-  lt random 10
 
-end
-
-to agiter-lapin
-  lt random 10
-  rt random 10
-end
 
 to go
-  ask loups [go-loup follow-odeur]
-  ask lapins [go-lapin ]
-  diffuse-odeur
-  ask patches [ evaporate
- recolor-patch ]
+  ask lapins [run ctask]
+
+  diffuse odeurM taux-diffusion
+  diffuse odeurF taux-diffusion
+
+  ask patches [colore]
+  ask loups [run ctask]
+  ask patches [evapore]
+
   tick
 end
 
-to go-loup
- ; chercher-lapin
- ;;agiter-loup
- fd 0.8
-end
-
-to go-lapin
- set odeur odeur + 50
- agiter-lapin
- fd 1
-end
-
-to wiggle
-  rt random 50
+to vadrouille
   lt random 50
+  rt random 50
+  fd vitesse
 end
 
-to diffuse-odeur
-  diffuse odeur (diffusion-rate / 100)
+to evapore
+  set odeurM odeurM - (odeurM * taux-evaporation)
+  set odeurF odeurF - (odeurF * taux-evaporation)
 end
 
-to recolor-patch
-  if (source != 1 and source != 2)[
-    ifelse (odeur > 0)
-       [ set pcolor scale-color yellow odeur 1 (odeur-max / 1.3) ]
-       [set pcolor black]
-   ]
+to colore
+  ifelse odeurM > odeurF [
+    set pcolor scale-color blue odeurM 1 (odeur-max / 1.3)
+  ][
+    set pcolor scale-color pink odeurF 1 (odeur-max / 1.3)
+  ]
 end
 
-to evaporate
-  set odeur odeur * (100 - evaporation-rate) / 100  ;; slowly evaporate odeur
+; LAPINS
+
+to depose-odeur
+  ifelse male? [
+    set odeurM odeurM + odeur-max
+  ][
+    set odeurF odeurF + odeur-max
+  ]
 end
 
-to follow-odeur
-    ifelse (odeur <= odeur-min) ;si odeur > odeur-min les loups suivent le lapin
-      [wiggle fd 0.8]
-        [
-          let p max-one-of neighbors [odeur]
-          if [odeur] of p > odeur [
-          face p
-          ]
-        ]
+to-report odeur-partenaire?
+  ifelse male? [
+    report odeurF > 1
+  ][
+    report odeurM > 1
+  ]
 end
 
+to remonte-odeur-partenaire
+  let p nobody
+  ifelse male? [
+    set p max-one-of neighbors [odeurF]
+  ][
+    set p max-one-of neighbors [odeurM]
+  ]
+  face p
+  fd vitesse
+end
 
+to cherche-partenaire
+  let l min-one-of loups in-radius champ-vision [distance myself]
+  ifelse l != nobody [ ; un loup est proche
+    set heading (- towards l)
+    fd vitesse
+  ][
+    depose-odeur
+    ifelse odeur-partenaire? [
+      remonte-odeur-partenaire
+      garde-espace-vitale
+    ][
+      vadrouille
+    ]
+  ]
+end
 
-;;-------------------------------------------------------
-;;
-;;  Auteur: J. Ferber
-;;
-;;------------------------------------------------------
+to garde-espace-vitale
+  let p min-one-of other breed in-radius espace-vitale [distance myself]
+  if p != nobody [ ; un lapins est dans mon espace vital
+    let temp heading
+    set heading towards p
+    bk espace-vitale - distance p
+    set heading temp
+  ]
+end
+
+; LOUPS
+
+to-report odeur?
+  report max (list odeurM odeurF) > 1
+end
+
+to remonte-odeur
+  let p max-one-of neighbors [max (list odeurM odeurF)]
+  face p
+  fd vitesse
+end
+
+to cherche-lapin
+  ifelse odeur? [
+    remonte-odeur
+    garde-espace-vitale
+  ][
+    vadrouille
+    garde-espace-vitale
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-200
+210
 10
-610
-421
+647
+448
 -1
 -1
-2.0
+13.0
 1
 10
 1
@@ -120,24 +173,24 @@ GRAPHICS-WINDOW
 1
 1
 1
--100
-100
--100
-100
-1
-1
+-16
+16
+-16
+16
 0
+0
+1
 ticks
 30.0
 
 BUTTON
-97
-117
-158
-150
-go
-go
-T
+11
+40
+84
+73
+NIL
+setup
+NIL
 1
 T
 OBSERVER
@@ -148,13 +201,13 @@ NIL
 1
 
 BUTTON
-24
-117
-85
-150
-setup
-setup
+17
+102
+80
+135
 NIL
+go
+T
 1
 T
 OBSERVER
@@ -165,29 +218,74 @@ NIL
 1
 
 SLIDER
-14
-32
-185
-65
-nombre-loups
-nombre-loups
-1
-20
-10.0
+720
+93
+892
+126
+odeur-max
+odeur-max
+0
+100
+18.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-15
-75
-187
-108
-nombre-lapins
-nombre-lapins
+675
+26
+847
+59
+taux-diffusion
+taux-diffusion
+0
 1
-5
+0.21
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+715
+174
+894
+207
+taux-evaporation
+taux-evaporation
+0
+1
+0.1
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+982
+28
+1154
+61
+nb-lapins
+nb-lapins
+0
+400
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+993
+110
+1165
+143
+nb-loups
+nb-loups
+0
+50
 5.0
 1
 1
@@ -195,75 +293,94 @@ NIL
 HORIZONTAL
 
 SLIDER
-751
-35
-929
-68
-evaporation-rate
-evaporation-rate
+988
+203
+1170
+236
+taux-lapins-males
+taux-lapins-males
 0
-5
-0.0
 1
+0.5
+0.01
 1
 NIL
 HORIZONTAL
 
-SLIDER
-732
-188
-904
+PLOT
+21
+492
 221
-diffusion-rate
-diffusion-rate
-0
-100
-78.0
-1
-1
+642
+population-loups
 NIL
-HORIZONTAL
-
-SLIDER
-94
-486
-266
-519
-odeur-max
-odeur-max
-0
-100
-11.0
-1
-1
 NIL
-HORIZONTAL
-
-SLIDER
-837
-287
-1009
-320
-odeur-min
-odeur-min
-0
-10
 0.0
-1
-1
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"loups" 1.0 0 -16777216 true "" "plot count loups"
+
+PLOT
+272
+499
+472
+649
+population-lapins
 NIL
-HORIZONTAL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"males" 1.0 0 -16777216 true "" "plot count lapins with [male? = true]"
+"femelle" 1.0 0 -7500403 true "" "plot count lapins with [male? = false]"
+"total" 1.0 0 -2674135 true "" "plot count lapins"
 
 @#$#@#$#@
-## QU'EST CE QUE C'EST
+## WHAT IS IT?
 
-Un programme hyper-simpliste o� les tortues avancent de mani�re al�atoires..  
-Dans ce programme, il y a deux types de tortues, chacune ayant sa propre couleur
+(a general understanding of what the model is trying to show or explain)
 
-## CREDITS ET REFERENCES
+## HOW IT WORKS
 
-Cr�� par J. Ferber  
-http://www.lirmm.fr/~ferber
+(what rules the agents use to create the overall behavior of the model)
+
+## HOW TO USE IT
+
+(how to use the model, including a description of each of the items in the Interface tab)
+
+## THINGS TO NOTICE
+
+(suggested things for the user to notice while running the model)
+
+## THINGS TO TRY
+
+(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+
+## EXTENDING THE MODEL
+
+(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+
+## NETLOGO FEATURES
+
+(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+
+## RELATED MODELS
+
+(models in the NetLogo Models Library and elsewhere which are of related interest)
+
+## CREDITS AND REFERENCES
+
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
 @#$#@#$#@
 default
 true
@@ -275,48 +392,10 @@ true
 0
 Polygon -7500403 true true 150 0 135 15 120 60 120 105 15 165 15 195 120 180 135 240 105 270 120 285 150 270 180 285 210 270 165 240 180 180 285 195 285 165 180 105 180 60 165 15
 
-ant
-true
-0
-Polygon -7500403 true true 136 61 129 46 144 30 119 45 124 60 114 82 97 37 132 10 93 36 111 84 127 105 172 105 189 84 208 35 171 11 202 35 204 37 186 82 177 60 180 44 159 32 170 44 165 60
-Polygon -7500403 true true 150 95 135 103 139 117 125 149 137 180 135 196 150 204 166 195 161 180 174 150 158 116 164 102
-Polygon -7500403 true true 149 186 128 197 114 232 134 270 149 282 166 270 185 232 171 195 149 186
-Polygon -7500403 true true 225 66 230 107 159 122 161 127 234 111 236 106
-Polygon -7500403 true true 78 58 99 116 139 123 137 128 95 119
-Polygon -7500403 true true 48 103 90 147 129 147 130 151 86 151
-Polygon -7500403 true true 65 224 92 171 134 160 135 164 95 175
-Polygon -7500403 true true 235 222 210 170 163 162 161 166 208 174
-Polygon -7500403 true true 249 107 211 147 168 147 168 150 213 150
-
 arrow
 true
 0
 Polygon -7500403 true true 150 0 0 150 105 150 105 293 195 293 195 150 300 150
-
-bee
-true
-0
-Polygon -1184463 true false 152 149 77 163 67 195 67 211 74 234 85 252 100 264 116 276 134 286 151 300 167 285 182 278 206 260 220 242 226 218 226 195 222 166
-Polygon -16777216 true false 150 149 128 151 114 151 98 145 80 122 80 103 81 83 95 67 117 58 141 54 151 53 177 55 195 66 207 82 211 94 211 116 204 139 189 149 171 152
-Polygon -7500403 true true 151 54 119 59 96 60 81 50 78 39 87 25 103 18 115 23 121 13 150 1 180 14 189 23 197 17 210 19 222 30 222 44 212 57 192 58
-Polygon -16777216 true false 70 185 74 171 223 172 224 186
-Polygon -16777216 true false 67 211 71 226 224 226 225 211 67 211
-Polygon -16777216 true false 91 257 106 269 195 269 211 255
-Line -1 false 144 100 70 87
-Line -1 false 70 87 45 87
-Line -1 false 45 86 26 97
-Line -1 false 26 96 22 115
-Line -1 false 22 115 25 130
-Line -1 false 26 131 37 141
-Line -1 false 37 141 55 144
-Line -1 false 55 143 143 101
-Line -1 false 141 100 227 138
-Line -1 false 227 138 241 137
-Line -1 false 241 137 249 129
-Line -1 false 249 129 254 110
-Line -1 false 253 108 248 97
-Line -1 false 249 95 235 82
-Line -1 false 235 82 144 100
 
 box
 false
@@ -513,6 +592,22 @@ Line -16777216 false 165 180 180 165
 Line -16777216 false 180 165 225 165
 Line -16777216 false 180 210 210 240
 
+sheep
+false
+15
+Circle -1 true true 203 65 88
+Circle -1 true true 70 65 162
+Circle -1 true true 150 105 120
+Polygon -7500403 true false 218 120 240 165 255 165 278 120
+Circle -7500403 true false 214 72 67
+Rectangle -1 true true 164 223 179 298
+Polygon -1 true true 45 285 30 285 30 240 15 195 45 210
+Circle -1 true true 3 83 150
+Rectangle -1 true true 65 221 80 296
+Polygon -1 true true 195 285 210 285 210 240 240 210 195 210
+Polygon -7500403 true false 276 85 285 105 302 99 294 83
+Polygon -7500403 true false 219 85 210 105 193 99 201 83
+
 square
 false
 0
@@ -600,32 +695,9 @@ Line -7500403 true 84 40 221 269
 wolf
 false
 0
-Polygon -7500403 true true 75 225 97 249 112 252 122 252 114 242 102 241 89 224 94 181 64 113 46 119 31 150 32 164 61 204 57 242 85 266 91 271 101 271 96 257 89 257 70 242
-Polygon -7500403 true true 216 73 219 56 229 42 237 66 226 71
-Polygon -7500403 true true 181 106 213 69 226 62 257 70 260 89 285 110 272 124 234 116 218 134 209 150 204 163 192 178 169 185 154 189 129 189 89 180 69 166 63 113 124 110 160 111 170 104
-Polygon -6459832 true true 252 143 242 141
-Polygon -6459832 true true 254 136 232 137
-Line -16777216 false 75 224 89 179
-Line -16777216 false 80 159 89 179
-Polygon -6459832 true true 262 138 234 149
-Polygon -7500403 true true 50 121 36 119 24 123 14 128 6 143 8 165 8 181 7 197 4 233 23 201 28 184 30 169 28 153 48 145
-Polygon -7500403 true true 171 181 178 263 187 277 197 273 202 267 187 260 186 236 194 167
-Polygon -7500403 true true 187 163 195 240 214 260 222 256 222 248 212 245 205 230 205 155
-Polygon -7500403 true true 223 75 226 58 245 44 244 68 233 73
-Line -16777216 false 89 181 112 185
-Line -16777216 false 31 150 47 118
-Polygon -16777216 true false 235 90 250 91 255 99 248 98 244 92
-Line -16777216 false 236 112 246 119
-Polygon -16777216 true false 278 119 282 116 274 113
-Line -16777216 false 189 201 203 161
-Line -16777216 false 90 262 94 272
-Line -16777216 false 110 246 119 252
-Line -16777216 false 190 266 194 274
-Line -16777216 false 218 251 219 257
-Polygon -16777216 true false 230 67 228 54 222 62 224 72
-Line -16777216 false 246 67 234 64
-Line -16777216 false 229 45 235 68
-Line -16777216 false 30 150 30 165
+Polygon -16777216 true false 253 133 245 131 245 133
+Polygon -7500403 true true 2 194 13 197 30 191 38 193 38 205 20 226 20 257 27 265 38 266 40 260 31 253 31 230 60 206 68 198 75 209 66 228 65 243 82 261 84 268 100 267 103 261 77 239 79 231 100 207 98 196 119 201 143 202 160 195 166 210 172 213 173 238 167 251 160 248 154 265 169 264 178 247 186 240 198 260 200 271 217 271 219 262 207 258 195 230 192 198 210 184 227 164 242 144 259 145 284 151 277 141 293 140 299 134 297 127 273 119 270 105
+Polygon -7500403 true true -1 195 14 180 36 166 40 153 53 140 82 131 134 133 159 126 188 115 227 108 236 102 238 98 268 86 269 92 281 87 269 103 269 113
 
 x
 false
@@ -633,10 +705,8 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.0.2
 @#$#@#$#@
-setup
-ask turtles [ repeat 150 [ go ] ]
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
