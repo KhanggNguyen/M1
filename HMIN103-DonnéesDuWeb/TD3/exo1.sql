@@ -1,39 +1,5 @@
 /* 1.1 */
 /*VERTICAL-EDGE */
-CREATE TABLE people (source varchar(10), target varchar(10) primary key not null, ordinal int, txtval varchar(255), numval int);
-CREATE TABLE person (source varchar(10), target varchar(10), ordinal int, txtval varchar(255), numval int, primary key (target), foreign key (source) references people(target));
-CREATE TABLE name (source varchar(10), target varchar(10), ordinal int, txtval varchar(255), numval int, primary key (target), foreign key (source) references person(target));
-CREATE TABLE age (source varchar(10), target varchar(10), ordinal int, txtval varchar(255), numval int, primary key (target), foreign key(source) references person(target));
-
-INSERT INTO people (source, target, ordinal, txtval, numval) VALUES (null, 'n1', null, null, null);
-INSERT INTO person VALUES ('n1', 'n2', 1, null, null);
-INSERT INTO person VALUES ('n1', 'n5', 2, null, null);
-INSERT INTO person VALUES ('n1', 'n7', 3, null, null);
-INSERT INTO name VALUES ('n2', 'n3', 1, 'Serge', null);
-INSERT INTO name VALUES ('n5', 'n6', 1, null, null);
-INSERT INTO age VALUES ('n7', 'n8', 1, null, 42);
-
-SELECT age.numval FROM people p1, person p2, age WHERE p1.target = p2.source AND p2.target = age.source;
-
-/*Monet DB */
-CREATE TABLE monet_people(node varchar(10), txtval varchar(255), numval int, primary key (node)); 
-CREATE TABLE monet_people_person(node varchar(10), txtval varchar(255), numval int, primary key (node)); 
-CREATE TABLE monet_people_person_name(node varchar(10), txtval varchar(255), numval int, primary key (node)); 
-CREATE TABLE monet_people_person_age(node varchar(10), txtval varchar(255), numval int, primary key (node)); 
-
-INSERT INTO monet_people VALUES ('n1', null, null);
-INSERT INTO monet_people_person VALUES ('n2', null, null);
-INSERT INTO monet_people_person VALUES('n5', null, null);
-INSERT INTO monet_people_ person VALUES('n7', null, null);
-INSERT INTO monet_people_person_name VALUES ('n3', 'Serge', null);
-INSERT INTO monet_people_person_name VALUES ('n6', null, null);
-INSERT INTO monet_people_person_age VALUES ('n8', null, 8);
-
-SELECT txtval, numval
-FROM monet_people_person_age;
-
-/* 1.2 */
-/* creation des tables */
 CREATE TABLE presse(source varchar(255), target varchar(255) primary key not null, ordinal int, txtval varchar(255), numval int);
 
 CREATE TABLE journalistes (source varchar(255), target varchar(255) primary key not null, ordinal int, txtval varchar(255), numval int, foreign key(source) references presse(target));
@@ -53,51 +19,70 @@ CREATE TABLE journal_article_titre(source varchar(255), target varchar(255) prim
 CREATE TABLE journal_article_auteur(source varchar(255), target varchar(255) primary key not null, ordinal int, txtval varchar(255), numval int, foreign key (source) references journal_article(target), foreign key (target) references journaliste_id(target));
 CREATE TABLE journal_article_corps(source varchar(255), target varchar(255) primary key not null, ordinal int, txtval varchar(255), numval int, foreign key (source) references journal_article(target));
 
+/* Monet DB */
+CREATE TABLE presse (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
 
+CREATE TABLE presse_journalistes (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE pressejournalistes_journaliste (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE pressejournalistes_journaliste_id (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE pressejournalistes_journaliste_anonymisation (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE pressejournalistes_journaliste_nom (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE pressejournalistes_journaliste_prenom (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
 
+CREATE TABLE presse_journal (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_nom (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_directeur (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_directeur_nom (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_directeur_prenom (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_article (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_article_titre (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_article_auteur (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+CREATE TABLE presse_journal_article_corps (node VARCHAR(255) primary key not null, txtval VARCHAR(255), numval INT)
+
+/* 1.2 */
 /* peupler */
-INSERT INTO presse VALUES (null, 'press_id1', 1, null, null);
+/* Vertical-Edge */
+INSERT INTO presse VALUES (null, 'n1', 1, null, null);
 
-INSERT INTO journal VALUES ('press_id1', 'journal_id1', 1, null, null);
-INSERT INTO journal_nom VALUES ('journal_id1', 'journal_nom_id1', 1, 'MIDI', null);
+INSERT INTO journal VALUES ('n1', 'n3', 1, null, null);
+INSERT INTO journal_nom VALUES ('n3', 'n4', 1, 'MIDI LIBRE', null);
 
-INSERT INTO journal_directeur VALUES ('journal_id1', 'journal_directeur_id1', 2, null, null);
-INSERT INTO journal_directeur_nom VALUES ('journal_directeur_id1', 'journal_directeur_nom_id1', 1, 'Nguyen', null);
-INSERT INTO journal_directeur_prenom VALUES ('journal_directeur_id1', 'journal_directeur_prenom_id1', 2, 'Huu Khang', null);
+INSERT INTO journal_directeur VALUES ('n3', 'n5', 2, null, null);
+INSERT INTO journal_directeur_nom VALUES ('n5', 'n7', 1, 'Nguyen', null);
+INSERT INTO journal_directeur_prenom VALUES ('n5', 'n8', 2, 'Huu Khang', null);
 
-INSERT INTO journalistes VALUES ('press_id1', 'journalistes_id1', 2, null, null);
+INSERT INTO journalistes VALUES ('n1', 'n2', 2, null, null);
 
-INSERT INTO journaliste VALUES ('journalistes_id1', 'journaliste_id1', 1, null, null);
-INSERT INTO journaliste_id VALUES ('journaliste_id1', 'journaliste_id1', 1, null, 1);
-INSERT INTO journaliste_anonymisation VALUES ('journaliste_id1', 'journaliste_anonymisation_id1', 2, 'oui', null);
-INSERT INTO journaliste_nom VALUES ('journaliste_id1', 'journaliste_nom_id1', 3, 'Tran', null);
-INSERT INTO journaliste_prenom VALUES ('journaliste_id1', 'journaliste_prenom_id1', 4, 'My', null);
+INSERT INTO journaliste VALUES ('n2', 'n12', 1, null, null);
+INSERT INTO journaliste_id VALUES ('n12', 'n13', 1, null, 1);
+INSERT INTO journaliste_anonymisation VALUES ('n12', 'n14', 2, 'oui', null);
+INSERT INTO journaliste_nom VALUES ('n12', 'n15', 3, 'Tran', null);
+INSERT INTO journaliste_prenom VALUES ('n12', 'n16', 4, 'My', null);
 
-INSERT INTO journaliste VALUES ('journalistes_id1', 'journaliste_id2', 2, null, null);
-INSERT INTO journaliste_id VALUES ('journaliste_id2', 'journaliste_id2', 1, null, 2);
-INSERT INTO journaliste_anonymisation VALUES ('journaliste_id2', 'journaliste_anonymisation_id2', 2, 'non', null);
-INSERT INTO journaliste_nom VALUES ('journaliste_id2', 'journaliste_nom_id2', 3, 'Anas', null);
-INSERT INTO journaliste_prenom VALUES ('journaliste_id2', 'journaliste_prenom_id2', 4, 'Strike', null);
-
-INSERT INTO journaliste VALUES ('journalistes_id1', 'journaliste_id3', 3, null, null);
-INSERT INTO journaliste_id VALUES ('journaliste_id3', 'journaliste_id3', 1, null, 3);
-INSERT INTO journaliste_anonymisation VALUES ('journaliste_id3', 'journaliste_anonymisation_id3', 2, 'non', null);
-INSERT INTO journaliste_nom VALUES ('journaliste_id3', 'journaliste_nom_id3', 3, 'Monkey D', null);
-INSERT INTO journaliste_prenom VALUES ('journaliste_id3', 'journaliste_prenom_id3', 4, 'Luffy', null);
-
-INSERT INTO journal_article VALUES ('journal_id1', 'journal_article_id1', 3, null, null);
-INSERT INTO journal_article_titre VALUES ('journal_article_id1', 'journal_article_titre_id1', 1, 'Voici le titre', null);
-INSERT INTO journal_article_auteur VALUES ('journal_article_id1', 'journaliste_id1', 2, null, null);
-INSERT INTO journal_article_corps VALUES ('journal_article_id1', 'journal_article_corps_id1', 3, 'Ceci est le corps', null);
+INSERT INTO journal_article VALUES ('n3', 'n6', 3, null, null);
+INSERT INTO journal_article_titre VALUES ('n6', 'n9', 1, 'Voici le titre1', null);
+INSERT INTO journal_article_auteur VALUES ('n6', 'n10', 2, null, null);
+INSERT INTO journal_article_corps VALUES ('n6', 'n11', 3, 'Ceci est le corps', null);
 
 INSERT INTO journal_article VALUES ('journal_id1', 'journal_article_id2', 4, null, null);
-INSERT INTO journal_article_titre VALUES ('journal_article_id2', 'journal_article_titre_id2', 1, 'Voici le titre', null);
+INSERT INTO journal_article_titre VALUES ('journal_article_id2', 'journal_article_titre_id2', 1, 'Voici le titre2', null);
 INSERT INTO journal_article_auteur VALUES ('journal_article_id2', 'journaliste_id2', 2, null, null);
 INSERT INTO journal_article_corps VALUES ('journal_article_id2', 'journal_article_corps_id2', 3, 'Ceci est le corps', null);
 
-
-
-/* 1.3 */
-
-
+/* Monet DB */
+INSERT INTO presse VALUES ('n1', null, null);
+INSERT INTO presse_journalistes VALUES ('n2', null, null);
+INSERT INTO presse_journalistes_journaliste VALUES('n3', null, null);
+INSERT INTO presse_journalistes_journaliste_id VALUES('n4', null, 1);
+INSERT INTO presse_journalistes_journaliste_anonymisation VALUES('n6', 'oui', null);
+INSERT INTO presse_journalistes_journaliste_nom VALUES('n8', 'TRAN', null);
+INSERT INTO presse_journalistes_journaliste_prenom VALUES('n10', 'MY', null);
+INSERT INTO presse_journal VALUES('n12', null, null);
+INSERT INTO presse_journal_nom VALUES('13', 'MIDI LIBRE', null);
+INSERT INTO presse_journal_directeur VALUES('n15', null, null);
+INSERT INTO presse_journal_directeur_nom VALUES('n16', 'NGUYEN', null);
+INSERT INTO presse_journal_directeur_prenom VALUES('n18', 'KHANG', null);
+INSERT INTO presse_journal_article_titre VALUES('n20', 'VOici le titre', null);
+INSERT INTO presse_journal_article_auteur VALUES('n22', null, 1);
+INSERT INTO presse_journal_article_corps VALUES('n24', 'Voici le corps', null);
 
