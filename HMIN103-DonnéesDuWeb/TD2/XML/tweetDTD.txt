@@ -1,0 +1,42 @@
+<!DOCTYPE tweeter[
+    <!ELEMENT tweeter(tweet, utilisateur)*>
+    
+    <!ELEMENT tweet (corps, url, OS, posGeo, Date, retweet, auteur)>
+    <!ATTLIST tweet id ID required>
+    <!ELEMENT corps (message, hashtags, references, taille, type, langue, couleur)>
+    <!ELEMENT url (PCDATA)>
+    <!ELEMENT OS (PCDATA)>
+    <!ELEMENT posGeo ( pays, ville, coordonnees)>
+    <!ELEMENT date (fuseauHoraire, PCDATA)>
+    <!ELEMENT retweet (PCDATA)>
+    <!ELEMENT auteur (lien)>
+
+    <!ELEMENT message (PCDATA)>
+    <!ELEMENT hashtags (hashtag)*>
+    <!ELEMENT hashtag (PCDATA)>
+    <!ELEMENT references (reference)>
+    <!ATTLIST reference idref required>
+    <!ELEMENT taille (PCDATA)>
+    <!ELEMENT type (PCDATA)>
+    <!ELEMENT langue (PCDATA)>
+    <!ELEMENT couleur (PCDATA)>
+
+    <!ELEMENT pays (PCDATA)>
+    <!ELEMENT ville (PCDATA)>
+    <!ELEMENT coordonnees (PCDATA)>
+    
+    <!ELEMENT fuseauHoraire (PCDATA)>
+
+    <!ELEMENT retweet (PCDATA)>
+
+    <!ATTLIST auteur idref ID required>
+    <!ELEMENT lien (PCDATA)>
+
+    <!ELEMENT utilisateur (nom, description, photo, nbfollowers, nbfollowed)>
+    <!ATTLIST utilisateur id ID required>
+    <!ELEMENT nom (PCDATA)>
+    <!ELEMENT description (PCDATA)>
+    <!ELEMENT photo (PCDATA)>
+    <!ELEMENT nbfollowers (PCDATA)>
+    <!ELEMENT nbfollowed (PCDATA)>
+]>
