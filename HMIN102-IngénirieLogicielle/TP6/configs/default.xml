@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="Graph"/>
+	<feature automatic="selected" name="Node"/>
+	<feature manual="selected" name="boxShapeRect"/>
+	<feature manual="selected" name="eclipseShape"/>
+	<feature automatic="selected" name="Edge"/>
+	<feature manual="selected" name="simpleLine"/>
+	<feature automatic="unselected" name="arrow"/>
+	<feature automatic="unselected" name="filledArrow"/>
+	<feature name="Color"/>
+	<feature name="red"/>
+	<feature name="green"/>
+	<feature automatic="unselected" name="oriented"/>
+</configuration>
