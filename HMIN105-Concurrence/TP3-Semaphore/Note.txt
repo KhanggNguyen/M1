@@ -1,0 +1,4 @@
+1) Il est nécessaire d'avoir une exclusion mutuelle  entre l'ensemble des processus car on a besoin de savoir le nombre de place restant pour pouvoir laisser rentrer les voitures et d'incrementer ainsi que de décrémenter en cas sortie de la voiture.
+
+2) 
+

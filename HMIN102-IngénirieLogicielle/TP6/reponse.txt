@@ -1,0 +1,12 @@
+Q4: ce sont les features node et edge.
+
+Q5: exemple node => color. ça detecte un faux optionnel
+
+Q6: exemple node => arrow. ça detecte une dead feature
+
+Q7: 
+Node : 3 ( boxShape, eclipseShape, boxShape ^ EclipseShape) 
+Color : 4 (R, V, RV, vide)
+Oriented/edge : 3 (Oriented^Arrow, oriented ^ filledArrow, non(oriented) ^ simpleLine)
+
+-> 3 * 3 * 4 = 36 configurations possibles
