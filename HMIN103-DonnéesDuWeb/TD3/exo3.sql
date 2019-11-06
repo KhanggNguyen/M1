@@ -66,8 +66,8 @@ SELECT EXTRACT (colonne_xml, '/tweet[corps/hashtags/hashtag[contains(., "#heheXD
 
 SELECT XMLQUERY ('for $x in //tweet return ($x, //utilisateur[@id = $x/auteur/@idref])' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
 SELECT XMLQUERY ('for $x in //utilisateur order by $x return $x' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
-SELECT XMLQUERY ('for $x in //tweet where $x/corps/hashtags/hashtag/text() = "#heheXD!" return $x' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
-SELECT XMLQUERY ('' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
-SELECT XMLQUERY ('' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
+SELECT XMLQUERY ('let $y := min(//tweet/Date/text()) return $y' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
+SELECT XMLQUERY ('for $x in //tweet let $y := /$x/corps/hashtags return ($x, $y)' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
+SELECT XMLQUERY ('for $x in //tweet return ($x, //utilisateur[@id = $x/auteur/@idref])' PASSING colonne_xml RETURNING CONTENT) FROM tweeter_table_clob;
 
 
