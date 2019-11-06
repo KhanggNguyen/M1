@@ -1,215 +1,184 @@
-breed [vaches vache]
-breed [taureaux taureau]
-breed [lions lion]
+breed [cows cow]
+breed [wolfs wolf]
 
-patches-own [pcpt-temps pcpt-temps-init ptaille-plante pctask]
+cows-own[
+  ctask
+  energy
+  avoir-peur
+  enfant
+]
 
-turtles-own [ctask energie]
+wolfs-own[
+  wtask
+]
+
+patches-own[
+  grass cpt
+]
 
 to setup
   clear-all
 
   ask patches [
-    set pcpt-temps-init 1 + random temps-croissance-max
-    set pcpt-temps pcpt-temps-init
-    set ptaille-plante 0
-    set pcolor black
-    set pctask "desert"
+   set grass max-size-grass
+   set cpt random cpt-max
+   set pcolor green
   ]
 
-  create-vaches nb-vaches [
-    set shape "cow"
-    set color white
-    setxy random-xcor random-ycor
-    set size 1
-    set energie 10
-    set ctask "cherche-taureau"
+  create-wolfs nb-wolf-init [
+   set shape "wolf"
+   set color gray
+   set size 6
+   setxy random-xcor random-ycor
+    set wtask "hunt"
   ]
 
-  create-taureaux nb-taureaux [
-    set shape "cow"
-    set color brown
-    setxy random-xcor random-ycor
-    set size 1
-    set ctask word "wiggle " 2
-  ]
-
-  create-lions nb-lions [
-    set shape "wolf"
-    set color red
-    setxy random-xcor random-ycor
-    set size 1
-    set energie 10
-    set ctask "cherche-vache"
+  create-cows nb-cow-init [
+   set shape "cow skull"
+   set energy random energy-init
+   set enfant random pourcentage-enfant
+   set-size
+   setxy random-xcor random-ycor
+   set ctask "regroup"
   ]
 
   reset-ticks
 end
 
 to go
-  ask patches [run pctask]
+  ask patches [grow-grass]
 
-  ask taureaux [run ctask]
-
-  ask vaches [
+  ask cows [
+    decide
     run ctask
-    set energie energie - 1
-    if random 100 <= reproduction-vaches [
-      reproduit-toi
-    ]
-    if energie <= 0 [
-      die
-    ]
   ]
 
-  ask lions [
-    run ctask
-    set energie energie - 1
-    if random 100 <= reproduction-lions [
-      reproduit-toi
-    ]
-    if energie <= 0 [
-      die
-    ]
+  ask wolfs [
+   hunt
   ]
 
   tick
-  update-plots
 end
 
-;; HERBE
+;;cows
+to wiggle
+  lt random 10
+  rt random 10
+  fd 0.2
+  set ctask "regroup"
+end
 
-to desert
-  ifelse pcpt-temps > 0 [
-    set pcpt-temps pcpt-temps - 1
-  ][
-    set pcpt-temps pcpt-temps-init
-    set ptaille-plante ptaille-plante + 1
-    set pcolor scale-color green ptaille-plante 0 taille-plante-max
-    set pctask "prairie"
+to regroup
+  let c other cows in-radius vision
+  ifelse any? c
+  [
+    let c2 one-of c
+    ifelse distance c2 < distinct-min
+    [
+      set ctask "wiggle"
+    ]
+    [
+      face c2
+      fd 0.2
+    ]
+  ]
+  [
+    set ctask "wiggle"
   ]
 end
 
-to prairie
-  ifelse pcpt-temps > 0 [
-    set pcpt-temps pcpt-temps - 1
-  ][
-    set pcpt-temps pcpt-temps-init
-    set ptaille-plante ptaille-plante + 1
-    set pcolor scale-color green ptaille-plante 0 taille-plante-max
-    if ptaille-plante >= taille-plante-max [
-      set pctask "prairie-decroissance"
+to set-size
+  ifelse enfant = 1
+  [
+   set size 2
+   set color white
+  ]
+  [
+    set size 5
+    set color brown
+  ]
+end
+
+
+to decide
+  set energy energy - consomme-energy
+  ifelse energy < energy-min
+  [
+    ifelse energy = 0
+    [
+      die
+    ]
+    [set ctask "food-mission"]
+  ]
+  [
+    set ctask "regroup"
+  ]
+end
+
+to food-mission
+  ifelse grass > consomme-herbe
+  [
+    set grass grass - consomme-herbe
+    set energy energy + consomme-herbe
+    lt random 10
+    rt random 10
+    fd 0.2
+  ]
+  [
+    set grass 0
+    set energy energy + grass
+    lt random 10
+    rt random 10
+    fd 0.2
+  ]
+  ifelse energy <= energy-max
+  [
+   set ctask "regroup"
+  ]
+  [
+    set ctask "food-mission"
+  ]
+end
+
+;;grass
+to grow-grass
+  set cpt cpt - 1
+  if cpt <= 0
+  [
+   if grass < max-size-grass
+    [
+     set grass grass + 1
+     set pcolor scale-color green grass 0 150
+     set cpt random cpt-max
     ]
   ]
 end
 
-to prairie-decroissance
-  ifelse pcpt-temps > 0 [
-    set pcpt-temps pcpt-temps - 1
-  ][
-    set pcpt-temps pcpt-temps-init
-    set ptaille-plante ptaille-plante - 1
-    set pcolor scale-color green ptaille-plante 0 taille-plante-max
-    if ptaille-plante <= 0 [
-      set pctask "desert"
+;wolf
+to hunt
+  lt random 10
+  rt random 10
+  fd 0.2
+  let c cows in-radius vision-wolf
+  if any? c
+  [
+    let c2 min-one-of c [distance myself]
+    if [enfant] of c2 = 1
+    [
+      face c2
+      ask c2 [set pcolor red die]
     ]
-  ]
-end
-
-;; vache
-
-to wiggle [spd]
-  rt random 50
-  lt random 50
-  fd spd
-end
-
-to broute
-  set ptaille-plante ptaille-plante - consommation-vache
-  set energie energie + gain-brouter
-end
-
-to-report herbe-ici?
-  report ptaille-plante > 0
-end
-
-to reproduit-toi
-  hatch 1
-  if energie != 0 [
-    set energie energie / 2
-  ]
-end
-
-to cherche-taureau
-  let t one-of taureaux in-radius champ-vision-vache
-  ifelse t != nobody [
-    set heading towards t
-    fd 1
-    set ctask word "suis-taureau " t
-  ][
-    if herbe-ici? [
-      broute
-    ]
-    wiggle 1
-  ]
-end
-
-to suis-taureau [t]
-  if herbe-ici? [
-    broute
-  ]
-  set heading towards t
-  fd 1
-end
-
-;;lion
-
-to devore [v]
-  ask v [die]
-  set energie energie + gain-devorer
-end
-
-to-report is-here? [agent]
-  report agent != nobody and member? agent other turtles-here
-end
-
-to cherche-vache
-  let v one-of vaches in-radius champ-vision-lion
-  ifelse v != nobody [
-    ifelse is-here? v [
-      devore v
-    ][
-      set heading towards v
-      fd 1
-      set ctask word "attaque-vache " v
-    ]
-  ][
-    wiggle 1
-  ]
-end
-
-to attaque-vache [v]
-  ifelse v != nobody [
-    ifelse is-here? v [
-      ask v [die]
-      set energie energie + gain-devorer
-    ][
-      set heading towards v
-      fd 2
-    ]
-  ][
-    set ctask "cherche-vache"
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-647
-448
+220
+12
+732
+525
 -1
 -1
-13.0
+5.0
 1
 10
 1
@@ -219,86 +188,21 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+-50
+50
+-50
+50
 0
 0
 1
 ticks
 30.0
 
-PLOT
-0
-0
-0
-0
-plot 1
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles"
-
-SLIDER
-666
-47
-884
-80
-temps-croissance-max
-temps-croissance-max
-0
-10.0
-1.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-672
-173
-847
-206
-taille-plante-max
-taille-plante-max
-50
-200
-50.0
-1
-1
-NIL
-HORIZONTAL
-
 BUTTON
-5
-52
-78
-85
-NIL
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-109
-52
-172
-85
+99
+33
+162
+66
 NIL
 go
 T
@@ -312,74 +216,61 @@ NIL
 1
 
 SLIDER
-672
-317
-844
-350
-nb-vaches
-nb-vaches
+753
+10
+925
+43
+nb-cow-init
+nb-cow-init
 0
 400
-50.0
+61.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-668
-121
-881
-154
-reproduction-vaches
-reproduction-vaches
-1
+752
+67
+924
 100
-1.0
-1
-1
-%
-HORIZONTAL
-
-SLIDER
-672
-248
-882
-281
-consommation-vache
-consommation-vache
+vision
+vision
 0
 10
-1.0
+10.0
 1
 1
 NIL
 HORIZONTAL
 
-SLIDER
-1059
-316
-1231
-349
-nb-taureaux
-nb-taureaux
-1
-40
-1.0
-1
-1
+BUTTON
+7
+37
+80
+70
+setup
+setup
 NIL
-HORIZONTAL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 SLIDER
-669
-433
-866
-466
-champ-vision-vache
-champ-vision-vache
-1
+943
+67
+1115
 100
+distinct-min
+distinct-min
+0
+10
 5.0
 1
 1
@@ -387,12 +278,87 @@ NIL
 HORIZONTAL
 
 SLIDER
-676
-375
-848
-408
-gain-brouter
-gain-brouter
+944
+10
+1116
+43
+energy-init
+energy-init
+0
+500
+500.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1188
+142
+1370
+175
+consomme-herbe
+consomme-herbe
+0
+100
+100.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+753
+117
+925
+150
+cpt-max
+cpt-max
+0
+100
+57.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1032
+350
+1204
+383
+max-size-grass
+max-size-grass
+0
+500
+232.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1270
+218
+1459
+251
+consomme-energy
+consomme-energy
+0
+100
+30.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+880
+289
+1052
+322
+energy-min
+energy-min
 0
 100
 50.0
@@ -402,100 +368,75 @@ NIL
 HORIZONTAL
 
 SLIDER
-867
-375
-1039
-408
-gain-devorer
-gain-devorer
+869
+429
+1041
+462
+energy-max
+energy-max
 0
-100
-50.0
+500
+245.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-895
-432
-1075
-465
-champ-vision-lion
-champ-vision-lion
-3
-20
-4.0
+761
+181
+963
+214
+pourcentage-enfant
+pourcentage-enfant
+0
+10
+10.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-936
-121
-1141
-154
-reproduction-lions
-reproduction-lions
+117
+603
+289
+636
+nb-wolf-init
+nb-wolf-init
 0
-100
-1.0
+10
+2.0
 1
 1
-%
+NIL
 HORIZONTAL
+
+MONITOR
+9
+282
+96
+327
+NIL
+count cows
+17
+1
+11
 
 SLIDER
-863
-316
-1035
-349
-nb-lions
-nb-lions
+999
+132
+1171
+165
+vision-wolf
+vision-wolf
 0
-100
-5.0
+10
+3.0
 1
 1
 NIL
 HORIZONTAL
-
-PLOT
-24
-489
-224
-639
-Qté Herbe
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"Herbe" 1.0 0 -15040220 true "" "plot sum [ptaille-plante] of patches"
-
-PLOT
-247
-489
-447
-639
-Qté vaches + taureaux
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"vahces + tauraux" 1.0 0 -16777216 true "" "plot count vaches + count taureaux"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -607,6 +548,16 @@ false
 Polygon -7500403 true true 200 193 197 249 179 249 177 196 166 187 140 189 93 191 78 179 72 211 49 209 48 181 37 149 25 120 25 89 45 72 103 84 179 75 198 76 252 64 272 81 293 103 285 121 255 121 242 118 224 167
 Polygon -7500403 true true 73 210 86 251 62 249 48 208
 Polygon -7500403 true true 25 114 16 195 9 204 23 213 25 200 39 123
+
+cow skull
+false
+0
+Polygon -7500403 true true 150 90 75 105 60 150 75 210 105 285 195 285 225 210 240 150 225 105
+Polygon -16777216 true false 150 150 90 195 90 150
+Polygon -16777216 true false 150 150 210 195 210 150
+Polygon -16777216 true false 105 285 135 270 150 285 165 270 195 285
+Polygon -7500403 true true 240 150 263 143 278 126 287 102 287 79 280 53 273 38 261 25 246 15 227 8 241 26 253 46 258 68 257 96 246 116 229 126
+Polygon -7500403 true true 60 150 37 143 22 126 13 102 13 79 20 53 27 38 39 25 54 15 73 8 59 26 47 46 42 68 43 96 54 116 71 126
 
 cylinder
 false
@@ -839,7 +790,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.2
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
