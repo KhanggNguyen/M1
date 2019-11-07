@@ -77,8 +77,8 @@ public class SaxParser extends DefaultHandler {
     static final String JAXP_SCHEMA_SOURCE =
         "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
-    /** A Hashtable with tag names as keys and Integers as values */
-    private Hashtable tags;         
+    /** A Hashtable with tag names as keys and Integers as values */    
+    private Hashtable tags;        
     private boolean bdtexte = false;
     private String [] tabDescriptionTexte = new String [3];  
     private boolean bctexte = false;
@@ -98,8 +98,6 @@ public class SaxParser extends DefaultHandler {
                              String qName, Attributes atts)
 	throws SAXException
     {
-        System.out.println("starting an element "+localName);
-
         if(qName.equalsIgnoreCase("dtexte")){
             bdtexte = true;
             tabDescriptionTexte[0] = atts.getValue("begin");
@@ -138,7 +136,6 @@ public class SaxParser extends DefaultHandler {
     
     // Parser calls this once after parsing a document
     public void endDocument() throws SAXException {
-            System.out.println("Bye bye");
     }
 
     // Parser calls after parsing a text node
