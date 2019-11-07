@@ -79,6 +79,10 @@ public class SaxParser extends DefaultHandler {
 
     /** A Hashtable with tag names as keys and Integers as values */
     private Hashtable tags;
+    private boolean bdtexte = false;
+    private boolean bctexte = false;
+    private boolean bptexte = false;
+    private boolean bnptexte = false;
 
     // Parser calls this once at the beginning of a document
     public void startDocument() throws SAXException {
@@ -90,7 +94,11 @@ public class SaxParser extends DefaultHandler {
                              String qName, Attributes atts)
 	throws SAXException
     {
-    	System.out.println("starting an element "+localName);
+        System.out.println("starting an element "+localName);
+        if(qName.equalsIgnoreCase("dtexte")) bdtexte = true;
+        if(qName.equalsIgnoreCase("ctexte")) bctexte = true;
+        if(qName.equalsIgnoreCase("ptexte")) bptexte = true;
+        if(qName.equalsIgnoreCase("nptexte")) bnptexte = true;
     }
     
     // Parser calls this for each end of an element in a document
@@ -98,25 +106,45 @@ public class SaxParser extends DefaultHandler {
                              String qName)
 	throws SAXException
     {
-    	System.out.println("ending an element "+localName);
-    	
+        if(qName.equalsIgnoreCase("etage")){
+            System.out.println("ending an element "+qName);
+        }else if(qName.equalsIgnoreCase("description")){
+            System.out.println("ending an element "+qName);
+        }else if(qName.equalsIgnoreCase("bureau")){
+            System.out.println("ending an element "+qName);
+        }else if(qName.equalsIgnoreCase("salle")){
+            System.out.println("ending an element "+qName);
+        }else if(qName.equalsIgnoreCase("code")){
+            System.out.println("ending an element "+qName);
+        }else if(qName.equalsIgnoreCase("personne")){
+            System.out.println("ending an element "+qName);
+        }else if(qName.equalsIgnoreCase("nombrePlaces")){
+            System.out.println("ending an element "+qName);
+        }
+    	    
     }
     
     // Parser calls this once after parsing a document
     public void endDocument() throws SAXException {
-        
             System.out.println("Bye bye");
-        
     }
 
     // Parser calls after parsing a text node
     public void characters(char[] ch, int start, int length) throws SAXException
     {
-            
-            String str = new String(ch, start, length);
-            
-            System.out.println(str);
-
+        if(bptexte){
+            System.out.println("Personne Texte : " + new String(ch, start, length));
+            bptexte = false;
+        }else if (bdtexte){
+            System.out.println("Description Texte : " + new String(ch, start, length));
+            bdtexte = false;
+        }else if (bctexte){
+            System.out.println("Code Texte : " + new String(ch, start, length));
+            bctexte = false;
+        }else if (bnptexte){
+            System.out.println("Nombre Places Texte : " + new String(ch, start, length));
+            bnptexte = false;
+        }
     }
 
 	
@@ -144,7 +172,7 @@ public class SaxParser extends DefaultHandler {
     }
 
     static public void main(String[] args) throws Exception {
-        String filename = null;
+        String filename = "input.xml";
         
                 if (args.length < 1) {
                     usage();
