@@ -78,16 +78,7 @@ public class SaxParser extends DefaultHandler {
         "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
     /** A Hashtable with tag names as keys and Integers as values */
-    private Hashtable tags;
-    private String [] tabDB = new String [3];
-    private String [] tabBatiment = new String [3];
-    private String [] tabEtage = new String [3];
-    private String [] tabDescription = new String [3];
-    private String [] tabBureau = new String [3];
-    private String [] tabCode = new String [3];
-    private String [] tabPersonne = new String [3];
-    private String [] tabSalle = new String [3];
-    private String [] tabNombrePlaces = new String [3];              
+    private Hashtable tags;         
     private boolean bdtexte = false;
     private String [] tabDescriptionTexte = new String [3];  
     private boolean bctexte = false;
@@ -108,24 +99,6 @@ public class SaxParser extends DefaultHandler {
 	throws SAXException
     {
         System.out.println("starting an element "+localName);
-        /*if(qName.equalsIgnoreCase("db")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("batiment")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("etage")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("description")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("bureau")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("code")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }*/
 
         if(qName.equalsIgnoreCase("dtexte")){
             bdtexte = true;
