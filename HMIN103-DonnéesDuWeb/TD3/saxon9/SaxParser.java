@@ -55,6 +55,7 @@
  */
 
 // JAXP packages
+package sax;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
@@ -79,6 +80,19 @@ public class SaxParser extends DefaultHandler {
 
     /** A Hashtable with tag names as keys and Integers as values */
     private Hashtable tags;
+    private String [] tabDB = new String [2];  
+    private String [] tabBatiment = new String [2];  
+    private String [] tabEtage = new String [2];
+    private String [] tabDescription = new String [2];
+    private String [] tabBureau = new String [2];
+    private String [] tabCode = new String [2];
+    private String [] tabPersonne = new String [2];
+    private String [] tabSalle = new String [2];
+    private String [] tabNombrePlaces = new String [2];              
+    private boolean bdtexte = false;
+    private boolean bctexte = false;
+    private boolean bptexte = false;
+    private boolean bnptexte = false;
 
     // Parser calls this once at the beginning of a document
     public void startDocument() throws SAXException {
@@ -90,7 +104,29 @@ public class SaxParser extends DefaultHandler {
                              String qName, Attributes atts)
 	throws SAXException
     {
-    	System.out.println("starting an element "+localName);
+        System.out.println("starting an element "+localName);
+        if(qName.equalsIgnoreCase("db")){
+            tabDB[0] = atts.getValue("begin");
+            tabDB[1] = atts.getValue("end");
+        }
+        if(qName.equalsIgnoreCase("batiment")){
+            tabBatiment[0] = atts.getValue("begin");
+            tabBatiment[1] = atts.getValue("end");
+        }
+        if(qName.equalsIgnoreCase("etage")){
+            tabEtage[0] = atts.getValue("begin");
+            tabEtage[1] = atts.getValue("end");
+        }
+        if(qName.equalsIgnoreCase("description")){
+            tabDescription[0] = atts.getValue("begin");
+            tabDescription[1] = atts.getValue("end");
+        }
+        if(qName.equalsIgnoreCase("dtexte")){
+            bdtexte = true;
+        } 
+        if(qName.equalsIgnoreCase("ctexte")) bctexte = true;
+        if(qName.equalsIgnoreCase("ptexte")) bptexte = true;
+        if(qName.equalsIgnoreCase("nptexte")) bnptexte = true;
     }
     
     // Parser calls this for each end of an element in a document
@@ -98,25 +134,30 @@ public class SaxParser extends DefaultHandler {
                              String qName)
 	throws SAXException
     {
-    	System.out.println("ending an element "+localName);
-    	
+    	    
     }
     
     // Parser calls this once after parsing a document
     public void endDocument() throws SAXException {
-        
             System.out.println("Bye bye");
-        
     }
 
     // Parser calls after parsing a text node
     public void characters(char[] ch, int start, int length) throws SAXException
     {
-            
-            String str = new String(ch, start, length);
-            
-            System.out.println(str);
-
+        if(bptexte){
+            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES " + new String(ch, start, length));
+            bptexte = false;
+        }else if (bdtexte){
+            System.out.println("Description Texte : " + new String(ch, start, length));
+            bdtexte = false;
+        }else if (bctexte){
+            System.out.println("Code Texte : " + new String(ch, start, length));
+            bctexte = false;
+        }else if (bnptexte){
+            System.out.println("Nombre Places Texte : " + new String(ch, start, length));
+            bnptexte = false;
+        }
     }
 
 	
@@ -144,7 +185,7 @@ public class SaxParser extends DefaultHandler {
     }
 
     static public void main(String[] args) throws Exception {
-        String filename = null;
+        String filename = "batiment-1.xml";
         
                 if (args.length < 1) {
                     usage();
