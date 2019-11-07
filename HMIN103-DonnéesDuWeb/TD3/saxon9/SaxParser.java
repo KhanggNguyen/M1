@@ -108,24 +108,6 @@ public class SaxParser extends DefaultHandler {
 	throws SAXException
     {
         System.out.println("starting an element "+localName);
-        /*if(qName.equalsIgnoreCase("db")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("batiment")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("etage")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("description")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("bureau")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }
-        if(qName.equalsIgnoreCase("code")){
-            System.out.println("INSERT INTO NODE (begin, end, par, tag, nodtyp) VALUES (" + atts.getValue("begin") + ", " + atts.getValue("end"); + ", " + atts.getValue("par") + ", '" + localName + "', Texte);");
-        }*/
 
         if(qName.equalsIgnoreCase("dtexte")){
             bdtexte = true;
@@ -160,7 +142,7 @@ public class SaxParser extends DefaultHandler {
                              String qName)
 	throws SAXException
     {
-    	    
+        System.out.println("ending an element "+localName);
     }
     
     // Parser calls this once after parsing a document
