@@ -1,0 +1,16 @@
+[
+    {
+        "nom" : "produit1",
+        "marque" : "marqueA",
+        "categorie" : "catA",
+        "prix" : "100",
+        "qte" : "10"
+    },
+    {
+        "nom" : "produit2",
+        "marque" : "marqueB",
+        "categorie" : "catB",
+        "prix" : "1",
+        "qte" : "99"
+    }
+]

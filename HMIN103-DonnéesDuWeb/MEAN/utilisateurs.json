@@ -1,0 +1,14 @@
+[
+    {
+        "nom" : "Nguyen",
+        "prenom": "Khang",
+        "email" : "nguyen.khang@yopmail.com",
+        "mdp" : "123456"
+    },
+    {
+        "nom" : "Tran",
+        "prenom": "My",
+        "email" : "tran.my@yopmail.com",
+        "mdp" : "654321"
+    }
+]
