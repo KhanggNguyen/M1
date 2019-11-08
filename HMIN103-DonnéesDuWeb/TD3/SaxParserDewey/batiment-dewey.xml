@@ -1,0 +1,30 @@
+<db>
+    <batiment nodeID="1">
+        <etage nodeID="1.1">
+            <description nodeID="1.1.1">
+                <dtexte nodeID="1.1.1.1">
+                    RDC
+                </dtexte>
+            </description>
+            <bureau nodeID="1.1.2">
+                <code nodeID="1.1.2.1">
+                    <ctexte nodeID="1.1.2.1.1">
+                        123
+                    </ctexte>
+                </code>
+                <personne nodeID="1.1.2.2">
+                    <ptexte nodeID="1.1.2.2.1">
+                        TRAN M1
+                    </ptexte>
+                </personne>
+            </bureau>
+            <salle nodeID="1.1.3">
+                <nombrePlaces nodeID="1.1.3.1">
+                    <nptexte nodeID="1.1.3.1.1">
+                        20
+                    </nptexte>
+                </nombrePlaces>
+            </salle>
+        </etage>
+    </batiment>
+</db>
