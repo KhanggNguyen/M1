@@ -66,12 +66,14 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
         try{
             db.collection("membres").find(req.body).toArray((err, documents) => {
                 if (documents.length == 1){
-                    res.end(JSON.stringify())
+                    
                 }
             })
+        }catch(e){
+            console.log("Erreur sur /membre/connexion : " + e);
+            res.end(JSON.stringify([]));
         }
-    })
-
+    });
 });
 
 app.listen(8888);
