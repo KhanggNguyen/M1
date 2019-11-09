@@ -49,7 +49,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
         try{
             db.collection("produits").find().toArray((err, documents) => {
                 for (let doc of documents){
-                    if (!categories.includes(doc.type)) categories.push(doc.type);
+                    if (!cateogires.includes(doc.type)) categories.push(doc.type);
                 }
                 console.log("Renvoi de" + JSON.stringify(categories));
                 res.end(JSON.stringify(categories));
