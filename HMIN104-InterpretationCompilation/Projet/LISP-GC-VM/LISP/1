@@ -50,9 +50,45 @@
             (list (car ll))
             (cons (car ll) (COPYLIST (cdr ll)) ))))
 
-(defun REMOVE (x ll)
+(defun REMOVE-X (x ll)
     (if (atom ll)
         ll
         (if (eql x (car ll))
-            (cons (car ll) (REMOVE (cdr ll)) )
-            (REMOVE (cdr ll)) )))
+            (REMOVE-X x (cdr ll))
+            (let ((rest (REMOVE-X x (cdr ll))))
+            (if (eq rest (cdr ll))
+                ll
+            (cons (car ll) rest ))))))
+
+//remove 1st occ only
+(defun REMOVE-X (x ll)
+    (if (atom ll)
+        ll
+        (if (eql x (car ll))
+            (cdr ll)
+            (let ((rest (REMOVE-X x (cdr ll))))
+            (if (eq rest (cdr ll))
+                ll
+            (cons (car ll) rest ))))))
+
+(defun append-l (l1 l2)
+    (if (null l2)
+        l1
+        (if (null l1) 
+            l2
+        (cons (car l1) (append-l (cdr l1) l2)))))
+
+//??
+(defun adjoin-l (x l)
+    (if (null l)
+        '(x)
+        (if (eql x (car l))
+            l
+            (if (eql nil (cdr l))
+                (cons x l)
+                (adjoin-l x (cdr l))))))
+
+(defun size (tree)
+    (if (null tree)
+        0
+        (+1 size (cdr tree)) ))
