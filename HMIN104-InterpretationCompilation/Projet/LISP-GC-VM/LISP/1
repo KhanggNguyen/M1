@@ -1,0 +1,58 @@
+2)
+(defun FACT (n) (if (= n 0) 1 (* n (FACT (- n 1)))))
+(defun FIBO (n) (if (<= n 2) 1 ( + (FIBO (- n 1)) (FIBO (- n 2)))))
+
+3) 
+(cons 1 '(2 3 4))
+(cons 1 (cons '(2 3) '(4))) 
+(cons 1 (cons '(2) (cons '(3) '(4))))
+
+4)
+(defun MEMBER? (x ll) 
+    (if (atom ll) 
+        nil 
+        (if (eql x (car ll)) 
+            ll 
+            (MEMBER? x (cdr ll)))))
+
+(defun LENGTH? (ll)
+    (if (atom ll)
+        0
+        (+ 1 (LENGTH? (cdr ll)))))
+
+(defun LAST? (ll)
+    (if (atom ll)
+        nil
+        (if (eql nil (car (cdr ll)))
+            ll 
+            (LAST? (cdr ll)))))
+( 1 2 3 4 5)
+//decroissant
+(defun MAKELIST (n)
+    (if (< n 1)
+        nil
+        (if (= n 1)
+            '(1)
+            (cons n (MAKELIST (- n 1)) ))))
+
+//croissant
+(defun MAKELIST (n)
+    (if (< n 1)
+        nil
+        (if (= n 1)
+            (list 1)
+            (append (MAKELIST (- n 1)) (list n) ))))
+
+(defun COPYLIST (ll)
+    (if (atom ll)
+        ll
+        (if (eql nil (cdr ll)) 
+            (list (car ll))
+            (cons (car ll) (COPYLIST (cdr ll)) ))))
+
+(defun REMOVE (x ll)
+    (if (atom ll)
+        ll
+        (if (eql x (car ll))
+            (cons (car ll) (REMOVE (cdr ll)) )
+            (REMOVE (cdr ll)) )))
