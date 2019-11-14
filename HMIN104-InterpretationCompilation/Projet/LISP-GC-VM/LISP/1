@@ -89,6 +89,22 @@
                 (adjoin-l x (cdr l))))))
 
 (defun size (tree)
-    (if (null tree)
+    (if (atom tree)
         0
-        (+1 size (cdr tree)) ))
+        (+ 1 (size (car tree)) (size (cdr tree)) )))
+
+(defun copytree (tree) 
+    (if (atom tree) 
+        nil 
+        (cons (car tree) (cdr tree)))
+)
+
+(defun subst-t (x y tree &rest x)
+    (if (atom tree) 
+        tree
+        (let ((a (apply #'subst-t x y (car tree) y))
+            (d (apply #'subst-t x y (cdr tree) x)))
+            (if (and (eql a (car tree))
+                    (eql d (cdr tree)))
+                tree
+                (cons a d))))))
