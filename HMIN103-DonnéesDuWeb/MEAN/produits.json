@@ -2,14 +2,14 @@
     {
         "nom" : "produit1",
         "marque" : "marqueA",
-        "categories" : "catA",
+        "type" : "catA",
         "prix" : "100",
         "qte" : "10"
     },
     {
         "nom" : "produit2",
         "marque" : "marqueB",
-        "categories" : "catB",
+        "type" : "catB",
         "prix" : "1",
         "qte" : "99"
     }
