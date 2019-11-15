@@ -1,4 +1,0 @@
-1) créer fichiers json
-2) créer scripts import db
-3) créer serveur : service web simple
-pour l'instant que get / pas de post
