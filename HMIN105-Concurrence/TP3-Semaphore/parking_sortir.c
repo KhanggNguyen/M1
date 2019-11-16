@@ -47,16 +47,16 @@ int main() {
         error = semop(sem_id, op, 1);
         WARN_ERROR(error);  
 
-        int* nb_places = (int*)shmat(key, NULL, SHM_W);
+        int* nb_places = (int*)shmat(sh_id, NULL, SHM_W);
         WARN_IF(*nb_places == -1);
 
-        if (*nb_places > 0) {
+        if (*nb_places < 20) {
             printf("Demande accepté\n");
             (*nb_places)++;
             //printf("Impression ticket\n");
-            printf("Nombre de place restante : %d", (*nb_places));
+            printf("Nombre de place restante : %d\n", (*nb_places));
         } else {
-            printf("Pas de place");
+            printf("Plus de voiture");
         }
 
         error = semop(sem_id, op+1, 1);

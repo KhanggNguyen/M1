@@ -44,7 +44,7 @@ int main(){
 
         error = semop(sem_id, op, 1); WARN_ERROR(error);
 
-        int* nb_places = (int*)shmat(key, NULL, SHM_W);
+        int* nb_places = (int*)shmat(sh_id, NULL, 0);
         WARN_IF(*nb_places == -1);
 
         if (*nb_places > 0) {
