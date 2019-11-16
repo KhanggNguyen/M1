@@ -103,7 +103,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
         }
     });
 
-    /* panier */
+    /* ajout dans panier */
 
     /* rechercher */
 
