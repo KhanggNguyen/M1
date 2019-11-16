@@ -34,7 +34,7 @@ end
 
 to-report rocket-launcher-t1-action
   ;; to be written 
-  report "idle"
+  report runresult ctask
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BASE BEHAVIOR ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,11 +47,13 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;EXPLORER STATES;;;;;;;;
 to-report decide-explorer
-  let spotted-food percepts with [is-food? self]
   if blocked?[
     set-random-heading
   ]
-  if any? spotted-food [
+  
+  let spotted-food percepts with [is-food? self]
+  let hit-food spotted-food with [is-colliding? myself]
+  ifelse any? spotted-food [
     ifelse empty-bag? [
       set ctask "recherche-nourriture"
     ]
@@ -59,7 +61,17 @@ to-report decide-explorer
       set ctask "retourne-base"
     ]
   ]
+  [
+    if energy <= rocket-damage and not empty-bag? [
+      set ctask "regenerer-energy-explorer"
+    ] 
+  ]
   report "move"
+end
+
+to-report regenerer-energy-explorer
+  set ctask "decide-explorer"
+  report "eat"
 end
 
 to-report recherche-nourriture
@@ -99,25 +111,32 @@ end
 
 ;;;;;;;;;;;;;;;;;;; ROCKET-LAUNCHER STATES
 to-report decide-rocket-launcher
-  if blocked? 
+  ifelse blocked? 
   [
     set-random-heading
   ]
-  
-  if (get-energy self < rocket-damage and not empty-bag?)
   [
-    set ctask "regenerer-energy"
-  ]
-  
-  if (get-rocket-number = 0 and get-energy self > rocket-cost) 
-  [
-    set ctask "generer-rocket"
-  ]
-  
-  let enemy-base one-of percepts with [is-base? self and is-my-enemy? myself]
-  let my-base one-of get-bases
-  if (enemy-base != nobody and my-base != nobody) [
-    set ctask "attack"
+    ifelse (get-energy self < rocket-damage and not empty-bag?)
+    [
+      set ctask "regenerer-energy"
+    ]
+    [
+      ifelse (get-rocket-number = 0 and get-energy self > rocket-cost) 
+      [
+        set ctask "generer-rocket"
+      ]
+      [
+        let target min-one-of percepts with [not is-rocket? self and not is-food? self and is-my-enemy? myself] [get-energy self]
+        ifelse (target != nobody and get-rocket-number > 0)[
+          set ctask "attack"
+        ]
+        [
+          if (random 5 = 1) [
+            set ctask "bouger"
+          ]
+        ]
+      ]
+    ]
   ]
   
   report "move"
@@ -125,7 +144,7 @@ end
 
 to-report generer-rocket 
   set ctask "decide-rocket-launcher"
-  report "build_rocket"
+  report "build-rocket"
 end
 
 to-report regenerer-energy
@@ -134,14 +153,25 @@ to-report regenerer-energy
 end
 
 to-report attack
-  let enemy-base one-of percepts with [is-base? self and is-my-enemy? myself]
-  let my-base one-of get-bases
+  while [not empty? incoming-queue]
+    [let msg get-message
+      if (get-performative msg) = "attack"
+      [ if show-messages [show (sentence "received message: " msg)]
+        set-heading get-heading-to-sender msg
+        report "move"
+      ]
+    ]
+  
   set ctask "decide-rocket-launcher"
-  report list "launch-rocket" towards enemy-base 
+  let target min-one-of percepts with [not is-rocket? self and not is-food? self and is-my-enemy? myself] [get-energy self]
+  if(target != nobody and get-rocket-number > 0)[
+    report list "launch-rocket" towards target
+  ]
+  report "idle"
 end
 
 to-report bouger
-  if (random 5 = 1) [
-    set-heading (heading + 0.1 * ((random-float 1) - 1)) 
-  ]
+  set-heading (heading + 0.1 * ((random-float 1) - 1))
+  set ctask "decide-rocket-launcher"
+  report "move"
 end   
