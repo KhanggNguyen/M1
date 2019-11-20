@@ -15,7 +15,6 @@ to-report initial-state
    set ctask "decide-rocket-launcher" 
   ]
   
-  
   report "idle"
 end
 
@@ -52,9 +51,8 @@ to-report decide-explorer
   ]
   
   let spotted-food percepts with [is-food? self]
-  let hit-food spotted-food with [is-colliding? myself]
   ifelse any? spotted-food [
-    ifelse empty-bag? [
+    ifelse not full-bag? [
       set ctask "recherche-nourriture"
     ]
     [
@@ -78,7 +76,6 @@ to-report recherche-nourriture
   let spotted-food percepts with [is-food? self]
   let hit-food spotted-food with [is-colliding? myself]
   let my-base one-of get-bases
-  
   ifelse full-bag?[
     set ctask "retourne-base"
   ][
@@ -109,16 +106,20 @@ to-report retourne-base
 end
 
 
-;;;;;;;;;;;;;;;;;;; ROCKET-LAUNCHER STATES
+;;;;;;;;;;;;;;;;;;; ROCKET-LAUNCHER STATES ATTACK
 to-report decide-rocket-launcher
   ifelse blocked? 
   [
     set-random-heading
   ]
   [
-    ifelse (get-energy self < rocket-damage and not empty-bag?)
+    ifelse (get-energy self < rocket-damage)
     [
-      set ctask "regenerer-energy"
+      ifelse (empty-bag?)
+      [
+        set ctask "fuir"
+      ]
+      [set ctask "regenerer-energy"]
     ]
     [
       ifelse (get-rocket-number = 0 and get-energy self > rocket-cost) 
@@ -131,7 +132,7 @@ to-report decide-rocket-launcher
           set ctask "attack"
         ]
         [
-          if (random 5 = 1) [
+          if (random 3 = 1) [
             set ctask "bouger"
           ]
         ]
@@ -139,6 +140,11 @@ to-report decide-rocket-launcher
     ]
   ]
   
+  report "idle"
+end
+
+to-report fuir
+  set-heading min-one-of get-bases [distance myself]
   report "move"
 end
 
