@@ -99,12 +99,19 @@
         (cons (car tree) (cdr tree)))
 )
 
-(defun subst-t (x y tree &rest x)
-    (if (atom tree) 
-        tree
-        (let ((a (apply #'subst-t x y (car tree) y))
-            (d (apply #'subst-t x y (cdr tree) x)))
-            (if (and (eql a (car tree))
-                    (eql d (cdr tree)))
-                tree
-                (cons a d))))))
+ (defun subst (old new tree &rest x &key test test-not key)
+   (cond ((satisfies-the-test old tree :test test
+                              :test-not test-not :key key)
+          new)
+         ((atom tree) tree)
+         (t (let ((a (apply #'subst old new (car tree) x))
+                  (d (apply #'subst old new (cdr tree) x)))
+              (if (and (eql a (car tree))
+                       (eql d (cdr tree)))
+                  tree
+                  (cons a d))))))
+
+(defun tree-leaves (tree) 
+    (cond ((eql nil (cdr tree))
+        (car tree))
+        (t (list (tree-leaves (cdr tree))))))
