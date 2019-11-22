@@ -15,6 +15,7 @@ int main(int argc, char ** argv) {
     int sockfd; 
     char buffer[MAXLINE]; 
     char buf_ip[INET_ADDRSTRLEN];
+    
     char msg[256];
     struct sockaddr_in servaddr, cliaddr; 
 
