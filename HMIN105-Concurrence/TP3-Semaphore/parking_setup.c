@@ -38,7 +38,7 @@ int parking_init(const char* filepath, int places){
 	// Création d'une sémaphore associée a la clée cleSem 
   	int idSem = semget(key, 1, IPC_CREAT|0666);
 
-	// Initialisation de la sémaphore a 1
+	//nb de personne ayant l'accès au ressource en meme temps
 	union semun egCtrl;
 	egCtrl.val=1;
 
@@ -47,7 +47,7 @@ int parking_init(const char* filepath, int places){
 	}
     
     printf("Creation du segment de mémoire partagée...\n");
-
+    //création d'un nouveau segments de mémoire avec l'identifiant en retour
     int sh_id = shmget(key, sizeof(int), IPC_CREAT|0666);
     WARN_ERROR(sh_id);
 
