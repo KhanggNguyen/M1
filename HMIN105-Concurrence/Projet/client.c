@@ -9,6 +9,8 @@
 #include <netdb.h>
 #include <time.h>
 
+#include <pthread.h>
+
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -18,11 +20,11 @@
 #include <sys/shm.h>
 
 /* ------------------- definition structure et variable constantes------------------- */
-typedef struct Donnees_Fichier;
+typedef struct Donnees_Fichier Donnees_Fichier;
 struct Donnees_Fichier{
     int socket;
     char* fichier;
-}
+};
 
 /* ------------------- definition des fonctions utiles ------------------- */
 int reception(int dest, void * msg, int taille_msg) {
@@ -64,7 +66,7 @@ void* gestion_fichier(void* arg){
     int n;
     int flag;
     do{
-        if(n = reception(donnees_fichier->socket, &flag, sizeof(int)) < 0)){
+        if((n = reception(donnees_fichier->socket, &flag, sizeof(int))) < 0){
             perror("Erreur de reception");
             exit(EXIT_FAILURE);
         }
@@ -92,7 +94,7 @@ int main(int argc, char ** argv){
         exit(EXIT_FAILURE);
     }
     
-    const char ip[16];
+    char ip[16];
     strcpy(ip, argv[1]);
     const int port = atoi(argv[2]);
 
@@ -145,7 +147,8 @@ int main(int argc, char ** argv){
 
 	pthread_t* threads_clients = malloc (2 * sizeof(pthread_t));
 
-    struct Donnees_Fichier donnees_fichier = malloc(sizeof(struct Donnees_Fichier));
+    struct Donnees_Fichier* donnees_fichier = NULL;
+    donnees_fichier = malloc(sizeof(struct Donnees_Fichier));
     donnees_fichier->socket = socket_client;
     donnees_fichier->fichier = fichier;
 
