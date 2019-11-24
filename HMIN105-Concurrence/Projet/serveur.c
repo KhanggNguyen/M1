@@ -131,11 +131,13 @@ void* gestion_client(void* arg){
         exit(EXIT_FAILURE);
     }
 
+    
     /* -------------------création de la cle d'accès IPC pour la maj ------------------- */
+    /*
     if ((maj = ftok(fichier_maj, 42)) == -1) {
         perror("Erreur de l'assignation de la clé\n");
         exit(EXIT_FAILURE);
-    }
+    }*/
 
 	printf("Création des sémaphores d'associe à la clé pour l'écriture");
     /* ------------------- semaphore d'associe à la cle pour la fichier partage ------------------- */
@@ -152,11 +154,12 @@ void* gestion_client(void* arg){
     }
 
     /* ------------------- semaphore d'associe à la cle pour la maj ------------------- */
+    /*
     int sem_id_maj = semget(maj, MAX_CLIENT, IPC_CREAT | 0666);
     if (sem_id_maj == -1) {
         perror("Erreur création sémaphore\n");
         exit(EXIT_FAILURE);
-    }
+    }*/
 
 	if(envoi(tab_socket_client[position], segment_partage->fichier, sizeof(segment_partage->fichier)) != 0){
 		perror("Erreur d'envoi");
@@ -286,8 +289,8 @@ void* gestion_client(void* arg){
 	}while(flag == 1);
 }
 
-void* maj_fichier_utilisateur(void * tmp){
-	struct Donnees_Client* donnees_client = tmp;
+void* maj_fichier_utilisateur(void * arg){
+	struct Donnees_Client* donnees_client = arg;
 
     int position = donnees_client->position;
 	int* tab_socket_client = donnees_client->tab_socket_client;
