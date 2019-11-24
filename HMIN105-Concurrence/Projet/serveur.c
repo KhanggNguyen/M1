@@ -603,7 +603,7 @@ int main(int argc, char ** argv) {
                     exit(EXIT_FAILURE);
                 }
 
-                if(pthread_create(&threads_notif_maj[position], NULL, maj_fichier_utilisateur, infoClient) != 0){
+                if(pthread_create(&threads_notif_maj[position], NULL, maj_fichier_utilisateur, donnees_client) != 0){
 		      		printf("Erreur ! \n");
 		      		exit(EXIT_FAILURE);
 		      	}
@@ -612,9 +612,7 @@ int main(int argc, char ** argv) {
                     printf("Erreur join pthreads! \n");
                     exit(EXIT_FAILURE);
 		      	}
-			} 
-
-
+			}
         }
     }
 	if (pid != 0 && pid != -1) {
