@@ -437,7 +437,7 @@ int main(int argc, char ** argv) {
     segment_partage-> nb_Clients = 0;
     segment_partage-> max_clients = max_clients;
 
-    printf("Création de la sémaphore d'associe à la clé pour l'écriture");
+    printf("Création de la sémaphore d'associe à la clé pour l'écriture\n");
     union semun egCtrl;
     /* ------------------- semaphore d'associe à la cle pour la fichier partage ------------------- */
     int sem_id_partage = semget(fichier, 1, IPC_CREAT | 0666);
@@ -517,6 +517,7 @@ int main(int argc, char ** argv) {
         perror("Erreur de positionnement");
         exit(EXIT_FAILURE);
     }
+    printf("Information du serveur : <%s> <%i>\n",inet_ntoa((struct in_addr)cliaddr.sin_addr), port);
     printf("En mode écoute....\n");
 
     struct sembuf sop;
