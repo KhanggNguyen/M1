@@ -118,7 +118,7 @@ void* gestion_client(void* arg){
     key_t notif, fichier, maj;
     int sh_id;
 
-    printf("Creation de la clé d'acces IPC...\n");
+    printf("Creation de la clé d'acces IPC. . .\n");
     /* ------------------- création de la cle d'accès IPC du fichier donnees ------------------- */
     if ((fichier = ftok(fichier_partage, 42)) == -1) {
         perror("Erreur de l'assignation de la clé\n");
@@ -375,20 +375,20 @@ int main(int argc, char ** argv) {
     const int max_clients = atoi(argv[2]);
 
     /* ------------------- ouverture des fichiers ------------------- */
-    printf("Creation du fichier partagée...\n");
+    printf("Creation du fichier partagée. . .\n");
     if (open(fichier_partage, O_RDWR | O_CREAT, 0666) < 0) {
         perror("Erreur d'ouverture de fichier");
         exit(EXIT_FAILURE);
     }
 
-    printf("Creation du fichier notif...\n");
+    printf("Creation du fichier notif. . .\n");
     if (open(fichier_notif, O_RDWR | O_CREAT, 0666) < 0) {
         perror("Erreur d'ouverture de fichier");
         exit(EXIT_FAILURE);
     }
 
     /*
-    printf("Creation du fichier maj...\n");
+    printf("Creation du fichier maj. . .\n");
     if (open(fichier_maj, O_RDWR | O_CREAT, 0666) < 0) {
         perror("Erreur d'ouverture de fichier");
         exit(EXIT_FAILURE);
@@ -399,7 +399,7 @@ int main(int argc, char ** argv) {
     key_t notif, fichier, maj;
     int sh_id;
 
-    printf("Creation de la clé d'acces IPC...\n");
+    printf("Creation de la clé d'acces IPC. . .\n");
     /* ------------------- création de la cle d'accès IPC du fichier donnees ------------------- */
     if ((fichier = ftok(fichier_partage, 42)) == -1) {
         perror("Erreur de l'assignation de la clé\n");
@@ -419,14 +419,14 @@ int main(int argc, char ** argv) {
         exit(EXIT_FAILURE);
     }*/
 
-    printf("Creation du segment de mémoire partagée...\n");
+    printf("Creation du segment de mémoire partagée. . .\n");
     /* ------------------- création d'un nouveau segment de mémoire avec l'identifiant en retour ------------------- */
     if ((sh_id = shmget(fichier, sizeof(struct Segment_partage), IPC_CREAT | 0666)) == -1) {
     	perror("Erreur lors de la création de la mémoire.");
         exit(EXIT_FAILURE);
     }
 
-    printf("Initialisation de la variable partagée...\n");
+    printf("Initialisation de la variable partagée. . .\n");
     /* ------------------- Initialisation de la variable partagé ------------------- */
     struct Segment_partage * segment_partage = NULL;
     segment_partage = (struct Segment_partage * ) shmat(sh_id, NULL, 0);
@@ -437,7 +437,7 @@ int main(int argc, char ** argv) {
     segment_partage-> nb_Clients = 0;
     segment_partage-> max_clients = max_clients;
 
-    printf("Création de la sémaphore d'associe à la clé pour l'écriture\n");
+    printf("Création de la sémaphore d'associe à la clé pour l'écriture. . .\n");
     union semun egCtrl;
     /* ------------------- semaphore d'associe à la cle pour la fichier partage ------------------- */
     int sem_id_partage = semget(fichier, 1, IPC_CREAT | 0666);
@@ -482,23 +482,29 @@ int main(int argc, char ** argv) {
     }
 
     /* ------------------- Initialisation du socket ------------------- */
-    struct sockaddr_in servaddr;
-    servaddr.sin_family = AF_INET; // IPv4 
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY); //ip
-    servaddr.sin_port = htons(port); //port
-
     int socket_serveur;
-    if ((socket_serveur = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    if ((socket_serveur = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Erreur de création du socket");
         exit(EXIT_FAILURE);
     }
     printf("Socket créé succès!\n");
 
+    struct sockaddr_in servaddr;
+    servaddr.sin_family = AF_INET; // IPv4 
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY); //ip
+    servaddr.sin_port = htons(port); //port
     if (bind(socket_serveur, (const struct sockaddr * ) &servaddr, sizeof(servaddr)) < 0) {
         perror("Erreur de nommage");
         exit(EXIT_FAILURE);
     }
-    printf("Nommage succès\n");
+    printf("Nommage succès!\n");
+
+    if (listen(socket_serveur, 2) == -1) {
+        perror("Erreur de positionnement");
+        exit(EXIT_FAILURE);
+    }
+    printf("Information du serveur : <%s> <%i>\n",inet_ntoa((struct in_addr)servaddr.sin_addr), port);
+    printf("En mode écoute. . .\n");
 
     int nb_Clients = 0;
     int * tab_socket_client = malloc(max_clients * sizeof(int));
@@ -512,13 +518,6 @@ int main(int argc, char ** argv) {
     //pthread_t * threads_clients_maj = malloc(max_clients * sizeof(pthread_t));
     pthread_t * threads_notif_maj = malloc(max_clients * sizeof(pthread_t));
     pid_t pid;
-
-    if (listen(socket_serveur, max_clients) != 0) {
-        perror("Erreur de positionnement");
-        exit(EXIT_FAILURE);
-    }
-    printf("Information du serveur : <%s> <%i>\n",inet_ntoa((struct in_addr)cliaddr.sin_addr), port);
-    printf("En mode écoute....\n");
 
     struct sembuf sop;
 
