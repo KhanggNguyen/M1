@@ -92,7 +92,7 @@ void init_donnees_client(struct Donnees_Client* donnees_client, int* tab_socket_
 }
 
 int recherche_position_libre(int* tab_socket_client){
-	for(int i = 0; i < sizeof(tab_socket_client); i++){
+	for(int i = 0; i < MAX_CLIENT; i++){
 		if(tab_socket_client[i] == -1){
 			return i;
 		}
@@ -115,8 +115,9 @@ void* gestion_client(void* arg){
 	}
 
 	/* ------------------- initialisation de la mémoire partagé ------------------- */
-    key_t notif, fichier, maj;
-    int sh_id;
+    key_t notif, fichier;
+    //key_t maj;
+    //int sh_id;
 
     printf("Creation de la clé d'acces IPC. . .\n");
     /* ------------------- création de la cle d'accès IPC du fichier donnees ------------------- */
@@ -139,7 +140,7 @@ void* gestion_client(void* arg){
         exit(EXIT_FAILURE);
     }*/
 
-	printf("Création des sémaphores d'associe à la clé pour l'écriture");
+	printf("Création des sémaphores d'associe à la clé pour l'écriture . . .\n");
     /* ------------------- semaphore d'associe à la cle pour la fichier partage ------------------- */
     int sem_id_partage = semget(fichier, 0, IPC_CREAT | 0666);
     if (sem_id_partage == -1) {
@@ -178,7 +179,7 @@ void* gestion_client(void* arg){
 	}
 
 	int flag_autre = 2 ;
-	for (int i = 0; i < sizeof(tab_socket_client); ++i)
+	for (int i = 0; i < MAX_CLIENT; ++i)
 	{
 		if(i != position && segment_partage->tab_socket_client[i] != -1){
 			if(envoi(segment_partage->tab_socket_client[i], &flag_autre, sizeof(int)) != 0){
@@ -236,7 +237,7 @@ void* gestion_client(void* arg){
                 exit(EXIT_FAILURE);
 		    }
 
-			for (int i = 0; i < sizeof(tab_socket_client); ++i) //on update les pseudos
+			for (int i = 0; i < MAX_CLIENT; ++i) //on update les pseudos
 			{
 				if(segment_partage->tab_socket_client[i]!=-1 && i!=position){
 					sop.sem_num = i;
@@ -273,7 +274,7 @@ void* gestion_client(void* arg){
                 exit(EXIT_FAILURE);
 		    }
 		
-			for (int i = 0; i < sizeof(tab_socket_client); ++i) //on update le fichier à tous les clients
+			for (int i = 0; i < MAX_CLIENT; ++i) //on update le fichier à tous les clients
 			{
 				if(segment_partage->tab_socket_client[i] != -1 && i != position){
 					sop.sem_num = i;
@@ -321,7 +322,7 @@ void* maj_fichier_utilisateur(void * arg){
         exit(EXIT_FAILURE);
     }
 
-    int sem_id_maj = semget(maj, sizeof(tab_socket_client), 0666);
+    int sem_id_maj = semget(maj, MAX_CLIENT, 0666);
 	if(sem_id_maj == -1){
         perror("Erreur sémaphore");
         exit(EXIT_FAILURE);
@@ -361,6 +362,9 @@ void* maj_fichier_utilisateur(void * arg){
             exit(EXIT_FAILURE);
         }
 	}while(1);
+
+    free(donnees_client);
+    pthread_exit(NULL);
 }
 
 /* ------------------- exécution ------------------- */
@@ -399,7 +403,8 @@ int main(int argc, char ** argv) {
     */
 
     /* ------------------- initialisation de la mémoire partagé ------------------- */
-    key_t notif, fichier, maj;
+    key_t notif, fichier; 
+    //key_t maj;
     int sh_id;
 
     printf("Creation de la clé d'acces IPC. . .\n");
@@ -469,7 +474,9 @@ int main(int argc, char ** argv) {
     }
 
     /* ------------------- semaphore d'associe à la cle pour la maj ------------------- */
-    int sem_id_maj = semget(maj, max_clients, IPC_CREAT | 0666);
+    /*
+    int sem_id_maj;
+    sem_id_maj = semget(maj, max_clients, IPC_CREAT | 0666);
     if (sem_id_maj == -1) {
         perror("Erreur création sémaphore\n");
         exit(EXIT_FAILURE);
@@ -483,10 +490,10 @@ int main(int argc, char ** argv) {
             exit(EXIT_FAILURE);
         }
     }
-
+    */
     /* ------------------- Initialisation du socket ------------------- */
     int socket_serveur;
-    if ((socket_serveur = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((socket_serveur = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Erreur de création du socket");
         exit(EXIT_FAILURE);
     }
@@ -533,7 +540,7 @@ int main(int argc, char ** argv) {
 		int flag;
         socklen_t lgA_client = sizeof(struct sockaddr_in);
 		/* ------------------- Connecter un client au socket -------------------*/
-        if (socket_client = accept(socket_serveur, (struct sockaddr * ) &cliaddr, &lgA_client) < 0) {
+        if ((socket_client = accept(socket_serveur, (struct sockaddr * ) &cliaddr, &lgA_client)) < 0) {
             perror("Erreur de connexion");
             exit(EXIT_FAILURE);
         }

@@ -81,10 +81,11 @@ void* gestion_fichier(void* arg){
             if(reception(donnees_fichier->socket, fichier, sizeof(fichier)) < 0){
                 perror("Erreur de reception");
             }
-
             strcpy(donnees_fichier->fichier, fichier);
         }
     }while(flag != 0);
+    free(donnees_fichier);
+    pthread_exit(NULL);
 }
 
 int main(int argc, char ** argv){
