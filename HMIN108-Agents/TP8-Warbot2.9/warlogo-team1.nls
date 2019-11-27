@@ -1,0 +1,336 @@
+;;----------------------------------------------------------------------------------------------
+;; Warlogo: The Team to be defined...
+;;
+;; Warlogo...
+;;;;;;;;;;;;;;;;;;;;;;;INIT
+
+to-report initial-state
+  if is-explorer? self
+  [
+    set ctask "decide-explorer"
+  ]
+  
+  if is-rocket-launcher? self
+  [
+   set ctask "decide-rocket-launcher" 
+  ]
+  
+  if is-base? self
+  [
+   set ctask "decide-base" 
+  ]
+  
+  report "idle"
+end
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EXPLORER BEHAVIOR ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+to-report explorer-t1-action
+  ;; to be written 
+  ;set ctask "recherche-nourriture"
+  
+  report runresult ctask
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ROCKET-LAUNCHER BEHAVIOR ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to-report rocket-launcher-t1-action
+  ;; to be written 
+  report runresult ctask
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BASE BEHAVIOR ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to-report base-t1-action
+  report runresult ctask
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;EXPLORER STATES;;;;;;;;
+to-report decide-explorer
+  if blocked?[
+    set-random-heading
+  ]
+  let enemy-base one-of percepts with [is-base? self and is-my-enemy? myself]   
+  if enemy-base != nobody [ 
+    broadcast-message get-rocket-launchers "attack-base" []   
+  ] 
+  
+  ifelse any? get-bases with [is-colliding? myself] 
+  [
+    ifelse not empty-bag?
+    [
+      set ctask "retourne-base"
+    ]
+    [
+      set ctask "recherche-nourriture" 
+    ]
+  ]
+  [
+    let spotted-food percepts with [is-food? self]
+    ifelse any? spotted-food [
+      ifelse not full-bag? [
+        set ctask "recherche-nourriture"
+      ]
+      [
+        set ctask "retourne-base"
+      ]
+    ]
+    [
+      if energy <= rocket-damage and not empty-bag? [
+        set ctask "regenerer-energy-explorer"
+      ] 
+    ]
+  ]
+  report "move"
+end
+
+to-report regenerer-energy-explorer
+  set ctask "decide-explorer"
+  report "eat"
+end
+
+to-report recherche-nourriture
+  let spotted-food percepts with [is-food? self]
+  let hit-food spotted-food with [is-colliding? myself]
+  let my-base one-of get-bases
+  ifelse full-bag?[
+    set ctask "retourne-base"
+  ][
+    ifelse any? hit-food [
+      if not full-bag? [
+        set ctask "retourne-base"
+        report list "take" one-of hit-food
+      ]
+    ]
+    [
+      set-heading min-one-of spotted-food [distance myself]
+      set ctask "decide-explorer"
+    ]
+  ]
+  report "move"
+end
+
+to-report retourne-base
+  set ctask "decide-explorer"
+  if(not empty-bag?)[
+    ifelse any? get-bases with [is-colliding? myself] 
+    [
+      report list "give" min-one-of get-bases [distance myself]
+    ] 
+    [
+      set-heading min-one-of get-bases [distance myself]
+    ]
+  ]
+  report "move"
+end
+
+
+;;;;;;;;;;;;;;;;;;; ROCKET-LAUNCHER STATES
+to-report decide-rocket-launcher
+  
+  if (blocked?) or (blocked? and hitting-north-wall? self) or (blocked? and hitting-south-wall? self) or (blocked? and hitting-east-wall? self) or (blocked? and hitting-west-wall? self)
+  [
+    set-random-heading
+  ]
+  
+  if(get-energy self >= 2 * rocket-damage)
+  [
+   set ctask "rechercher-enemy"
+   report "move" 
+  ]
+  
+  
+  
+  ifelse (get-energy self < 150 and not member? "recherche-nourriture-rocket-launcher" ctask)
+  [
+    set-heading min-one-of get-bases [ distance myself ]
+    set ctask "recherche-nourriture-rocket-launcher"
+  ]
+  [
+    ifelse (get-rocket-number = 0 and get-energy self > rocket-cost) 
+    [
+      set ctask "generer-rocket"
+    ]
+    [
+      let target min-one-of percepts with [not is-rocket? self and not is-food? self and is-my-enemy? myself] [get-energy self]
+      ifelse (target != nobody and get-rocket-number > 0)[
+        if (is-rocket-launcher? target)
+        [
+          set ctask "attack"
+          report "idle"
+        ]
+      ]
+      [ 
+        set ctask "bouger"
+      ]
+    ]
+  ]
+
+  report "idle"
+end
+
+to-report recherche-nourriture-rocket-launcher
+  let spotted-food percepts with [is-food? self]
+  let hit-food spotted-food with [is-colliding? myself]
+  if not empty-bag? and energy < 10 * rocket-damage 
+  [
+   report "eat" 
+  ]
+  
+  if any? hit-food [
+    ifelse empty-bag?[
+      report list "take" one-of hit-food
+    ][
+      report list "take" (one-of hit-food)
+    ]
+  ] 
+  if any? spotted-food 
+  [ 
+    set-heading min-one-of spotted-food [distance myself] 
+    report "move" 
+  ]
+  set ctask "decide-rocket-launcher"
+  report "move"
+end
+
+to-report rechercher-enemy
+  if energy <= 10 * rocket-damage [ if not empty-bag? [report "eat"] ] 
+  
+  if (get-rocket-number = 0 and get-energy self > rocket-cost) [report "build-rocket"]
+  
+  let target min-one-of percepts with [not is-rocket? self and not is-food? self and not is-explorer? self and not is-my-friend? myself] [get-energy self]
+  if (target != nobody and get-rocket-number > 0) [
+    set-heading target
+    ifelse energy <= 4 * rocket-damage  
+    [ set ctask "defense" ]
+    [ set ctask "attack" ]
+    report list "launch-rocket" towards target
+  ]
+  
+  broadcast-message other get-rocket-launchers with [not is-colliding? myself] "attack" []
+  set ctask "decide-rocket-launcher"
+  report "move"
+end
+
+to-report attack  
+  let target min-one-of percepts with [not is-rocket? self and not is-food? self and not is-explorer? self and is-my-enemy? myself] [get-energy self]
+  
+  if energy <= 10 * rocket-damage [ if not empty-bag? [ report "eat" ] ]
+  if energy <= 4 * rocket-damage  
+  [ 
+    ifelse (get-heading > 180) 
+    [
+      set-heading get-heading - 180  
+    ]
+    [ set-heading get-heading + 180 ]
+    report "move"
+  ]
+  
+  if (get-rocket-number = 0 and get-energy self > rocket-cost) 
+  [
+    report "build-rocket"
+  ]
+  
+  let myAlly percepts with [ is-my-friend? self]
+  let colliding one-of myAlly with [ is-colliding? myself ]
+  
+  if(colliding != nobody)
+  [
+    set-heading  get-heading + 90
+    set ctask "decide-rocket-launcher"
+    report "move"
+  ]
+
+  if (target != nobody and get-rocket-number > 0) 
+  [
+    set-heading target
+    if not is-base? target [
+      set ctask "attack"
+      report "idle"
+    ]
+    set-heading target
+    set ctask "attack"
+    report list "launch-rocket" towards target
+  ]  
+  
+  if not blocked?[
+    broadcast-message other get-rocket-launchers "attack" []
+  ]
+  
+  set ctask "decide-rocket-launcher"
+  report "move"
+end
+
+to-report defense
+  if not full-bag? [
+    let spotted-food min-one-of percepts with [is-food? self][distance myself]
+    let hit-food percepts with [is-food? self and is-colliding? myself]   
+    if any? hit-food [
+      report list "take" one-of hit-food
+    ] 
+    if spotted-food != nobody [
+      if distance spotted-food < 6 [
+        set-heading spotted-food 
+        report "move" 
+      ]
+    ]
+  ]
+  
+  let target min-one-of percepts with [not is-rocket? self and not is-food? self and not is-explorer? self and is-my-enemy? myself] [get-energy self]
+  
+  let hit-food-RL percepts with [is-food? self and is-colliding? myself]
+  if any? hit-food-RL and not full-bag? [report list "take" one-of hit-food-RL]
+  
+  if energy <= 10 * rocket-damage [ if not empty-bag? [report "eat"] ] 
+  
+  if (get-rocket-number = 0 and get-energy self > rocket-cost) [report "build-rocket"]
+  
+  ifelse target != nobody [
+    set-heading target
+    report list "launch-rocket" towards target
+  ][
+    set ctask "rechercher-enemy"
+    report "move"
+  ]
+  report "move"
+end 
+
+
+;;;;;;;;;;;;; Base States
+to-report decide-base
+  while[not empty? incoming-queue]
+  [let msg get-message
+    show (sentence "received message :" msg)]
+  if(just-shot?)
+  [
+    let my-rocket-launchers get-rocket-launchers in-radius detection-range
+    broadcast-message my-rocket-launchers "sauver-la-base" [] 
+  ]
+  ifelse(energy > 3 * rocket-launcher-cost and energy > 3 * explorer-cost)
+  [
+    set ctask "build-vehicule"
+  ]
+  [
+    if not empty-bag? [ 
+      set ctask "manger"
+    ]
+  ]
+  report "idle"
+end
+
+to-report build-vehicule
+  set ctask "decide-base"
+  ifelse random 20 < 10[
+    report "build-rocket-launcher" 
+  ][
+    report "build-explorer"
+  ]
+end
+
+to-report manger
+  set ctask "decide-base"
+  report "eat"
+end

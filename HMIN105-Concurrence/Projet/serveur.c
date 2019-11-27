@@ -177,7 +177,7 @@ void* gestion_client(void* arg){
 		perror("Erreur de semop");
 		exit(EXIT_FAILURE);
 	}
-
+    /*
 	int flag_autre = 2 ;
 	for (int i = 0; i < MAX_CLIENT; ++i)
 	{
@@ -187,24 +187,13 @@ void* gestion_client(void* arg){
 				exit(EXIT_FAILURE);
 			}
 		}
-	}
+	}*/
 
 	sop.sem_num = 0;
 	sop.sem_op = 1;
 	sop.sem_flg = 0;
     if(semop(sem_id_partage, &sop, 1) < 0){
 		perror("Erreur de semop");
-		exit(EXIT_FAILURE);
-	}
-
-	int verif = 0;
-	if(reception(tab_socket_client[position], &verif, sizeof(verif)) != 0){
-		perror("Erreur reception");
-		exit(EXIT_FAILURE);
-	}
-
-	if(verif == 0){
-		perror("verification echoué.");
 		exit(EXIT_FAILURE);
 	}
 
@@ -288,6 +277,9 @@ void* gestion_client(void* arg){
 			}
 		}
 	}while(flag == 1);
+    free(donnees_client);
+    pthread_exit(NULL);
+
 }
 
 void* maj_fichier_utilisateur(void * arg){
@@ -303,11 +295,11 @@ void* maj_fichier_utilisateur(void * arg){
 		exit(EXIT_FAILURE);
 	}
 
-    key_t file, maj;
+    key_t file, notif;
     struct sembuf sop;
 
-	if((maj = ftok("./fichier_maj.txt", 42)) == -1){
-		perror("Erreur  de l'assignation de la clé maj");
+	if((notif = ftok("./fichier_notif.txt", 42)) == -1){
+		perror("Erreur  de l'assignation de la clé notif");
 		exit(EXIT_FAILURE);
 	}
 
@@ -322,8 +314,8 @@ void* maj_fichier_utilisateur(void * arg){
         exit(EXIT_FAILURE);
     }
 
-    int sem_id_maj = semget(maj, MAX_CLIENT, 0666);
-	if(sem_id_maj == -1){
+    int sem_id_notif = semget(notif, 99, 0666);
+	if(sem_id_notif == -1){
         perror("Erreur sémaphore");
         exit(EXIT_FAILURE);
     }
@@ -332,7 +324,7 @@ void* maj_fichier_utilisateur(void * arg){
 		sop.sem_num = position;
 		sop.sem_op = -1;
 		sop.sem_flg = 0;
-        if(semop(sem_id_maj, &sop, 1) < 0){
+        if(semop(sem_id_notif, &sop, 1) < 0){
             perror("Erreur de semop");
             exit(EXIT_FAILURE);
         }
@@ -629,6 +621,11 @@ int main(int argc, char ** argv) {
                     printf("Erreur join pthreads! \n");
                     exit(EXIT_FAILURE);
 		      	}
+
+                if(pthread_join(threads_notif_maj[position], NULL) != 0){
+                    perror("Erreur de join pthread_notif\n");
+                    exit(EXIT_FAILURE);
+                }
 			}
         }
     }

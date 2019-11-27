@@ -71,7 +71,7 @@ void* gestion_fichier(void* arg){
             exit(EXIT_FAILURE);
         }
 
-        if(n == 2){
+        if(flag == 2){
             printf("Fermeture du serveur\n");
             exit(EXIT_FAILURE);
         }
@@ -82,8 +82,40 @@ void* gestion_fichier(void* arg){
                 perror("Erreur de reception");
             }
             strcpy(donnees_fichier->fichier, fichier);
+            printf("Contenu du fichier %s\n", fichier);
+
+            char buf[9999];
+            printf("Saississez votre contenu :  ");
+            scanf("%s\n", buf);
+        }
+        
+    }while(flag != 0);
+    free(donnees_fichier);
+    pthread_exit(NULL);
+}
+
+void* modifier_fichier(void* arg){
+    struct Donnees_Fichier* donnees_fichier = arg;
+    int n;
+    int flag;
+    do{
+        if((n = reception(donnees_fichier->socket, &flag, sizeof(int))) < 0){
+            perror("Erreur de reception");
+            exit(EXIT_FAILURE);
+        }
+
+        if(n == 2){
+            printf("Fermeture du serveur\n");
+            exit(EXIT_FAILURE);
+        }
+
+        if(flag == 1){
+            char buf[9999];
+            printf("Saississez votre contenu :  ");
+            scanf("%s\n", buf);
         }
     }while(flag != 0);
+
     free(donnees_fichier);
     pthread_exit(NULL);
 }
@@ -122,16 +154,17 @@ int main(int argc, char ** argv){
 	}
 	printf("Connecté.\n");
 
-    char flag_connexion;
-	if(reception(socket_client,&flag_connexion,sizeof(int)) != 0){
+    int test_connexion;
+	if(reception(socket_client,&test_connexion,sizeof(int)) != 0){
 		perror("Erreur reception");
 		exit(EXIT_FAILURE);
 	}
 
-    if(flag_connexion != 0){
+    if(test_connexion != 0){
         printf("Erreur de connexion : plein");
         exit(EXIT_FAILURE);
     }
+    printf("Test de connexion : reçu\n");
 
     /* Reception du buffer*/
     char fichier[9999];
@@ -139,12 +172,9 @@ int main(int argc, char ** argv){
 		perror("Erreur reception du fichier");
 		exit(EXIT_FAILURE);
 	}
+    printf("Contenu du fichier %s\n", fichier);
 
-    int verif = 1;
-    if(send(socket_client, &verif, sizeof(verif), 0) ==-1){
-		perror("Erreur envoi verification");
-		exit(EXIT_FAILURE);
-	}
+    
 
 	pthread_t* threads_clients = malloc (2 * sizeof(pthread_t));
 
@@ -157,6 +187,14 @@ int main(int argc, char ** argv){
   		printf("Erreur thread gestion_fichier! \n");
   		exit(EXIT_FAILURE);
   	}
+    /*
+    if(pthread_create(&threads_clients[1], NULL, modifier_fichier, donnees_fichier) != 0 ){
+        printf("Erreur thread modifier_fichier! \n");
+        exit(EXIT_FAILURE);
+    }*/
+
+    pthread_join(threads_clients[0], NULL);
+    //pthread_join(threads_clients[1], NULL);
 
     free(threads_clients);
     close(socket_client);
