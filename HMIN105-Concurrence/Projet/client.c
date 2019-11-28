@@ -166,6 +166,13 @@ int main(int argc, char ** argv){
     }
     printf("Test de connexion : reçu\n");
 
+    int flag_connexion = 1;
+    if(envoi(socket_client,&flag_connexion,sizeof(int)) != 0){
+		perror("Erreur reception");
+		exit(EXIT_FAILURE);
+	}
+    printf("Envoyé flag de connexion\n");
+
     /* Reception du buffer*/
     char fichier[9999];
 	if(reception(socket_client, fichier, sizeof(fichier))!=0){
@@ -175,7 +182,6 @@ int main(int argc, char ** argv){
     printf("Contenu du fichier %s\n", fichier);
 
     
-
 	pthread_t* threads_clients = malloc (2 * sizeof(pthread_t));
 
     struct Donnees_Fichier* donnees_fichier = NULL;

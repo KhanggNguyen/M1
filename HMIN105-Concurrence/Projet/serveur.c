@@ -41,9 +41,18 @@ struct Donnees_Client{
 	int *tab_socket_client;
 	int position;
 	int sh_id;
-	int num_client;
+    key_t fichier;
+    key_t notif;
+    int sem_id_notif;
+    int sem_id_fichier;
+ 	int num_client;
 	char nom[256];
 };
+
+struct sembuf sop[] ={
+       {0, -1, SEM_UNDO},//lock
+       {0, 1, SEM_UNDO}  //unlock
+    };
 
 const char * fichier_partage = "fichier_partage.txt";
 const char * fichier_notif = "fichier_notif.txt";
@@ -84,11 +93,15 @@ int envoi(int dest, void * msg, int taille_msg) {
     return 0;
 }
 
-void init_donnees_client(struct Donnees_Client* donnees_client, int* tab_socket_client, int position, int sh_id, int num_client){
+void init_donnees_client(struct Donnees_Client* donnees_client, int* tab_socket_client, int position, int sh_id, int num_client, key_t fichier, key_t notif, int sem_id, int sem_id_partage){
 	donnees_client->tab_socket_client = tab_socket_client;
 	donnees_client->position = position; 
 	donnees_client->sh_id = sh_id;
 	donnees_client->num_client = num_client;
+    donnees_client->fichier = fichier;
+    donnees_client->notif = notif;
+    donnees_client->sem_id_notif = sem_id;
+    donnees_client->sem_id_fichier = sem_id_partage;
 }
 
 int recherche_position_libre(int* tab_socket_client){
@@ -108,96 +121,25 @@ void* gestion_client(void* arg){
 	int* tab_socket_client = donnees_client->tab_socket_client;
 
 	struct Segment_partage* segment_partage = NULL;
-	segment_partage = (struct Segment_partage*) shmat(donnees_client->sh_id, NULL, 0);
+	segment_partage = (struct Segment_partage *) shmat(donnees_client->sh_id, NULL, 0);
 	if(segment_partage == NULL){
 		perror("Erreur de la liaison à la mémoire partagée");
 		exit(EXIT_FAILURE);
 	}
 
-	/* ------------------- initialisation de la mémoire partagé ------------------- */
-    key_t notif, fichier;
-    //key_t maj;
-    //int sh_id;
-
-    printf("Creation de la clé d'acces IPC. . .\n");
-    /* ------------------- création de la cle d'accès IPC du fichier donnees ------------------- */
-    if ((fichier = ftok(fichier_partage, 42)) == -1) {
-        perror("Erreur de l'assignation de la clé\n");
-        exit(EXIT_FAILURE);
-    }
-
-    /* -------------------création de la cle d'accès IPC pour notifier la maj ------------------- */
-    if ((notif = ftok(fichier_notif, 42)) == -1) {
-        perror("Erreur de l'assignation de la clé\n");
-        exit(EXIT_FAILURE);
-    }
-
-    
-    /* -------------------création de la cle d'accès IPC pour la maj ------------------- */
-    /*
-    if ((maj = ftok(fichier_maj, 42)) == -1) {
-        perror("Erreur de l'assignation de la clé\n");
-        exit(EXIT_FAILURE);
-    }*/
-
-	printf("Création des sémaphores d'associe à la clé pour l'écriture . . .\n");
-    /* ------------------- semaphore d'associe à la cle pour la fichier partage ------------------- */
-    int sem_id_partage = semget(fichier, 0, IPC_CREAT | 0666);
-    if (sem_id_partage == -1) {
-        perror("Erreur création sémaphore");
-    }
-
-    /* ------------------- semaphore d'associe à la cle pour la notif ------------------- */
-    int sem_id = semget(notif, position, IPC_CREAT | 0666);
-    if (sem_id == -1) {
-        perror("Erreur création sémaphore \n");
-        exit(EXIT_FAILURE);
-    }
-
-    /* ------------------- semaphore d'associe à la cle pour la maj ------------------- */
-    /*
-    int sem_id_maj = semget(maj, MAX_CLIENT, IPC_CREAT | 0666);
-    if (sem_id_maj == -1) {
-        perror("Erreur création sémaphore\n");
-        exit(EXIT_FAILURE);
-    }*/
-
 	if(envoi(tab_socket_client[position], segment_partage->fichier, sizeof(segment_partage->fichier)) != 0){
 		perror("Erreur d'envoi");
 		exit(EXIT_FAILURE);
 	}
-
-	struct sembuf sop;
-
-	//semaphore
-	sop.sem_num = 0;
-	sop.sem_op = -1;
-	sop.sem_flg = 0;
-    if(semop(sem_id_partage, &sop, 1) < 0){
-		perror("Erreur de semop");
-		exit(EXIT_FAILURE);
-	}
-    /*
-	int flag_autre = 2 ;
-	for (int i = 0; i < MAX_CLIENT; ++i)
-	{
-		if(i != position && segment_partage->tab_socket_client[i] != -1){
-			if(envoi(segment_partage->tab_socket_client[i], &flag_autre, sizeof(int)) != 0){
-				perror("Erreur envoi flag_autre 2");
-				exit(EXIT_FAILURE);
-			}
-		}
-	}*/
-
-	sop.sem_num = 0;
-	sop.sem_op = 1;
-	sop.sem_flg = 0;
-    if(semop(sem_id_partage, &sop, 1) < 0){
-		perror("Erreur de semop");
-		exit(EXIT_FAILURE);
-	}
+    printf("Envoyé contenu du fichier\n");
 
 	int flag;
+
+    if(reception(tab_socket_client[position], &flag, sizeof(int)) != 0){
+			perror("Erreur reception");
+			flag=0;
+	}
+
 	do{
 		if(reception(tab_socket_client[position], &flag, sizeof(int)) != 0){
 			perror("Erreur reception");
@@ -206,10 +148,8 @@ void* gestion_client(void* arg){
 		/* cas deconnexion */
 		if(flag == 0){
 			printf("Client déconnecté !\n");
-			sop.sem_num = 0;
-			sop.sem_op = -1;
-			sop.sem_flg = 0;
-            if(semop(sem_id_partage, &sop, 1) < 0){
+
+            if(semop(donnees_client->sem_id_fichier, sop, 1) < 0){
                 perror("Erreur de semop");
                 exit(EXIT_FAILURE);
 		    }
@@ -218,10 +158,7 @@ void* gestion_client(void* arg){
 			close(segment_partage->tab_socket_client[position]);
 			segment_partage->tab_socket_client[position] = -1;
 
-			sop.sem_num=0;
-			sop.sem_op=1;
-			sop.sem_flg=0;
-            if(semop(sem_id_partage, &sop, 1) < 0){
+            if(semop(donnees_client->sem_id_fichier, sop+1, 1) < 0){
                 perror("Erreur de semop");
                 exit(EXIT_FAILURE);
 		    }
@@ -229,52 +166,33 @@ void* gestion_client(void* arg){
 			for (int i = 0; i < MAX_CLIENT; ++i) //on update les pseudos
 			{
 				if(segment_partage->tab_socket_client[i]!=-1 && i!=position){
-					sop.sem_num = i;
-					sop.sem_op = 1;
-					sop.sem_flg = 0;
-                    if(semop(sem_id_partage, &sop, 1) < 0){
+                    if(semop(donnees_client->sem_id_fichier, sop+1, 1) < 0){
                         perror("Erreur de semop");
                         exit(EXIT_FAILURE);
 		            }
 				}
 			}
 		}else{
+            if(semop(donnees_client->sem_id_fichier, sop, 1) < 0){
+                perror("Erreur de semop");
+                exit(EXIT_FAILURE);
+		    }
+
 			char fichier[9999];
+
             if(reception(tab_socket_client[position], fichier, sizeof(fichier)) != 0){
 				perror("Erreur reception");
 				exit(EXIT_FAILURE);
 			}
 
-            sop.sem_num = 0;
-			sop.sem_op = -1;
-			sop.sem_flg = 0;
-            if(semop(sem_id_partage, &sop, 1) < 0){
-                perror("Erreur de semop");
-                exit(EXIT_FAILURE);
-		    }
+            
 
             strcpy(segment_partage->fichier, fichier);
 
-            sop.sem_num = 0;
-			sop.sem_op = 1;
-			sop.sem_flg = 0;
-			if(semop(sem_id_partage, &sop, 1) < 0){
+			if(semop(donnees_client->sem_id_fichier, sop+1, 1) < 0){
                 perror("Erreur de semop");
                 exit(EXIT_FAILURE);
 		    }
-		
-			for (int i = 0; i < MAX_CLIENT; ++i) //on update le fichier à tous les clients
-			{
-				if(segment_partage->tab_socket_client[i] != -1 && i != position){
-					sop.sem_num = i;
-					sop.sem_op = 1;
-					sop.sem_flg = 0;
-					if(semop(sem_id_partage, &sop, 1) < 0){
-                        perror("Erreur de semop");
-                        exit(EXIT_FAILURE);
-                    }
-				}
-			}
 		}
 	}while(flag == 1);
     free(donnees_client);
@@ -386,56 +304,22 @@ int main(int argc, char ** argv) {
         exit(EXIT_FAILURE);
     }
 
-    /*
-    printf("Creation du fichier maj. . .\n");
-    if (open(fichier_maj, O_RDWR | O_CREAT, 0666) < 0) {
-        perror("Erreur d'ouverture de fichier");
-        exit(EXIT_FAILURE);
-    }
-    */
-
     /* ------------------- initialisation de la mémoire partagé ------------------- */
     key_t notif, fichier; 
-    //key_t maj;
-    int sh_id;
+    int sh_id, sh_id_notif;
 
     printf("Creation de la clé d'acces IPC. . .\n");
     /* ------------------- création de la cle d'accès IPC du fichier donnees ------------------- */
-    if ((fichier = ftok(fichier_partage, 42)) == -1) {
+    if ((fichier = ftok(fichier_partage, 1)) == -1) {
         perror("Erreur de l'assignation de la clé\n");
         exit(EXIT_FAILURE);
     }
 
     /* -------------------création de la cle d'accès IPC pour notifier la maj ------------------- */
-    if ((notif = ftok(fichier_notif, 42)) == -1) {
+    if ((notif = ftok(fichier_notif, 1)) == -1) {
         perror("Erreur de l'assignation de la clé\n");
         exit(EXIT_FAILURE);
     }
-
-    /* -------------------création de la cle d'accès IPC pour la maj ------------------- */
-    /*
-    if ((maj = ftok(fichier_maj, 42)) == -1) {
-        perror("Erreur de l'assignation de la clé\n");
-        exit(EXIT_FAILURE);
-    }*/
-
-    printf("Creation du segment de mémoire partagée. . .\n");
-    /* ------------------- création d'un nouveau segment de mémoire avec l'identifiant en retour ------------------- */
-    if ((sh_id = shmget(fichier, sizeof(struct Segment_partage), IPC_CREAT | 0666)) == -1) {
-    	perror("Erreur lors de la création de la mémoire.");
-        exit(EXIT_FAILURE);
-    }
-
-    printf("Initialisation de la variable partagée. . .\n");
-    /* ------------------- Initialisation de la variable partagé ------------------- */
-    struct Segment_partage * segment_partage = NULL;
-    segment_partage = (struct Segment_partage * ) shmat(sh_id, NULL, 0);
-    if (segment_partage == NULL) {
-        perror("Erreur de la liaison à la mémoire partagée");
-        exit(EXIT_FAILURE);
-    }
-    segment_partage-> nb_Clients = 0;
-    segment_partage-> max_clients = max_clients;
 
     printf("Création de la sémaphore d'associe à la clé pour l'écriture. . .\n");
     union semun egCtrl;
@@ -465,24 +349,39 @@ int main(int argc, char ** argv) {
         }
     }
 
-    /* ------------------- semaphore d'associe à la cle pour la maj ------------------- */
-    /*
-    int sem_id_maj;
-    sem_id_maj = semget(maj, max_clients, IPC_CREAT | 0666);
-    if (sem_id_maj == -1) {
-        perror("Erreur création sémaphore\n");
+    printf("Creation du segment de mémoire partagée. . .\n");
+    /* ------------------- création d'un nouveau segment de mémoire avec l'identifiant en retour ------------------- */
+    if ((sh_id = shmget(fichier, sizeof(struct Segment_partage), IPC_CREAT | 0666)) == -1) {
+    	perror("Erreur lors de la création de la mémoire.");
         exit(EXIT_FAILURE);
     }
 
-    egCtrl.val = 0;
-    for (int i = 0; i < max_clients; ++i) //
-    {
-        if (semctl(sem_id_maj, i, SETVAL, egCtrl) == -1) {
-            perror("Erreur d'initialisation\n");
-            exit(EXIT_FAILURE);
-        }
+    if ((sh_id_notif = shmget(notif, sizeof(struct Segment_partage), IPC_CREAT | 0666)) == -1) {
+    	perror("Erreur lors de la création de la mémoire.");
+        exit(EXIT_FAILURE);
     }
-    */
+
+    printf("Initialisation de la variable partagée. . .\n");
+    /* ------------------- Initialisation de la variable partagé ------------------- */
+    struct Segment_partage * segment_partage = NULL;
+    segment_partage = (struct Segment_partage * ) shmat(sh_id, NULL, 0);
+    if (segment_partage == NULL) {
+        perror("Erreur de la liaison à la mémoire partagée");
+        exit(EXIT_FAILURE);
+    }
+    segment_partage-> nb_Clients = 0;
+    segment_partage-> max_clients = max_clients;
+    
+
+    struct Segment_partage * segment_partage_notif = NULL;
+    segment_partage_notif = (struct Segment_partage * ) shmat(sh_id_notif, NULL, 0);
+    if (segment_partage_notif == NULL) {
+        perror("Erreur de la liaison à la mémoire partagée");
+        exit(EXIT_FAILURE);
+    }
+    segment_partage_notif-> nb_Clients = 0;
+    segment_partage_notif-> max_clients = max_clients;
+
     /* ------------------- Initialisation du socket ------------------- */
     int socket_serveur;
     if ((socket_serveur = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -521,8 +420,6 @@ int main(int argc, char ** argv) {
     pthread_t * threads_notif_maj = malloc(max_clients * sizeof(pthread_t));
     pid_t pid;
 
-    struct sembuf sop;
-
     /* ------------------- Gestion des clients ------------------- */
 	struct Donnees_Client* donnees_client;
     int fils = 0;
@@ -537,19 +434,13 @@ int main(int argc, char ** argv) {
             exit(EXIT_FAILURE);
         }
 
-		sop.sem_num = 0;	/* Agir sur le sémaphore 0 */
-		sop.sem_op = -1;	/* Attendre que la valeur soit égale à 0 */
-		sop.sem_flg = 0;
-		if(semop(sem_id_partage, &sop, 1) < 0){
+		if(semop(sem_id_partage, sop, 1) < 0){
 			perror("Erreur de semop");
 			exit(EXIT_FAILURE);
 		}
 
         if (segment_partage->nb_Clients >= max_clients) {
-            sop.sem_num = 0;
-            sop.sem_op = 1;
-            sop.sem_flg = 0;
-            if((semop(sem_id_partage, &sop, 1)) < 0 ){
+            if((semop(sem_id_partage, sop+1, 1)) < 0 ){
 				perror("Erreur de semop");
 				exit(EXIT_FAILURE);
 			}
@@ -586,10 +477,8 @@ int main(int argc, char ** argv) {
 			segment_partage->nb_Clients++;
 			nb_Clients = segment_partage->nb_Clients++;
 
-			sop.sem_num = 0;
-			sop.sem_op = 1;
-			sop.sem_flg = 0;
-			if(semop(sem_id_partage, &sop, 1) < 0){
+
+			if(semop(sem_id_partage, sop+1, 1) < 0){
 				perror("Erreur de semop");
 				exit(EXIT_FAILURE);
 			}
@@ -605,38 +494,43 @@ int main(int argc, char ** argv) {
 				fils = 1;
 				/* ------------------- Creation du client ------------------- */
 				donnees_client = malloc(sizeof(struct Donnees_Client));
-				init_donnees_client(donnees_client, tab_socket_client, position, sh_id, nb_Clients);
+				init_donnees_client(donnees_client, tab_socket_client, position, sh_id, nb_Clients, fichier, notif, sem_id, sem_id_partage);
 					
                 if(pthread_create(&threads_clients[position], NULL, gestion_client, donnees_client) != 0){
                     printf("Erreur pthread gestion_client! \n");
                     exit(EXIT_FAILURE);
                 }
-
+                /*
                 if(pthread_create(&threads_notif_maj[position], NULL, maj_fichier_utilisateur, donnees_client) != 0){
 		      		printf("Erreur pthread maj fichier utilisateur\n");
 		      		exit(EXIT_FAILURE);
-		      	}
+		      	}*/
 
                 if(pthread_join(threads_clients[position],NULL) != 0){
                     printf("Erreur join pthreads! \n");
                     exit(EXIT_FAILURE);
 		      	}
-
+                /*
                 if(pthread_join(threads_notif_maj[position], NULL) != 0){
                     perror("Erreur de join pthread_notif\n");
                     exit(EXIT_FAILURE);
                 }
+                */
 			}
         }
     }
 	if (pid != 0 && pid != -1) {
-                if (shmctl(sh_id, IPC_RMID, NULL) == -1) {
+                if (shmdt(segment_partage) == -1) {
+                    perror("Erreur du détachement de la mémoire partagée.");
+                    exit(EXIT_FAILURE);
+                }
+
+                if (shmdt(segment_partage_notif) == -1) {
                     perror("Erreur du détachement de la mémoire partagée.");
                     exit(EXIT_FAILURE);
                 }
                 close(socket_serveur);
                 free(threads_clients);
-                //free(threads_clients_maj);
                 free(threads_notif_maj);
 				printf("Fermeture du serveur\n");
             }   
