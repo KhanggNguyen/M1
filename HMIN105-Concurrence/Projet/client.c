@@ -158,10 +158,12 @@ int main(int argc, char ** argv){
     struct sockaddr_in servaddr;
     servaddr.sin_family = AF_INET; // IPv4
     servaddr.sin_port = htons(port);
+    servaddr.sin_addr.s_addr = inet_addr(ip);
+    /*
     if(inet_pton(AF_INET, ip, &(servaddr.sin_addr)) < 0 ){
         perror("Erreur d'initialisation de l'adresse ip");
         exit(EXIT_FAILURE);
-    }
+    }*/
 
 	if (connect(socket_client,(struct sockaddr*)&servaddr, sizeof(servaddr)) == -1)
 	{
