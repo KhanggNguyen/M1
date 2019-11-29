@@ -71,27 +71,41 @@ int envoi(int dest, void * msg, int taille_msg) {
 void* gestion_fichier(void* arg){
     struct Donnees_Fichier* donnees_fichier = arg;
     int n;
-    int flag;
+    int flag_connexion_serveur;
+    int flag_connexion_client = 1;
     do{
-        pthread_mutex_lock(&lock);
-        if((n = reception(donnees_fichier->socket, &flag, sizeof(int))) < 0){
+        
+        if(envoi(donnees_fichier->socket ,&flag_connexion_client,sizeof(int)) != 0){
+            perror("Erreur reception");
+            exit(EXIT_FAILURE);
+        }
+        printf("Envoyé flag de connexion\n");
+
+        //pthread_mutex_lock(&lock);
+        if((n = reception(donnees_fichier->socket, &flag_connexion_serveur, sizeof(int))) < 0){
             perror("Erreur de reception");
             exit(EXIT_FAILURE);
         }
-        pthread_mutex_unlock(&lock);
+        printf("Reçu flag de connexion du serveur : %d\n", flag_connexion_serveur);
+        //pthread_mutex_unlock(&lock);
 
-        if(flag == 2){
+        if(flag_connexion_serveur == 2){
             printf("Fermeture du serveur\n");
             exit(EXIT_FAILURE);
         }
 
-        if(flag == 1){
+        if(flag_connexion_serveur == 1){
             char buf[9999];
             printf("Saississez votre contenu :  ");
-            scanf("%s\n", buf);
+            scanf("%s", buf);
+            if(envoi(donnees_fichier->socket,&buf,sizeof(buf)) != 0){
+                perror("Erreur reception");
+                exit(EXIT_FAILURE);
+            }
+            printf("Envoyé contenu du client\n");
         }
         
-    }while(flag != 0);
+    }while(flag_connexion_serveur == 1);
     free(donnees_fichier);
     pthread_exit(NULL);
 }
@@ -179,14 +193,7 @@ int main(int argc, char ** argv){
 		perror("Erreur reception du fichier");
 		exit(EXIT_FAILURE);
 	}
-    printf("Contenu du fichier %s\n", fichier);
-
-    int flag_connexion = 1;
-    if(envoi(socket_client,&flag_connexion,sizeof(int)) != 0){
-		perror("Erreur reception");
-		exit(EXIT_FAILURE);
-	}
-    //printf("Envoyé flag de connexion\n");
+    printf("Contenu du fichier : %s\n", fichier);
     
 	pthread_t* threads_clients = malloc (2 * sizeof(pthread_t));
 

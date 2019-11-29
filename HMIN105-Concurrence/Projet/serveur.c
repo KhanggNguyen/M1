@@ -129,23 +129,25 @@ void* gestion_client(void* arg){
 	}
     printf("Envoyé contenu du fichier\n");
 
-	int flag;
-    int flag_connexion = 1;
+	int flag_connexion_client;
+    int flag_connexion_serveur = 1;
 	do{
         //pthread_mutex_lock(&lock);
-		if(reception(tab_socket_client[position], &flag, sizeof(int)) != 0){
+		if(reception(tab_socket_client[position], &flag_connexion_client, sizeof(int)) != 0){
 			perror("Erreur reception");
-			flag=0;
+			flag_connexion_client=0;
 		}
+        printf("Reçu flag de vérification : %d\n", flag_connexion_client);
         
-        if (envoi(tab_socket_client[position], &flag_connexion, sizeof(int)) != 0) {
+        if (envoi(tab_socket_client[position], &flag_connexion_serveur, sizeof(int)) != 0) {
             perror("Erreur d'envoi");
             exit(EXIT_FAILURE);
         }
+        printf("Envoyé flag de connexion au client\n");
         //pthread_mutex_unlock(&lock);
 
 		/* cas deconnexion */
-		if(flag == 0){
+		if(flag_connexion_client == 0){
 			printf("Client déconnecté !\n");
 
             if(semop(donnees_client->sem_id, sop, 1) < 0){
@@ -182,7 +184,7 @@ void* gestion_client(void* arg){
                 exit(EXIT_FAILURE);
 		    }
 		}
-	}while(flag == 1);
+	}while(flag_connexion_client == 1);
     free(donnees_client);
     pthread_exit(NULL);
 
@@ -283,6 +285,10 @@ int main(int argc, char ** argv) {
     FILE* fd_fichier;
     printf("Creation des fichier. . .\n");
     fd_fichier = fopen(fichier_partage, "a+");
+    if(fd_fichier == NULL){
+        perror("Erreur d'ouverture fichier\n");
+        exit(EXIT_FAILURE);
+    }
 
     /* ------------------- initialisation de la mémoire partagé ------------------- */
     key_t fichier; 
@@ -327,10 +333,10 @@ int main(int argc, char ** argv) {
     segment_partage-> nb_Clients = 0;
     segment_partage-> max_clients = max_clients;
     fseek(fd_fichier, 0, SEEK_END);
-    int size = ftell(fd_fichier);
-    rewind(fd_fichier);
-    fread(segment_partage->fichier, 1, size, fd_fichier);
-    printf("segment_partage : %s\n", segment_partage->fichier);
+    long length = ftell(fd_fichier);
+    fseek(fd_fichier, 0, SEEK_SET);
+    fread(segment_partage->fichier, 1, length, fd_fichier);
+    printf("Contenu du fichier : %s", segment_partage->fichier);
 
     /* ------------------- Initialisation du socket ------------------- */
     int socket_serveur;
