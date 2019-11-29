@@ -26,6 +26,13 @@ struct Donnees_Fichier{
     char* fichier;
 };
 
+struct sembuf sop[] ={
+       {0, -1, SEM_UNDO},//lock
+       {0, 1, SEM_UNDO}  //unlock
+    };
+
+pthread_mutex_t lock;
+
 /* ------------------- definition des fonctions utiles ------------------- */
 int reception(int dest, void * msg, int taille_msg) {
     int nb_octet_recu = 0;
@@ -66,10 +73,12 @@ void* gestion_fichier(void* arg){
     int n;
     int flag;
     do{
+        pthread_mutex_lock(&lock);
         if((n = reception(donnees_fichier->socket, &flag, sizeof(int))) < 0){
             perror("Erreur de reception");
             exit(EXIT_FAILURE);
         }
+        pthread_mutex_unlock(&lock);
 
         if(flag == 2){
             printf("Fermeture du serveur\n");
@@ -77,13 +86,6 @@ void* gestion_fichier(void* arg){
         }
 
         if(flag == 1){
-            char fichier[9999];
-            if(reception(donnees_fichier->socket, fichier, sizeof(fichier)) < 0){
-                perror("Erreur de reception");
-            }
-            strcpy(donnees_fichier->fichier, fichier);
-            printf("Contenu du fichier %s\n", fichier);
-
             char buf[9999];
             printf("Saississez votre contenu :  ");
             scanf("%s\n", buf);
@@ -166,12 +168,10 @@ int main(int argc, char ** argv){
     }
     printf("Test de connexion : reçu\n");
 
-    int flag_connexion = 1;
-    if(envoi(socket_client,&flag_connexion,sizeof(int)) != 0){
-		perror("Erreur reception");
-		exit(EXIT_FAILURE);
-	}
-    printf("Envoyé flag de connexion\n");
+    if(pthread_mutex_init(&lock, NULL) != 0){
+        perror("Erreur d'initialisation mutex");
+        exit(EXIT_FAILURE);
+    }
 
     /* Reception du buffer*/
     char fichier[9999];
@@ -181,6 +181,12 @@ int main(int argc, char ** argv){
 	}
     printf("Contenu du fichier %s\n", fichier);
 
+    int flag_connexion = 1;
+    if(envoi(socket_client,&flag_connexion,sizeof(int)) != 0){
+		perror("Erreur reception");
+		exit(EXIT_FAILURE);
+	}
+    //printf("Envoyé flag de connexion\n");
     
 	pthread_t* threads_clients = malloc (2 * sizeof(pthread_t));
 
