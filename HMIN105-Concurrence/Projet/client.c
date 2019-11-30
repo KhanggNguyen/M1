@@ -73,20 +73,28 @@ void* gestion_fichier(void* arg){
     int n;
     int flag_connexion_serveur;
     int flag_connexion_client = 1;
+    /* Reception du buffer*/
+    char fichier[9999];
+	if(reception(donnees_fichier->socket, fichier, sizeof(fichier))!=0){
+		perror("Erreur reception du fichier");
+		exit(EXIT_FAILURE);
+	}
+    printf("Contenu du fichier : %s\n", fichier);
+
     do{
         
         if(envoi(donnees_fichier->socket ,&flag_connexion_client,sizeof(int)) != 0){
             perror("Erreur reception");
             exit(EXIT_FAILURE);
         }
-        printf("Envoyé flag de connexion\n");
+        //printf("Envoyé flag de connexion\n");
 
         //pthread_mutex_lock(&lock);
         if((n = reception(donnees_fichier->socket, &flag_connexion_serveur, sizeof(int))) < 0){
             perror("Erreur de reception");
             exit(EXIT_FAILURE);
         }
-        printf("Reçu flag de connexion du serveur : %d\n", flag_connexion_serveur);
+        //printf("Reçu flag de connexion du serveur : %d\n", flag_connexion_serveur);
         //pthread_mutex_unlock(&lock);
 
         if(flag_connexion_serveur == 2){
@@ -98,11 +106,16 @@ void* gestion_fichier(void* arg){
             char buf[9999];
             printf("Saississez votre contenu :  ");
             scanf("%s", buf);
-            if(envoi(donnees_fichier->socket,&buf,sizeof(buf)) != 0){
+            if(envoi(donnees_fichier->socket, &buf, sizeof(buf)) != 0){
                 perror("Erreur reception");
                 exit(EXIT_FAILURE);
             }
-            printf("Envoyé contenu du client\n");
+            printf("Contenu Envoyé\n");
+            if(reception(donnees_fichier->socket, fichier, sizeof(fichier))!=0){
+                perror("Erreur reception du fichier");
+                exit(EXIT_FAILURE);
+            }
+            printf("Contenu du fichier : %s\n", fichier);
         }
         
     }while(flag_connexion_serveur == 1);
@@ -110,31 +123,19 @@ void* gestion_fichier(void* arg){
     pthread_exit(NULL);
 }
 
-void* modifier_fichier(void* arg){
+void* reception_modification(void* arg){
     struct Donnees_Fichier* donnees_fichier = arg;
-    int n;
-    int flag;
+
     do{
-        if((n = reception(donnees_fichier->socket, &flag, sizeof(int))) < 0){
-            perror("Erreur de reception");
-            exit(EXIT_FAILURE);
+        char fichier[9999];
+        if(reception(donnees_fichier->socket, fichier, sizeof(fichier)) > 0){
+            printf("Contenu du fichier : %s\n", fichier);
         }
-
-        if(n == 2){
-            printf("Fermeture du serveur\n");
-            exit(EXIT_FAILURE);
-        }
-
-        if(flag == 1){
-            char buf[9999];
-            printf("Saississez votre contenu :  ");
-            scanf("%s\n", buf);
-        }
-    }while(flag != 0);
+    }while(1);
 
     free(donnees_fichier);
     pthread_exit(NULL);
-}
+} 
 
 int main(int argc, char ** argv){
 
@@ -172,51 +173,30 @@ int main(int argc, char ** argv){
 	}
 	printf("Connecté.\n");
 
-    int test_connexion;
-	if(reception(socket_client,&test_connexion,sizeof(int)) != 0){
-		perror("Erreur reception");
-		exit(EXIT_FAILURE);
-	}
-
-    if(test_connexion != 0){
-        printf("Erreur de connexion : plein");
-        exit(EXIT_FAILURE);
-    }
-    printf("Test de connexion : reçu\n");
-
     if(pthread_mutex_init(&lock, NULL) != 0){
         perror("Erreur d'initialisation mutex");
         exit(EXIT_FAILURE);
     }
-
-    /* Reception du buffer*/
-    char fichier[9999];
-	if(reception(socket_client, fichier, sizeof(fichier))!=0){
-		perror("Erreur reception du fichier");
-		exit(EXIT_FAILURE);
-	}
-    printf("Contenu du fichier : %s\n", fichier);
     
 	pthread_t* threads_clients = malloc (2 * sizeof(pthread_t));
 
     struct Donnees_Fichier* donnees_fichier = NULL;
     donnees_fichier = malloc(sizeof(struct Donnees_Fichier));
     donnees_fichier->socket = socket_client;
-    donnees_fichier->fichier = fichier;
+    //donnees_fichier->fichier = fichier;
 
 	if(pthread_create(&threads_clients[0], NULL, gestion_fichier, donnees_fichier) != 0){
   		printf("Erreur thread gestion_fichier! \n");
   		exit(EXIT_FAILURE);
   	}
     /*
-    if(pthread_create(&threads_clients[1], NULL, modifier_fichier, donnees_fichier) != 0 ){
-        printf("Erreur thread modifier_fichier! \n");
+    if(pthread_create(&threads_clients[1], NULL, reception_modification, donnees_fichier) != 0){
+        printf("Erreur thread reception modif\n");
         exit(EXIT_FAILURE);
-    }*/
+    } */
 
     pthread_join(threads_clients[0], NULL);
     //pthread_join(threads_clients[1], NULL);
-
     free(threads_clients);
     close(socket_client);
     printf("Fin processus\n");

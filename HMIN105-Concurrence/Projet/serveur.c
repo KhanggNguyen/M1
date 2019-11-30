@@ -114,7 +114,7 @@ void* gestion_client(void* arg){
 	printf("Gestion du client numéro %d\n", donnees_client->num_client);
 
 	int position = donnees_client->position;
-	int* tab_socket_client = donnees_client->tab_socket_client;
+	int* tab_socket_client = donnees_client->tab_socket_client; 
 
 	struct Segment_partage* segment_partage = NULL;
 	segment_partage = (struct Segment_partage *) shmat(donnees_client->sh_id, NULL, 0);
@@ -123,6 +123,12 @@ void* gestion_client(void* arg){
 		exit(EXIT_FAILURE);
 	}
 
+    segment_partage->tab_socket_client[position] = tab_socket_client[position];
+    for(int i = 0; i < segment_partage->max_clients; i++){
+        tab_socket_client[i] = segment_partage->tab_socket_client[i];
+    }
+
+    //envoi la contenue du fichier dès la connexion du client
 	if(envoi(tab_socket_client[position], segment_partage->fichier, sizeof(segment_partage->fichier)) != 0){
 		perror("Erreur d'envoi");
 		exit(EXIT_FAILURE);
@@ -134,16 +140,15 @@ void* gestion_client(void* arg){
 	do{
         //pthread_mutex_lock(&lock);
 		if(reception(tab_socket_client[position], &flag_connexion_client, sizeof(int)) != 0){
-			perror("Erreur reception");
+			printf("Erreur reception\n ");
 			flag_connexion_client=0;
 		}
-        printf("Reçu flag de vérification du client numéro %d : %d\n", donnees_client->num_client, flag_connexion_client);
+        //printf("Reçu flag de vérification du client numéro %d : %d\n", donnees_client->num_client, flag_connexion_client);
         
         if (envoi(tab_socket_client[position], &flag_connexion_serveur, sizeof(int)) != 0) {
-            perror("Erreur d'envoi");
-            exit(EXIT_FAILURE);
+            perror("Erreur d'envoi\n ");
         }
-        printf("Envoyé flag de connexion au client numéro %d\n", donnees_client->num_client);
+        //printf("Envoyé flag de connexion au client numéro %d\n", donnees_client->num_client);
         //pthread_mutex_unlock(&lock);
 
 		/* cas deconnexion */
@@ -164,107 +169,39 @@ void* gestion_client(void* arg){
                 exit(EXIT_FAILURE);
 		    }
 		}else{
+			char buffer[9999];
+
+            if(reception(tab_socket_client[position], buffer, sizeof(buffer)) != 0){
+				printf("Erreur reception");
+                flag_connexion_client=0;
+			}
+            printf("Contenu reçu du client numéro %d : %s\n ", donnees_client->num_client, buffer);
+
             if(semop(donnees_client->sem_id, sop, 1) < 0){
                 perror("Erreur de semop");
                 exit(EXIT_FAILURE);
 		    }
 
-			char buffer[9999];
-
-            if(reception(tab_socket_client[position], buffer, sizeof(buffer)) != 0){
-				perror("Erreur reception");
-				exit(EXIT_FAILURE);
-			}
-            printf("Contenu reçu du client numéro %d : %s\n ", donnees_client->num_client, buffer);
-            
-            //mettre dans le segment-partage->fichier
+            strcpy(segment_partage->fichier, buffer);
 
 			if(semop(donnees_client->sem_id, sop+1, 1) < 0){
                 perror("Erreur de semop");
                 exit(EXIT_FAILURE);
 		    }
+
+            for(int i=0; i< segment_partage->max_clients; i++){
+                if(segment_partage->tab_socket_client[i] != -1){
+                    if(envoi(tab_socket_client[i], segment_partage->fichier, sizeof(segment_partage->fichier)) != 0){
+                        printf("Erreur d'envoi");
+                    }
+                } 
+                
+            } 
 		}
 	}while(flag_connexion_client == 1);
     free(donnees_client);
     pthread_exit(NULL);
 
-}
-
-void* maj_fichier_utilisateur(void * arg){
-	struct Donnees_Client* donnees_client = arg;
-
-    int position = donnees_client->position;
-	int* tab_socket_client = donnees_client->tab_socket_client;
-
-    struct Segment_partage* segment_partage = NULL;
-	segment_partage = (struct Segment_partage*) shmat(donnees_client->sh_id, NULL, 0);
-	if(segment_partage == NULL){
-		perror("Erreur de la liaison à la mémoire partagée");
-		exit(EXIT_FAILURE);
-	}
-
-    key_t file, notif;
-    struct sembuf sop;
-
-	if((notif = ftok("./fichier_notif.txt", 42)) == -1){
-		perror("Erreur  de l'assignation de la clé notif");
-		exit(EXIT_FAILURE);
-	}
-
-    if((file = ftok("./fichier_partage.txt", 42)) == -1){
-		perror("Erreur de l'assignation de la clé key");
-		exit(EXIT_FAILURE);
-	}
-
-    int sem_id_partage = semget(file, 0, 0666);
-	if(sem_id_partage==-1){
-        perror("Erreur semaphore \n"); 
-        exit(EXIT_FAILURE);
-    }
-
-    int sem_id_notif = semget(notif, 99, 0666);
-	if(sem_id_notif == -1){
-        perror("Erreur sémaphore");
-        exit(EXIT_FAILURE);
-    }
-
-    do{
-		sop.sem_num = position;
-		sop.sem_op = -1;
-		sop.sem_flg = 0;
-        if(semop(sem_id_notif, &sop, 1) < 0){
-            perror("Erreur de semop");
-            exit(EXIT_FAILURE);
-        }
-
-		sop.sem_num = 0;
-		sop.sem_op = -1;
-		sop.sem_flg = 0;
-        if(semop(sem_id_partage, &sop, 1) < 0){
-            perror("Erreur de semop");
-            exit(EXIT_FAILURE);
-        }
-
-		int flag = 1;
-		if(envoi(tab_socket_client[position], &flag, sizeof(int)) == -1){
-			perror("Erreur envoie");
-		}
-
-		if(envoi(tab_socket_client[position], segment_partage->fichier,sizeof(segment_partage->fichier)) != 0){
-			perror("Erreur reception");
-		}
-
-		sop.sem_num = 0;
-		sop.sem_op = 1;
-		sop.sem_flg = 0;
-		if(semop(sem_id_partage, &sop, 1) < 0){
-            perror("Erreur de semop");
-            exit(EXIT_FAILURE);
-        }
-	}while(1);
-
-    free(donnees_client);
-    pthread_exit(NULL);
 }
 
 /* ------------------- exécution ------------------- */
@@ -363,7 +300,6 @@ int main(int argc, char ** argv) {
     printf("Information du serveur : <%s> <%i>\n",inet_ntoa((struct in_addr)servaddr.sin_addr), port);
     printf("En mode écoute. . .\n");
 
-    int nb_Clients = 0;
     int * tab_socket_client = malloc(max_clients * sizeof(int));
 
     for (int i = 0; i < max_clients; ++i) {
@@ -380,11 +316,10 @@ int main(int argc, char ** argv) {
         perror("Erreur d'initialisation mutex");
         exit(EXIT_FAILURE);
     }
-    int pid;
+
     while (1) {
         int socket_client;
         struct sockaddr_in cliaddr;
-		int flag;
         socklen_t lgA_client = sizeof(struct sockaddr_in);
 		/* ------------------- Connecter un client au socket -------------------*/
         if ((socket_client = accept(socket_serveur, (struct sockaddr * ) &cliaddr, &lgA_client)) < 0) {
@@ -392,78 +327,32 @@ int main(int argc, char ** argv) {
             exit(EXIT_FAILURE);
         }
 
-        pid = fork();
-        if(pid == 0){
-            if(semop(sem_id, sop, 1) < 0){
-                perror("Erreur de semop");
-                exit(EXIT_FAILURE);
-            }
+        printf("Nouvelle connection : %s\n", inet_ntoa((struct in_addr)cliaddr.sin_addr));
 
-            if (segment_partage->nb_Clients >= max_clients) {
-                if((semop(sem_id, sop+1, 1)) < 0 ){
-                    perror("Erreur de semop");
-                    exit(EXIT_FAILURE);
-                }
-
-                flag = 1; //trop de client connecté
-                if (envoi(socket_client, &flag, sizeof(int)) != 0) {
-                    perror("Erreur d'envoi");
-                    exit(EXIT_FAILURE);
-                }
-            }else {
-                flag = 0;
-                if (envoi(socket_client, &flag, sizeof(int)) != 0) {
-                    perror("Erreur d'envoi");
-                    exit(EXIT_FAILURE);
-                }
-
-                int position = recherche_position_libre(tab_socket_client);
-                if(position == -1){
-                    perror("Plus de place libre\n");
-                    exit(EXIT_FAILURE);
-                }
-
-                tab_socket_client[position] = socket_client;
-                if (tab_socket_client[position] == -1) {
-                    perror("Erreur de connexion");
-                    exit(EXIT_FAILURE);
-                }
-
-                segment_partage->tab_socket_client[position] = tab_socket_client[position];
-                for(int i = 0; i < max_clients; i++){
-                    tab_socket_client[i] = segment_partage->tab_socket_client[i];
-                }
-
-                segment_partage->nb_Clients++;
-                nb_Clients = segment_partage->nb_Clients++;
-
-
-                if(semop(sem_id, sop+1, 1) < 0){
-                    perror("Erreur de semop");
-                    exit(EXIT_FAILURE);
-                }
-
-                printf("Nouvelle connection : %s\n", inet_ntoa((struct in_addr)cliaddr.sin_addr));
-                
-                /* ------------------- Creation du client ------------------- */
-                donnees_client = malloc(sizeof(struct Donnees_Client));
-                init_donnees_client(donnees_client, tab_socket_client, position, sh_id, nb_Clients, fichier, sem_id);
-                        
-                if(pthread_create(&threads_clients[position], NULL, gestion_client, donnees_client) != 0){
-                    printf("Erreur pthread gestion_client! \n");
-                    exit(EXIT_FAILURE);
-                }
-                for(int i=0; i < position ; i++){
-                    if(pthread_join(threads_clients[i],NULL) != 0){
-                        printf("Erreur join pthreads! \n");
-                        exit(EXIT_FAILURE);
-                    }
-                }    
-            }
-        }
-        else {
-            close(socket_client);
+        int position = recherche_position_libre(tab_socket_client);
+        if(position == -1){
+            perror("Plus de place libre\n");
+            exit(EXIT_FAILURE);
         } 
+        tab_socket_client[position] = socket_client;
+        if (tab_socket_client[position] == -1) {
+            perror("Erreur de connexion");
+            exit(EXIT_FAILURE);
+        }
+
+        segment_partage->nb_Clients++;
+
+        /* ------------------- Creation du client ------------------- */
+        donnees_client = malloc(sizeof(struct Donnees_Client));
+        init_donnees_client(donnees_client, tab_socket_client, position, sh_id, segment_partage->nb_Clients, fichier, sem_id);
+
+        if(pthread_create(&threads_clients[position], NULL, gestion_client, donnees_client) != 0){
+            printf("Erreur pthread gestion_client! \n");
+            exit(EXIT_FAILURE);
+        }
+
+        pthread_join(threads_clients[position], NULL);
+
     } 
     if (shmdt(segment_partage) == -1) {
         perror("Erreur du détachement de la mémoire partagée.");
