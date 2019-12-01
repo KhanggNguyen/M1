@@ -172,7 +172,7 @@ void* gestion_client(void* arg){
 			char buffer[9999];
 
             if(reception(tab_socket_client[position], buffer, sizeof(buffer)) != 0){
-				printf("Erreur reception");
+				printf("Erreur reception\n");
                 flag_connexion_client=0;
 			}
             printf("Contenu reçu du client numéro %d : %s\n ", donnees_client->num_client, buffer);
@@ -258,6 +258,8 @@ int main(int argc, char ** argv) {
         exit(EXIT_FAILURE);
     }
 
+    
+
 
     printf("Initialisation de la variable partagée. . .\n");
     /* ------------------- Initialisation de la variable partagé ------------------- */
@@ -322,6 +324,7 @@ int main(int argc, char ** argv) {
         struct sockaddr_in cliaddr;
         socklen_t lgA_client = sizeof(struct sockaddr_in);
 		/* ------------------- Connecter un client au socket -------------------*/
+        printf("test\n");
         if ((socket_client = accept(socket_serveur, (struct sockaddr * ) &cliaddr, &lgA_client)) < 0) {
             perror("Erreur de connexion");
             exit(EXIT_FAILURE);
@@ -358,6 +361,7 @@ int main(int argc, char ** argv) {
         perror("Erreur du détachement de la mémoire partagée.");
         exit(EXIT_FAILURE);
     }
+    pthread_mutex_destroy(&lock);
     fclose(fd_fichier);
     close(socket_serveur);
     free(threads_clients);
