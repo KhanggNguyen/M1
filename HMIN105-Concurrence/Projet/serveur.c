@@ -324,7 +324,6 @@ int main(int argc, char ** argv) {
         struct sockaddr_in cliaddr;
         socklen_t lgA_client = sizeof(struct sockaddr_in);
 		/* ------------------- Connecter un client au socket -------------------*/
-        printf("test\n");
         if ((socket_client = accept(socket_serveur, (struct sockaddr * ) &cliaddr, &lgA_client)) < 0) {
             perror("Erreur de connexion");
             exit(EXIT_FAILURE);
@@ -353,8 +352,6 @@ int main(int argc, char ** argv) {
             printf("Erreur pthread gestion_client! \n");
             exit(EXIT_FAILURE);
         }
-
-        pthread_join(threads_clients[position], NULL);
 
     } 
     if (shmdt(segment_partage) == -1) {
