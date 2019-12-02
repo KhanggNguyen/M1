@@ -1,0 +1,15 @@
+Pour compiler utiliser la commande "make" sur le terminal
+Pour executer, 
+- il faut demarrer le serveur en ouvrant le terminal dans le dossier bin et execute la commande suivant :
+./serveur <PORT> <NB_Max_Client>
+par exemple : 
+./serveur 1234 20
+
+- ensuite, on peut connecter un client en utilisant la commande suivant dans un autre terminal du dossier bin :
+./client <IP> <PORT>
+par exemple : 
+./client 162.38.80.10 1234 
+
+pour connaitre l'adresse IP du serveur, il faut aller dans l'ordi de serveur et faire la commande "ifconfig". Vous trouverez l'adresse IP du serveur à côte du inet < IP >
+
+Les travaux effectués sont la mise en place du serveur concurrence et l'espace partagé. 
