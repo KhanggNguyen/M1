@@ -47,6 +47,7 @@ struct Donnees_Client{
     int sem_id;
  	int num_client;
 	char nom[256];
+    int num_zone;
 };
 
 struct sembuf sop[] ={
@@ -195,7 +196,6 @@ void* gestion_client(void* arg){
                         printf("Erreur d'envoi");
                     }
                 } 
-                
             } 
 		}
 	}while(flag_connexion_client == 1);
@@ -257,9 +257,6 @@ int main(int argc, char ** argv) {
     	perror("Erreur lors de la création de la mémoire.");
         exit(EXIT_FAILURE);
     }
-
-    
-
 
     printf("Initialisation de la variable partagée. . .\n");
     /* ------------------- Initialisation de la variable partagé ------------------- */
@@ -324,7 +321,6 @@ int main(int argc, char ** argv) {
         struct sockaddr_in cliaddr;
         socklen_t lgA_client = sizeof(struct sockaddr_in);
 		/* ------------------- Connecter un client au socket -------------------*/
-        printf("test\n");
         if ((socket_client = accept(socket_serveur, (struct sockaddr * ) &cliaddr, &lgA_client)) < 0) {
             perror("Erreur de connexion");
             exit(EXIT_FAILURE);
@@ -353,9 +349,6 @@ int main(int argc, char ** argv) {
             printf("Erreur pthread gestion_client! \n");
             exit(EXIT_FAILURE);
         }
-
-        pthread_join(threads_clients[position], NULL);
-
     } 
     if (shmdt(segment_partage) == -1) {
         perror("Erreur du détachement de la mémoire partagée.");

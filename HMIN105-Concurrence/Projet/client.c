@@ -116,6 +116,8 @@ void* gestion_fichier(void* arg){
                 exit(EXIT_FAILURE);
             }
             printf("Contenu du fichier : %s\n", fichier);
+
+            
         }
         
     }while(flag_connexion_serveur == 1);
