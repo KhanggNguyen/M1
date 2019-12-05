@@ -14,8 +14,8 @@
 #include "warn.h"
 
 struct sembuf op[] = {
-    { 0, -1, SEM_UNDO }, //lock
-    { 0, 1, SEM_UNDO } //unlock
+    { 0, -1, 0 }, //lock
+    { 0, 1, 0 } //unlock
 };  
 
 
