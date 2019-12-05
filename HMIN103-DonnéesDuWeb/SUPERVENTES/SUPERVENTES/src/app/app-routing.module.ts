@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ProduitsComponent } from './produits/produits.component';
-import { InscriptionComponent } from './inscription/inscription.component';
+import { UtilisateurComponent } from './utilisateur/utilisateur.component';
+import { InscriptionComponent } from './utilisateur/inscription/inscription.component';
 
 
 const routes: Routes = [
@@ -10,8 +11,8 @@ const routes: Routes = [
     component: ProduitsComponent
   },
   {
-    path : 'inscription',
-    component: InscriptionComponent
+    path: 'inscription', component: UtilisateurComponent,
+    children: [{ path : '', component: InscriptionComponent }]
   }
 ];
 

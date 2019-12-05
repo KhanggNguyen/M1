@@ -1,16 +1,19 @@
+//build-in
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+//routing
 import { AppRoutingModule } from './app-routing.module';
-import { ProduitsService } from './produits.service';
 
+//components 
 import { AppComponent } from './app.component';
 import { ProduitsComponent } from './produits/produits.component';
-import { ConnexionComponent } from './connexion/connexion.component';
+import { ConnexionComponent } from './utilisateur/connexion/connexion.component';
 import { MenuComponent } from './menu/menu.component';
-import { InscriptionComponent } from './inscription/inscription.component';
+import { InscriptionComponent } from './utilisateur/inscription/inscription.component';
+import { UtilisateurComponent } from './utilisateur/utilisateur.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,8 @@ import { InscriptionComponent } from './inscription/inscription.component';
     ProduitsComponent,
     ConnexionComponent,
     MenuComponent,
-    InscriptionComponent
+    InscriptionComponent,
+    UtilisateurComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +32,6 @@ import { InscriptionComponent } from './inscription/inscription.component';
     FormsModule
   ],
   providers: [
-    ProduitsService,
     
   ],
   bootstrap: [AppComponent]

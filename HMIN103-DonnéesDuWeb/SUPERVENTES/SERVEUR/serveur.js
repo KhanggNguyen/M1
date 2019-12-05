@@ -1,5 +1,15 @@
-const express = require('express');
+require('./config/config'); // les configs du serveur et bdd
+require('./models/db'); // connecter à la bdd
+
+const express = require('express'); //traiter les requêtes avec la BDD et renvoyer les reponses
 const app = express();
+const bodyParser = require('body-parser');//permet d'extraire les données du requete plus simple
+const cors = require('cors');//proteger les clients contre les requêtes des differents domain
+
+const rtsIndex = require('./routes/index.router');
+
+app.use(bodyParser.json());
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(function (req, res, next){
@@ -8,11 +18,15 @@ app.use(function (req, res, next){
     res.setHeader('Access-Control-Allow-Headers', '*');
     next();
 });
+app.use('/', rtsIndex);
 
+//var MongoDB
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectId;
+
 const url ="mongodb://localhost:27017";
 
+//etablie une connexion sur la mongodb
 MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
     let db = client.db("SUPERVENTES");
 
@@ -77,36 +91,11 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
         }
     });
 
-    /* inscription */
-    app.post("/inscription", (req, res) => {
-        console.log("/inscription");
-        try{
-            db.collection("membres").find({email : req.body.email}).toArray((err, documents) => {
-                if (documents.length != 0){
-                    console.log("utilisateur existe");
-                    //res.end(JSON.stringify({"resultat" : 0 , "message" : "L'email existe dans la db "}));
-                }else{
-                    let nom = req.body.nom;
-                    let prenom =req.body.prenom;
-                    let email = req.body.email;
-                    let mdp = req.body.mdp;
-                    let myUser = {nom : nom, prenom : prenom, email : email, mdp : mdp};
-                    db.collection("membres").insertOne(myUser, function(err, res) {
-                        console.log("Utilisateur ajouté dans la db!");
-                        //res.end(JSON.stringify({"resultat" : 1 , "message" : "Inscription réussi!"}));
-                    });
-                }
-            });
-        }catch (e){
-            console.log("Erreur sur /inscription : " + e);
-            res.end(JSON.stringify({"resultat" : 0, "message" : e}));
-        }
-    });
-
     /* ajout dans panier */
 
     /* rechercher */
 
 });
 
-app.listen(8888);
+//demarrage du serveur
+app.listen(process.env.PORT, () => console.log(`Serveur demarrage sur la port : ${process.env.PORT}`));
