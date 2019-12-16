@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ProduitsService } from '../shared/produits.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-produits',
@@ -9,7 +8,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./produits.component.css']
 })
 export class ProduitsComponent implements OnInit {
-  private user : Observable<string>;
   private produits : Object[] = new Array();
 
   constructor(
@@ -19,7 +17,6 @@ export class ProduitsComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      console.log("Dans produits.component.ts!");
       if (params["categorie"] !== undefined){
         console.log("/produits/"+params['categorie']);
         this.produitsService.getProduitsParCategorie(params["categorie"]).subscribe(produits => { 

@@ -1,33 +1,40 @@
-<div>
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+<h2 class="text-center"> Inscription </h2>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
 
-        <div class="form-group" [ngClass]="{ 'has-error': invalidFirstName() }">
-            <label for="prenom" class="control-label">Prénom</label>
-            <input type="text" formControlName="_prenom" class="form-control" [(ngModel)]="userService.selectedUser.prenom" id="prenom" name="prenom" placeholder="Martin">
-            <p *ngIf="invalidFirstName()" id="prenom_error" class="help-block">Prénom invalide.</p>
-        </div>
+    <div class="form-group" [ngClass]="{ 'has-error': invalidFirstName() }">
+        <label for="prenom">Prénom</label>
+        <input type="text" formControlName="_prenom" class="form-control" [(ngModel)]="userService.selectedUser.prenom" id="prenom" name="prenom" placeholder="Martin">
+        <p *ngIf="invalidFirstName()" id="prenom_error" class="help-block">Prénom invalide.</p>
+    </div>
 
-        <div class="form-group" [ngClass]="{ 'has-error': invalidLastName() }">
-            <label for="nom" class="control-label">Nom</label>
-            <input type="text" formControlName="_nom" class="form-control"  [(ngModel)]="userService.selectedUser.nom" id="nom" name="nom" placeholder="Toha">
-            <p *ngIf="invalidLastName()" id="nom_error" class="help-block">Nom invalide.</p>
-        </div>
+    <div class="form-group" [ngClass]="{ 'has-error': invalidLastName() }">
+        <label for="nom">Nom</label>
+        <input type="text" formControlName="_nom" class="form-control"  [(ngModel)]="userService.selectedUser.nom" id="nom" name="nom" placeholder="Toha">
+        <p *ngIf="invalidLastName()" id="nom_error" class="help-block">Nom invalide.</p>
+    </div>
 
-        <div class="form-group" [ngClass]="{ 'has-error': invalidEmail() }">
-            <label for="email" class="control-label">Email</label>
-            <input type="email" formControlName="_email" class="form-control" [(ngModel)]="userService.selectedUser.email" id="email" name="email" placeholder="your@email.com">
-            <p *ngIf="invalidEmail()" id="email_error" class="help-block">Adresse électronique invalide.</p>
-        </div>
+    <div class="form-group" [ngClass]="{ 'has-error': invalidEmail() }">
+        <label for="email">Email</label>
+        <input type="email" formControlName="_email" class="form-control" [(ngModel)]="userService.selectedUser.email" id="email" name="email" placeholder="your@email.com">
+        <p *ngIf="invalidEmail()" id="email_error" class="help-block">Adresse électronique invalide.</p>
+    </div>
         
-        <div class="form-group" [ngClass]="{ 'has-error': invalidPassword() }">
-            <label for="mdp" class="control-label">Mot de passe</label>
-            <input type="password" formControlName="_password" class="form-control" [(ngModel)]="userService.selectedUser.mdp" id="mdp" name="mdp" placeholder="*******">
-            <p *ngIf="invalidPassword()" id="password_error" class="help-block">Mot de passe invalide.</p>
-        </div>
+    <div class="form-group" [ngClass]="{ 'has-error': invalidPassword() }">
+        <label for="mdp">Mot de passe</label>
+        <input type="password" formControlName="_password" class="form-control" [(ngModel)]="userService.selectedUser.mdp" id="mdp" name="mdp" placeholder="*******">
+        <p *ngIf="invalidPassword()" id="password_error" class="help-block">Mot de passe invalide.</p>
+    </div>
         
-        <div class="form-group has-error">
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </div>
+    <div class="form-group has-error">
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </div>
 
-    </form>
+</form>
+
+<div class="alert alert-success" *ngIf="regisreted">
+    Votre compte est enregistré!
+</div>
+
+<div class="alert alert-danger" *ngIf="serverErrorMessages">
+    {{ serverErrorMessages }}
 </div>

@@ -1,31 +1,51 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 var userSchema = new mongoose.Schema({
-    FirstName: {
-        type: String
+    nom: {
+        type: String,
+        required: "Le prénom ne peut pas être vide."
     },
-    LastName:{
-        type: String
+    prenom:{
+        type: String,
+        required: "Le nom ne peut pas être vide."
     },
     email: {
-        type: String
+        type: String,
+        required: "L'email ne peut pas être vide.",
+        unique: true
     },
-    password: {
-        type: String
+    mdp: {
+        type: String,
+        required: "Le mot de passe ne peut pas être vide.",
+        minlength : [4,'Password must be atleast 4 character long']
     },
     salt: String
 });
 
-//event 
+//event
 userSchema.pre('save', function(next){
     bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(this.password, salt, (err, hash) => {
-            this.password = hash;
+        bcrypt.hash(this.mdp, salt, (err, hash) => {
+            this.mdp = hash;
             this.salt = salt;
             next();
         });
     });
 });
 
-mongoose.model('User', userSchema);
+userSchema.methods.verifyPassword = function(password){
+    return bcrypt.compareSync(password, this.mdp );
+};
+
+userSchema.methods.generateJwt = function (){
+    return jwt.sign({ _id: this._id, _nom: this.nom, _prenom: this.prenom  },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: process.env.JWT_EXP
+            }
+        );
+}
+
+mongoose.model('User', userSchema, 'membres');

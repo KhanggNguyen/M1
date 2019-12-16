@@ -1,0 +1,22 @@
+<table *ngIf="userInfos" class="table-fill">
+    <thead>
+        <tr>
+            <th colspan="2" class="text-center">User Profile</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Nom :</td>
+            <td>{{userInfos.nom}}</td>
+        </tr>
+        <tr>
+            <td>Prénom :   </td>
+            <td>{{userInfos.prenom}}</td>
+        </tr>
+        
+        <tr>
+            <td>Email :</td>
+            <td>{{userInfos.email}}</td>
+        </tr>
+    </tbody>
+  </table>

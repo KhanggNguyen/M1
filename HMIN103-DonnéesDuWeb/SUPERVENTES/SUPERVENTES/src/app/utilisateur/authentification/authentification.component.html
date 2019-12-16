@@ -1,0 +1,19 @@
+<h2 class="text-center"> Authentification </h2>
+<form #f="ngForm" (ngSubmit)="f.valid && onSubmit(f)">
+    <input type="text" #email="ngModel" class="form-control" name="email" [(ngModel)]="utilisateur.email" placeholder="exemple@gmail.com" [pattern]="emailRegex" required>
+    <div *ngIf="f.submitted && email.errors?.pattern">
+        <p class="alert alert-danger help-block">L'adresse email non valide</p>
+    </div>
+
+    <input type="password" #password="ngModel" class="form-control" name="password" [(ngModel)]="utilisateur.password" minlength="5" placeholder="Mot de passe" required>
+    <div  *ngIf="f.submitted && password.errors?.minlength">
+        <p class="alert alert-danger help-block">La longueur du mot de passe doit être supérieur à 5.</p>
+    </div >
+    
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+    </div>
+</form>
+<div class="alert alert-danger" *ngIf='serverErrorMessages'>
+    {{ serverErrorMessages }}
+</div>
