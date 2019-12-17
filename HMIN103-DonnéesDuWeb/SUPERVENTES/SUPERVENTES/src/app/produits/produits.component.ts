@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ProduitsService } from '../shared/produits.service';
+import { UserService } from '../shared/user.service';
 
 @Component({
   selector: 'app-produits',
@@ -12,7 +13,8 @@ export class ProduitsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private produitsService: ProduitsService
+    private produitsService: ProduitsService,
+    private userService: UserService
     ) { }
 
   ngOnInit() {
@@ -28,5 +30,9 @@ export class ProduitsComponent implements OnInit {
         });
       }
     });
+  }
+
+  isAuthenticated(){
+    return this.userService.isLoggedIn();
   }
 }

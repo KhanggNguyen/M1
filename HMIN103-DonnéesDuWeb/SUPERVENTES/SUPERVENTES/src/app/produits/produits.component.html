@@ -1,7 +1,20 @@
-<div>
-        <div *ngFor="let produit of produits" class="card">
-            <div class="card-text mx-auto"> {{produit['nom']}} ({{produit['type']}})
-                <div *ngIf="(user|async)"> <button> mais achetez donc ! </button> </div>
-            </div>
-        </div>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nom Produit</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Prix</th>
+            <th *ngIf="isAuthenticated()" scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr  *ngFor="let produit of produits; let i = index" class="card">
+            <th scope="row">{{ i+1 }}</th>
+            <td>{{ produit['nom'] }}</td>
+            <td><a [routerLink]="['/produits', produit.type]">{{ produit['type'] }}</a></td>
+            <td>{{ produit['prix'] }}</td>
+            <td *ngIf="isAuthenticated()"> <a><mat-icon>shopping_cart</mat-icon></a> </td>
+        </tr>
+    </tbody>
+  </table>

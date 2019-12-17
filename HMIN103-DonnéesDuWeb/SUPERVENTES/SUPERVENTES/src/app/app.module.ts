@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon'
 
 //routing
 import { routes } from './app-routing.module';
@@ -23,6 +24,7 @@ import { UserService } from './shared/user.service';
 //other
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { PanierComponent } from './panier/panier.component';
 
 @NgModule({
   declarations: [
@@ -32,13 +34,15 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     InscriptionComponent,
     UtilisateurComponent,
     ProfileComponent,
-    AuthentificationComponent
+    AuthentificationComponent,
+    PanierComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    MatIconModule,
     RouterModule.forRoot(routes)
   ],
   providers: [{
