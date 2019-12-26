@@ -3,14 +3,12 @@
         "nom" : "produit1",
         "marque" : "marqueA",
         "type" : "catA",
-        "prix" : "100",
-        "qte" : "10"
+        "prix" : "100"
     },
     {
         "nom" : "produit2",
         "marque" : "marqueB",
         "type" : "catB",
-        "prix" : "1",
-        "qte" : "99"
+        "prix" : "1"
     }
 ]

@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 var userSchema = new mongoose.Schema({
+    _id: {
+        type: mongoose.Schema.Types.ObjectId
+    },
     nom: {
         type: String,
         required: "Le prénom ne peut pas être vide."

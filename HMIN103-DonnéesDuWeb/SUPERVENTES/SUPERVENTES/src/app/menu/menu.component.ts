@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
-import { UserService } from '../shared/user.service';
+import { UserService } from '../services/user.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',

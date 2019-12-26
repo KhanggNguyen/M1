@@ -3,5 +3,4 @@ export class User {
     prenom:String;
     email:String;
     mdp:String;
-
 }

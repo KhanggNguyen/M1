@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon'
+import {FlashMessageModule} from 'angular-flash-message';
 
 //routing
 import { routes } from './app-routing.module';
@@ -19,7 +20,7 @@ import { ProfileComponent } from './utilisateur/profile/profile.component';
 import { AuthentificationComponent } from './utilisateur/authentification/authentification.component';
 
 //service
-import { UserService } from './shared/user.service';
+import { UserService } from './services/user.service';
 
 //other
 import { AuthGuard } from './auth/auth.guard';
@@ -35,7 +36,7 @@ import { PanierComponent } from './panier/panier.component';
     UtilisateurComponent,
     ProfileComponent,
     AuthentificationComponent,
-    PanierComponent
+    PanierComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +44,7 @@ import { PanierComponent } from './panier/panier.component';
     ReactiveFormsModule,
     FormsModule,
     MatIconModule,
+    FlashMessageModule,
     RouterModule.forRoot(routes)
   ],
   providers: [{

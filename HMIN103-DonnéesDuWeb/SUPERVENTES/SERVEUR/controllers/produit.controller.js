@@ -22,7 +22,6 @@ module.exports.getProduitsByCategorie = (req, res, next) => {
 
 module.exports.getCategories = (req, res, next) => {
     categories = [];
-
     try{
         Produit.find({}, function(err, produits){
             for (let p of produits){

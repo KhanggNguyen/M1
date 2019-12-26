@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 
 var produitSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId
-    },
     nom: {
         type: String
     },
@@ -15,9 +12,6 @@ var produitSchema = new mongoose.Schema({
     },
     prix: {
         type: Number 
-    },
-    quantite: {
-        type: Number
     }
 });
 

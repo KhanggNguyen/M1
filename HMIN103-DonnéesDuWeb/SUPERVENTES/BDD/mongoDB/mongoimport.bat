@@ -1,2 +1,3 @@
 "C:\Program Files\MongoDB\Server\4.2\bin\mongoimport.exe" --db SUPERVENTES --collection produits --file produits.json --jsonArray --drop
 "C:\Program Files\MongoDB\Server\4.2\bin\mongoimport.exe" --db SUPERVENTES --collection membres --file utilisateurs.json --jsonArray --drop
+"C:\Program Files\MongoDB\Server\4.2\bin\mongoimport.exe" --db SUPERVENTES --collection paniers --file paniers.json --jsonArray --drop

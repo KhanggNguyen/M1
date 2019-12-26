@@ -7,13 +7,14 @@
         <div class="collapse navbar-collapse js-navbar-collapse">
             <ul class="nav navbar-nav" routerLinkActive="active">
                 <li class="nav-item"><a class="nav-link" routerLink="produits">Produits</a></li>
+                <!-- <li class="nav-item"><a class="nav-link" routerLink="categories">Catégories</a></li> -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="nav-item" *ngIf="!isAuthenticated()"><a class="nav-link" routerLink="inscription">Inscription</a></li>
                 <li class="nav-item" *ngIf="!isAuthenticated()"><a class="nav-link" routerLink="authentification">Se connecter</a></li>
                 <li class="nav-item" *ngIf="isAuthenticated()"><a class="nav-link" routerLink="profile">Profile</a></li>
                 <li class="nav-item" *ngIf="isAuthenticated()"><a class="nav-link" (click)="onLogout()" > Déconnecter </a></li>
-                <li><a href="#"><mat-icon>shopping_basket</mat-icon></a></li>
+                <li class="nav-item" *ngIf="isAuthenticated()"><a class="nav-link" routerLink="panier">Mon panier</a></li>
             </ul>
         </div><!-- /.nav-collapse -->
     </nav>
