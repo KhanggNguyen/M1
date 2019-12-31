@@ -22,6 +22,6 @@ export class PanierService {
   }
 
   supprimeProduitPanier(id: String) : Observable<any>{
-    return this.http.get(environment.apiBaseUrl + 'supprimeProduitPanier/'+ id);
+    return this.http.get(environment.apiBaseUrl + 'supprimerProduitPanier/'+ id);
   }
 }

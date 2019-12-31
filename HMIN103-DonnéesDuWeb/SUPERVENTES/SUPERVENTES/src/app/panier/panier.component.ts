@@ -14,7 +14,7 @@ import { ProduitsService } from '../services/produits.service';
 })
 export class PanierComponent implements OnInit {
   userPanier: ProduitPanier[];
-
+  serverMessages: String;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -31,16 +31,15 @@ export class PanierComponent implements OnInit {
     });
   }
 
-  onDelete(id: String){
+  onSupprimer(id: String){
     this.panierService.supprimeProduitPanier(id).subscribe(
       res => {
         if(res.success){
-          this.flashMessage.success('Vous avez supprimé un produit de votre panier !');
+          this.serverMessages = 'Vous avez supprimé un produit de votre panier !';
         }
-        this.router.navigate(['produits']);
+        this.router.navigateByUrl('/produits');
       },
       err => {
-        this.router.navigate(['panier']);
       }
     );
   }

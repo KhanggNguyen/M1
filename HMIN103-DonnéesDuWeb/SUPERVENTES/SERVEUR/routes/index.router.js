@@ -20,5 +20,6 @@ router.get("/categories", ctrlProduit.getCategories);
 //panier
 router.get("/getPanier/:id", ctrlPanier.getProduitsPanier);
 router.post("/ajoutProduitPanier", ctrlPanier.ajoutProduitPanier);
+router.get("/supprimerProduitPanier/:id",ctrlPanier.supprimerProduitPanier);
 
 module.exports = router;

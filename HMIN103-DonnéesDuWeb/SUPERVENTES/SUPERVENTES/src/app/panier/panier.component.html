@@ -22,8 +22,12 @@
                     <input ngModel #quantite="ngModel" name="quantite" type="number" class="" min="1" step="1" required>&nbsp;&nbsp;
                     <button type="submit" class="btn btn-primary btn-sm">Ajouter <mat-icon>shopping_cart</mat-icon></button>
                 </form>
-                <button type="button" class="btn btn-primary btn-sm">Supprimer <mat-icon>delete</mat-icon></button>
+                <button (click)="onSupprimer(produit._id)" type="button" class="btn btn-primary btn-sm">Supprimer <mat-icon>delete</mat-icon></button>
             </td>
         </tr>
     </tbody>
 </table>
+
+<div class="alert alert-succes" *ngIf='serverMessages'>
+    {{ serverMessage }}
+</div>

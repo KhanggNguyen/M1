@@ -7,6 +7,7 @@ const User = mongoose.model('User');//récuperer la schéma utilisateur
 module.exports.register = (req, res, next) => {
     //verif si email est utilisé
     var user = new User();
+    user._id = new mongoose.Types.ObjectId(),
     user.nom = req.body._nom;
     user.prenom =req.body._prenom;
     user.email = req.body._email;
