@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon'
-import {FlashMessageModule} from 'angular-flash-message';
+import {FlashMessagesModule} from 'angular2-flash-messages';
 
 //routing
 import { routes } from './app-routing.module';
@@ -44,7 +44,7 @@ import { PanierComponent } from './panier/panier.component';
     ReactiveFormsModule,
     FormsModule,
     MatIconModule,
-    FlashMessageModule,
+    FlashMessagesModule.forRoot(),
     RouterModule.forRoot(routes)
   ],
   providers: [{

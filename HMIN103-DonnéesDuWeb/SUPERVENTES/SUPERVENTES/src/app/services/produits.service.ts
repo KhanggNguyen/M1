@@ -19,5 +19,9 @@ export class ProduitsService {
     return this.http.get(environment.apiBaseUrl +'produits/'+categorie);
   }
 
+  getCategories() : Observable<any>{
+    return this.http.get(environment.apiBaseUrl + 'categories');
+  }
+
   
 }

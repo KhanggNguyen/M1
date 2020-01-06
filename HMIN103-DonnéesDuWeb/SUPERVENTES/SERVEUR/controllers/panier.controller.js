@@ -49,7 +49,7 @@ module.exports.supprimerProduitPanier = (req, res, next) => {
     let id = req.params.id;
 
     Panier.deleteOne({ _id: id },
-        (err, res) => {
+        (err, suc) => {
             if(!err) 
                 return res.status(200).json({success: true, message: "supprimé" });
             else{

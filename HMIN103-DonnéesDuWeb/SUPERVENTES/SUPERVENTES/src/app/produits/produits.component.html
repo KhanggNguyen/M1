@@ -1,14 +1,16 @@
+<flash-messages></flash-messages>
 <table class="table text-center">
     <thead>
         <tr >
             <th scope="col">#</th>
-            <th scope="col">Nom Produit</th>
+            <th *ngIf='produits.length > 0' scope="col">Nom Produit</th>
             <th scope="col">Catégorie</th>
-            <th scope="col">Prix</th>
-            <th *ngIf="userService.isLoggedIn()" scope="col">Action</th>
+            <th *ngIf='produits.length > 0' scope="col">Prix</th>
+            <th *ngIf="userService.isLoggedIn() && produits.length > 0" scope="col">Action</th>
         </tr>
+
     </thead>
-    <tbody>
+    <tbody *ngIf='produits.length > 0'>
         <tr  *ngFor="let produit of produits; let i = index" class="card">
             <th scope="row">{{ i+1 }}</th>
             <td>{{ produit['nom'] }}</td>
@@ -23,4 +25,12 @@
             </td>
         </tr>
     </tbody>
+
+    <tbody *ngIf='categories.length > 0'>
+        <tr  *ngFor="let categorie of categories; let i = index" class="card">
+            <th scope="row">{{ i+1 }}</th>
+            <td><a [routerLink]="['/produits', categorie]">{{ categorie }}</a></td>
+        </tr>
+    </tbody>
 </table>
+

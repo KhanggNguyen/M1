@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import {FlashMessage} from 'angular-flash-message';
+import {FlashMessagesService} from 'angular2-flash-messages';
 import { NgForm } from "@angular/forms";
 
 import { ProduitsService } from '../services/produits.service';
@@ -15,14 +15,14 @@ import { ProduitPanier } from '../models/produitPanier.model';
 })
 export class ProduitsComponent implements OnInit {
   private produits : Object[] = new Array();
-
+  private categories : Object[] = new Array();
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private produitsService: ProduitsService,
     private userService: UserService,
     private panierService: PanierService,
-    private flashMessage: FlashMessage,
+    private flashMessage: FlashMessagesService,
   ) { }
 
   ngOnInit() {
@@ -30,6 +30,10 @@ export class ProduitsComponent implements OnInit {
       if (params["categorie"] !== undefined){
         this.produitsService.getProduitsParCategorie(params["categorie"]).subscribe(produits => { 
           this.produits = produits;
+        });
+      }else if(this.router.url === '/categories'){
+        this.produitsService.getCategories().subscribe(categories => {
+          this.categories = categories;
         });
       }else{
         this.produitsService.getProduits().subscribe(produits => {
@@ -51,9 +55,8 @@ export class ProduitsComponent implements OnInit {
     this.panierService.ajoutProduitPanier(produitPanier).subscribe(
       res => {
         if(res){
-          this.flashMessage.success('Vous avez ajouté un produit dans votre panier !');
+          this.flashMessage.show('Vous avez ajouté un produit dans votre panier !', {cssClass: 'alert-success', timeout: 2000});
         }
-        this.router.navigate(['produits']);
       }
     );
   }
