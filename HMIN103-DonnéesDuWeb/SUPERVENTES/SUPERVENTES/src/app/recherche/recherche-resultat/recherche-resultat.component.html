@@ -1,13 +1,13 @@
 <flash-messages></flash-messages>
-<table class="table text-center">
+<table class="table">
     <thead>
         <tr >
             <th scope="col">#</th>
-            <th *ngIf='produits.length > 0' scope="col">Nom Produit</th>
-            <th *ngIf='produits.length > 0' scope="col">Marque</th>
+            <th scope="col">Nom Produit</th>
+            <th scope="col">Marque</th>
             <th scope="col">Catégorie</th>
-            <th *ngIf='produits.length > 0' scope="col">Prix</th>
-            <th *ngIf="userService.isLoggedIn() && produits.length > 0" scope="col">Action</th>
+            <th scope="col">Prix</th>
+            <th *ngIf="userService.isLoggedIn()" scope="col">Action</th>
         </tr>
 
     </thead>
@@ -27,12 +27,8 @@
             </td>
         </tr>
     </tbody>
-
-    <tbody *ngIf='categories.length > 0'>
-        <tr  *ngFor="let categorie of categories; let i = index" class="card">
-            <th scope="row">{{ i+1 }}</th>
-            <td><a [routerLink]="['/produits', categorie]">{{ categorie }}</a></td>
-        </tr>
-    </tbody>
 </table>
 
+<div *ngIf='produits.length <= 0 || produits === null'>
+    <p class="text-center">Il n'y a pas de produits correspond aux critères de recherche!</p>
+</div>

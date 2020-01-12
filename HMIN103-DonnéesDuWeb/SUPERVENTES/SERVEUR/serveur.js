@@ -2,7 +2,7 @@ require('./config/config'); // les configs du serveur et bdd
 require('./models/db'); // connecter à la bdd
 require('./config/passportConfig');
 
-const express = require('express'); //traiter les requêtes avec la BDD et renvoyer les reponses
+const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');//permet d'extraire les données du requete plus simple
 const cors = require('cors');//proteger les clients contre les requêtes des differents domain

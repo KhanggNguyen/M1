@@ -16,6 +16,7 @@ router.get('/profile', jwtHelper.verifyJwtToken, ctrlUser.profile);
 router.get("/produits", ctrlProduit.getProduits);
 router.get("/produits/:categorie", ctrlProduit.getProduitsByCategorie);
 router.get("/categories", ctrlProduit.getCategories);
+router.post("/recherche", ctrlProduit.getProduitsByCriteres);
 
 //panier
 router.get("/getPanier/:id", ctrlPanier.getProduitsPanier);

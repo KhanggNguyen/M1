@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import {FlashMessagesService} from 'angular2-flash-messages';
+import { FlashMessagesService } from 'angular2-flash-messages';
 import { NgForm } from "@angular/forms";
 
 import { ProduitsService } from '../services/produits.service';
 import { UserService } from '../services/user.service';
 import { PanierService } from '../services/panier.service';
-import { ProduitPanier } from '../models/produitPanier.model';
 
 @Component({
   selector: 'app-produits',
@@ -26,10 +25,11 @@ export class ProduitsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
+    this.route.params.subscribe(( params: Params) => {
       if (params["categorie"] !== undefined){
         this.produitsService.getProduitsParCategorie(params["categorie"]).subscribe(produits => { 
           this.produits = produits;
+          
         });
       }else if(this.router.url === '/categories'){
         this.produitsService.getCategories().subscribe(categories => {

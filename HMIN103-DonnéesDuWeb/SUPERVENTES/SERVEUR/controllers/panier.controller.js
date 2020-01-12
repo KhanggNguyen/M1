@@ -30,12 +30,12 @@ module.exports.ajoutProduitPanier = (req, res, next) => {
                                     if(!err){
                                         res.status(200).json(produitPanier);
                                     }else{
-                
+                                        //manque la gestion d'erreur
                                     }
                                 });
                             }else{
                                 produit.quantite = req.body.quantite;
-                                produit.save((err, doc) => {
+                                produit.update((err, doc) => {
                                     res.send(doc);
                                 });
                             }

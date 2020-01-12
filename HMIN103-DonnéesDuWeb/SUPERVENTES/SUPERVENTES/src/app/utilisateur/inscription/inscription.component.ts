@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router} from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-inscription',
@@ -10,7 +9,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./inscription.component.css'],
 })
 export class InscriptionComponent implements OnInit {
-  private user : Observable<string>;
   registered = false;
 	submitted = false;
   userForm: FormGroup;

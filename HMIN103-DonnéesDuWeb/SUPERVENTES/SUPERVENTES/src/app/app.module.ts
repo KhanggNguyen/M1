@@ -18,6 +18,7 @@ import { InscriptionComponent } from './utilisateur/inscription/inscription.comp
 import { UtilisateurComponent } from './utilisateur/utilisateur.component';
 import { ProfileComponent } from './utilisateur/profile/profile.component';
 import { AuthentificationComponent } from './utilisateur/authentification/authentification.component';
+import { PanierComponent } from './panier/panier.component';
 
 //service
 import { UserService } from './services/user.service';
@@ -25,7 +26,8 @@ import { UserService } from './services/user.service';
 //other
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { PanierComponent } from './panier/panier.component';
+import { RechercheComponent } from './recherche/recherche.component';
+import { RechercheResultatComponent } from './recherche/recherche-resultat/recherche-resultat.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { PanierComponent } from './panier/panier.component';
     ProfileComponent,
     AuthentificationComponent,
     PanierComponent,
+    RechercheComponent,
+    RechercheResultatComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 import {FlashMessagesService} from 'angular2-flash-messages';
 
 import { ProduitPanier } from '../models/produitPanier.model';
 import { PanierService } from '../services/panier.service';
 import { UserService } from '../services/user.service';
-import { ProduitsService } from '../services/produits.service';
 import { NgForm } from "@angular/forms";
 
 
@@ -16,10 +14,8 @@ import { NgForm } from "@angular/forms";
 })
 export class PanierComponent implements OnInit {
   userPanier: ProduitPanier[];
+  
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private produitsService: ProduitsService,
     private userService: UserService,
     private panierService: PanierService,
     private flashMessage: FlashMessagesService,
@@ -46,6 +42,9 @@ export class PanierComponent implements OnInit {
         if(res){
           this.flashMessage.show('Vous avez ajouté un produit dans votre panier !', {cssClass: 'alert-success', timeout: 2000});
         }
+      },
+      err => {
+        this.flashMessage.show(err.error.join('<br/>'), { cssClass: 'alert-warning', timeout: 2000});
       }
     );
   }
@@ -58,6 +57,7 @@ export class PanierComponent implements OnInit {
         }
       },
       err => {
+        this.flashMessage.show(err.error.join('<br/>'), { cssClass: 'alert-warning', timeout: 2000});
       }
     );
   }

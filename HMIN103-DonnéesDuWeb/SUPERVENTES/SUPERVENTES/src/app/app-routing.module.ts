@@ -5,8 +5,11 @@ import { UtilisateurComponent } from './utilisateur/utilisateur.component';
 import { InscriptionComponent } from './utilisateur/inscription/inscription.component';
 import { AuthentificationComponent } from './utilisateur/authentification/authentification.component';
 import { ProfileComponent } from './utilisateur/profile/profile.component';
-import { AuthGuard } from './auth/auth.guard';
 import { PanierComponent } from './panier/panier.component';
+import { AuthGuard } from './auth/auth.guard';
+import { RechercheComponent } from './recherche/recherche.component';
+import { RechercheResultatComponent } from './recherche/recherche-resultat/recherche-resultat.component';
+
 
 export const routes: Routes = [
   {
@@ -37,6 +40,12 @@ export const routes: Routes = [
   },
   {
     path: 'supprimerProduitPanier/:id', component: PanierComponent, canActivate:[AuthGuard]
+  },
+  {
+    path: 'recherche', component: RechercheComponent, canActivate:[AuthGuard]
+  },
+  {
+    path: 'rechercheResult', component: RechercheResultatComponent, canActivate:[AuthGuard]
   },
   {
     path: '', redirectTo: 'produits', pathMatch:'full'

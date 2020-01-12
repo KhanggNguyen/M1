@@ -11,7 +11,7 @@ var produitSchema = new mongoose.Schema({
         type: String
     },
     prix: {
-        type: Number 
+        type: String 
     }
 });
 
