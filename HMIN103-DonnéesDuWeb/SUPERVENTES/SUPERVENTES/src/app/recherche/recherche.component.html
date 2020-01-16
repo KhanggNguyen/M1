@@ -17,7 +17,16 @@
     </div>
 
     <div class="form-group">
-        <input type="Number" #prix="ngModel" class="form-control" name="prix" [(ngModel)]="produit.prix" placeholder="ex du prix max : 100" min=0>
+        <label for="prixMax">Prix max &nbsp; </label>
+        <input matInput id="prixMax" type="number" name="prix" placeholder="Votre prix max" [(ngModel)]="produit.prix" readonly>
+        &nbsp;&nbsp;
+        <mat-slider 
+            class="slider"
+            #prix="ngModel" name="prix" 
+            [(ngModel)]="produit.prix" 
+            [max]="max" 
+            [min]="min" [step]="step" >
+        </mat-slider>
     </div>
     
     <div class="form-group">

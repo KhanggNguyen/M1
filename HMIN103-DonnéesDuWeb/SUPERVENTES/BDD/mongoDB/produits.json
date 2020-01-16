@@ -3,92 +3,92 @@
         "nom" : "Chaussure Ozweego",
         "marque" : "Adidas",
         "type" : "Chaussures",
-        "prix" : "129,95"
+        "prix" : 129.95
     },
     {
         "nom" : "Chaussure Stan Smith",
         "marque" : "Adidas",
         "type" : "Chaussures",
-        "prix" : "100"
+        "prix" : 100
     },
     {
         "nom" : "Nike Air Max Plus I",
         "marque" : "Nike",
         "type" : "Chaussures",
-        "prix" : "120"
+        "prix" : 120
     },
     {
         "nom" : "Nike Air Max Plus II",
         "marque" : "Nike",
         "type" : "Chaussures",
-        "prix" : "150"
+        "prix" : 150
     },
     {
         "nom" : "Nike Air Max Plus III",
         "marque" : "Nike",
         "type" : "Chaussures",
-        "prix" : "200"
+        "prix" : 200
     },
     {
         "nom" : "Nike Air Zoom Pegasus",
         "marque" : "Nike",
         "type" : "Chaussures",
-        "prix" : "125"
+        "prix" : 125
     },
     
     {
         "nom" : "Sweat-Shirt Pinwheel Hooded",
         "marque" : "Adidas",
         "type" : "Vetement",
-        "prix" : "64,95"
+        "prix" : 64.95
     },
     {
         "nom" : "Veste d'hiver",
         "marque" : "Adidas",
         "type" : "Vetement",
-        "prix" : "129,95"
+        "prix" : 129.95
     },
     {
         "nom" : "Veste de survêtement",
         "marque" : "Adidas",
         "type" : "Vetement",
-        "prix" : "85,95"
+        "prix" : 85.95
     },
     {
         "nom" : "Sac a dos 4ATHLS",
         "marque" : "Adidas",
         "type" : "Accessoires",
-        "prix" : "39,95"
+        "prix" : 39.95
     },
     {
         "nom" : "Sac a dos classic",
         "marque" : "Adidas",
         "type" : "Vetement",
-        "prix" : "24,95"
+        "prix" : 24.95
     },
     {
         "nom" : "Sweat a capuche en tissu Fleece",
         "marque" : "Nike",
         "type" : "Vetement",
-        "prix" : "70"
+        "prix" : 70
     },
     {
         "nom" : "Casquette réglable",
         "marque" : "Nike",
         "type" : "Accessoires",
-        "prix" : "30"
+        "prix" : 30
     },
     {
         "nom" : "Pantalon pour Homme",
         "marque" : "Nike",
         "type" : "Vetement",
-        "prix" : "65"
+        "prix" : 65
     },
     {
         "nom" : "Ballon de football",
         "marque" : "Nike",
         "type" : "Accessoires",
-        "prix" : "20"
+        "prix" : 20
     }
 
 

@@ -38,11 +38,10 @@ module.exports.getCategories = (req, res, next) => {
 }
 
 module.exports.getProduitsByCriteres = (req, res, next) => {
-    console.log(req.body);
-    let nom = '';
-    let marque = '';
-    let categorie = '';
-    let prix = 9999;
+    var nom = '';
+    var marque = '';
+    var categorie = '';
+    var prix = 9999;
     if(req.body.nom !== ''){
         nom = req.body.nom;
     }
@@ -55,20 +54,23 @@ module.exports.getProduitsByCriteres = (req, res, next) => {
         categorie = req.body.categorie;
     } 
 
-    if(req.body.prix !== ''){
-        prix = req.body.prix;
+    if(typeof req.body.prix !== 'undefined' && req.body.prix){
+        prix = parseInt(req.body.prix);
     }
 
     try{
-        Produit.find({
-            nom : new RegExp(nom, 'i'), 
-            marque: new RegExp(marque, 'i'), 
-            type : new RegExp(categorie, 'i'), 
-            prix: {$lt :  prix } }, 
+        Produit.find(
+            {
+                nom : new RegExp(nom, 'i'), 
+                marque: new RegExp(marque, 'i'), 
+                type : new RegExp(categorie, 'i'), 
+                prix: {$lt :  prix } 
+            }, null,
+            { sort: {nom: 1} },
             function(err, produits){
-                console.log(produits);
                 res.send(produits);
-            }, { sort : { nom : 1}});
+            }, 
+        );
     }catch(e){
         console.log("Erreur sur /recherche : " + e);
         res.end(JSON.stringify([]));

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import { Router} from '@angular/router';
 import { NgForm  } from '@angular/forms';
+import { MatSliderChange } from '@angular/material';
 
 import { Produit } from '../models/produit.model';
 import { RechercheService } from '../services/recherche.service';
@@ -21,6 +23,11 @@ export class RechercheComponent implements OnInit {
   };
   submitted = false;
   serverErrorMessages: string;
+  
+  //slider
+  max = 1000;
+  min = 0;
+  step = 1;
 
   constructor(
     private router: Router,
@@ -46,5 +53,4 @@ export class RechercheComponent implements OnInit {
       }  
     );
   }
-
 }

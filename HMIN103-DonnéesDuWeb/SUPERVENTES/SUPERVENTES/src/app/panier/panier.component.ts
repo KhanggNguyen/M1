@@ -54,6 +54,7 @@ export class PanierComponent implements OnInit {
       res => {
         if(res.success){ 
           this.flashMessage.show('Vous avez supprimé un produit de votre panier !', { cssClass: 'alert-success', timeout: 2000});
+          location.reload();
         }
       },
       err => {

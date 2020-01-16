@@ -4,6 +4,7 @@
         <tr >
             <th scope="col">#</th>
             <th scope="col">Nom Produit</th>
+            <th scope="col">Marque</th>
             <th scope="col">Catégorie</th>
             <th scope="col">Prix</th>
             <th scope="col">Quantité</th>
@@ -14,6 +15,7 @@
         <tr  *ngFor="let produit of userPanier; let i = index" class="card">
             <th scope="row">{{ i+1 }}</th>
             <td>{{ produit['nom'] }}</td>
+            <td>{{ produit['marque'] }}</td>
             <td><a [routerLink]="['/produits', produit.type]">{{ produit['type'] }}</a></td>
             <td>{{ produit['prix'] * produit['quantite'] }}</td>
             <td>{{ produit['quantite'] }}</td>

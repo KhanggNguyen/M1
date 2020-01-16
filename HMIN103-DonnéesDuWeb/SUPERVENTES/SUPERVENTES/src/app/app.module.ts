@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon'
+import { MatSliderModule } from '@angular/material';
 import {FlashMessagesModule} from 'angular2-flash-messages';
 
 //routing
@@ -48,6 +49,7 @@ import { RechercheResultatComponent } from './recherche/recherche-resultat/reche
     ReactiveFormsModule,
     FormsModule,
     MatIconModule,
+    MatSliderModule,
     FlashMessagesModule.forRoot(),
     RouterModule.forRoot(routes)
   ],

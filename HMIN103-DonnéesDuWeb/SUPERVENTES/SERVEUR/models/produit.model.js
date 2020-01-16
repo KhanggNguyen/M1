@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+require('mongoose-double')(mongoose);
 
+var SchemaTypes = mongoose.Schema.Types;
 var produitSchema = new mongoose.Schema({
     nom: {
         type: String
@@ -11,7 +13,7 @@ var produitSchema = new mongoose.Schema({
         type: String
     },
     prix: {
-        type: String 
+        type: SchemaTypes.Double
     }
 });
 

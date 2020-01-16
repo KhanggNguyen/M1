@@ -15,7 +15,7 @@
         <tr  *ngFor="let produit of produits; let i = index" class="card">
             <th scope="row">{{ i+1 }}</th>
             <td>{{ produit['nom'] }}</td>
-            <td><a [routerLink]="">{{ produit['marque'] }}</a></td>
+            <td>{{ produit['marque'] }}</td>
             <td><a [routerLink]="['/produits', produit.type]">{{ produit['type'] }}</a></td>
             <td>{{ produit['prix'] }}</td>
             <td *ngIf="userService.isLoggedIn()"> 
