@@ -9,4 +9,20 @@ public class Archives {
 	public Archives(){
 		
 	}
+
+	public ArrayList<CycleSeminaires> getAnciensSeminaires() {
+		return anciensSeminaires;
+	}
+
+	public void setAnciensSeminaires(ArrayList<CycleSeminaires> anciensSeminaires) {
+		this.anciensSeminaires = anciensSeminaires;
+	}
+
+	public ArrayList<Adherent> getAnciensAdherents() {
+		return anciensAdherents;
+	}
+
+	public void setAnciensAdherents(ArrayList<Adherent> anciensAdherents) {
+		this.anciensAdherents = anciensAdherents;
+	}
 }
