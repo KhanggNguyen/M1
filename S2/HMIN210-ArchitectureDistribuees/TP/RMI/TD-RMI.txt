@@ -1,0 +1,59 @@
+Question 1. Donner la procédure exacte pour lancer le serveur puis le client.
+
+Serveur: 
+rmiregistry & //par défaut le port est 1099 s'il on ne le precise pas 
+java helloWorld.Server //exécute ce commande dans le dossier précède le dossier contenant les fichiers sources. 
+
+Client:
+java helloworld.client
+
+Question 2. Que se passe t-il si on remplace la ligne 15 de Server.java par la ligne 14 (commentée) ?
+
+- Si on a fait la commande rmiregistry &, le registre sera créé avec la port par défaut 1099.
+- La commande getRegistry() renvoie la référence vers la remote de l'objet Registry pour localhost de la port 1099.
+
+Question 3. Donnez les affichages chez le client et chez le serveur.
+
+//Serveur
+Server ready
+The server prints: Hello, world!
+
+//Client
+response: Hello, world!
+
+
+//Si Sous Eclipse
+projet TP1
+TP1/src/*.java
+TP1/bin/*.class
+
+exécute rmiregistry & dans TP1/bin ou décommenté la ligne commentaire qui crée le registry
+
+Question 4. Dans quelle JVM seront créés les objets de type HelloImpl ?
+
+- Il ne sera créé dans la JVM du Serveur et jamais dans celle du Client.
+
+Question 5. À quoi sert l’interface Hello.java ?
+
+- Elle nous sert à typer dans le côté client. Le type statique sera donc Hello et on ne connait pas le type dynamique.
+
+Question 6. Donnez des exemples d’exceptions pouvant être attrapées à la ligne 22 de Server.java.
+
+- Erreur de communication car le registre est mort entre les 2.
+- Erreur de registre déjà existe
+- Erreur de port n'existe pas
+
+Question 7. Quelle est la différence entre Naming.bind et Naming.rebind ?
+
+- "Bind" renvoie une exception si l'objet est déjà nommé
+- "Rebind" renommer sans envoyer une exception
+
+Question 8. Que se passe t-il si on ne passe pas d’argument en ligne de commande quand on lance le client ?
+
+- Elle utilise la port par défaut.
+
+Question 9. Faites un diagramme d’instances pour le côté serveur et un pour le côté client illustrant les objets
+présents au démarrage du serveur et du client. Faites un autre diagramme d’objets illustrant le côté client après
+la ligne 15 du client.
+
+- Voir l'image.
