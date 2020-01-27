@@ -1,0 +1,47 @@
+Question 1.
+
+1) 
+- Observer Code
+
+2) 
+- On ajoute la morceau du code dans le fichier Java
+
+EditText et = new EditText(this);
+LinearLayout ll = new LinearLayout(this);
+ll.setContent(ll.vertical);
+ll.add(tv);
+ll.ad(et);
+setContentView(ll);
+
+3)
+- On avait des vues "programmative". Ici, c'est une vues "déclarative". 
+
+4) 
+- On ajout un élément EditText à la vue.
+
+Question 2.
+
+- L'élement text du button est référencé vers une élément du fichier string.xml. Elle est donc pas fixé mais en fonction du fichier string.xml
+
+- Pour affichier, il faut ajouter un element <TextView/> avec le contenu voulu.
+
+- Pour editer, il faut ajouter un element <EditText/>
+
+Question 3. 
+
+- Observer.
+
+Question 4.
+
+- (Button) findViewById(); : Créer une instance de type Button par rapport au ID.
+
+- arg0 : correspond au Button.
+
+- Toast : afficher une message pour quelques secondes. On n'utilise pas "this" parce qu'on n'est pas en context "Activité" mais en context général, on utilise donc la méthode "getApplicationContext()" pour récuperer le context de l'activité correspond au "Bouton".
+
+- Pour que le message ne disparait pas au bout de qq secondes, il faut ajouter un TextView à la place de Toast. Pour éviter qu'il affiche le message dès le début, on l'initialise le TextView = "" et on "set" quand l'utilisateur clique sur le "bouton".
+
+- Pour afficher le message en fonction de la langue, on va remplacer le string "Message Bouton 1" par une méthode toString par rapport à la langue choisi. Voir l'exemple de l'ex 5 -> on peut utiliser les méthodes comme Locale.getDefault().getLanguage(), getCountry(), etc. pour vérifier la langues de device.
+
+Question 5.
+
