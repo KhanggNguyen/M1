@@ -1,0 +1,14 @@
+1) /tweeter/utilisateur[@id = //tweet/auteur/@idref]/nom
+
+2) /tweeter/tweet[auteur/@idref = "u42"]
+
+3) /tweeter/tweet[./corps/hashtags/hashtag[contains(., "#I&lt;3XML")]]
+
+4) //tweet/Date[not(text() <= preceding::Date/text()) and not(text() <= following::Date/text())]/text()
+
+5) //tweet[not(contains(.,'#'))]
+
+6) //tweet[corps/references/reference/@idref = "t42"]
+
+7) /tweeter/utilisateur[@id = //tweet[corps/reponse/@idref="t42"]/auteur/@idref]
+      

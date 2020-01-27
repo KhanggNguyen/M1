@@ -1,0 +1,47 @@
+Exam 2017 - IL
+
+A
+
+1.
+
+a) L'affectation polymorphique est l'affectation d'une valeur d'un type ST, sous-type de T, à une variable de type T.
+
+b) Le type statique de la variable r dans la méthode addRencontrés(r) est Rencontré. Lors de l'appel de la méthode par la class Game avec g.addRencontrés(f) le type dynamique de la variable r est Fantôme.
+Il s'agit donc d'une affectation polymorphique de la valeur de la variable f de type Fantôme, sous type de Rencontré, à la variable r de type statique Rencontré.
+
+2.
+
+	public class Fantôme {
+		
+		private static int CPT = 0;
+
+		public Fantôme(){
+
+			try{
+				CPT > 2;
+			}
+			catch(PlusDeFantomes pdf){
+				throw new PlusDeFantomes();
+			}
+
+			CPT++;
+
+		}
+	}
+
+3.
+
+a)	La méthode rencontrer(Rencontré r) est paramétrée par spécialisation parce qu'elle fait appel à la méthode abstraite getDescription() de this et de r qui sont définies par les classes filles de Héros et de Rencontrés.
+	De plus elle est paramétrée par composition puisque les paramètres de la méthode System.out.println() font appel à d'autres méthodes.
+
+b)	Pour étendre le framework sans avoir à retoucher à la méthode rencontrer(Rencontré r) il suffit dans les classes filles de Héros et de Rencontré d'Override la méthode getDescription().
+
+B
+
+1. Pour qu'une méthode soit interprétée, par le compilateur et la machine virtuelle, comme une redéfinition d'une autre il faut qu'une sous classe SC, d'une classe C, définisse une méthode de même nom et paramètres qu'une méthode déjà définie dans la classe C.
+
+2.	La méthode rencontrer(Fantôme f) n'ayant pas été définie dans la classe Héros, la méthode invoquée par l'appel "h.rencontrer(f)" du listing 4 fait appel à la méthode de la classe mère Element.
+
+3.	Après avoir défini la méthode rencontrer(Fantôme f) dans la classe Héros, celle-ci masque la méthode de la classe mère Element. Ainsi la méthode invoquée dans ce cadre figure est celle redéfinie dans la classe Héros.
+
+4.	

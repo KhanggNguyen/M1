@@ -1,0 +1,57 @@
+1) 
+for $x in //tweet
+ return ($x, //utilisateur[@id = $x/auteur/@idref])
+
+2)
+for $x in //utilisateur
+  for $y in //tweet
+    where $x/@id = $y/auteur/@idref
+     return ($x/nom, $y/Date)
+
+3)
+for $x in //utilisateur
+  let $z := 0
+  for $y in //tweet
+    where $x/@id = $y/auteur/@idref and $y/retweet = 2
+      return ($x/nom)
+
+
+4)
+for $x in //tweet
+  for $y in //tweet
+    where $x/@id = $y/corps/reponse/@idref
+      return if ($y/retweet/text() > 0) then ($y/corps/message,$y/Date) else ($y/corps/message,$y/Date, $y/nonRetweeted)
+      
+      
+5)
+for $x in //utilisateur
+order by $x 
+return $x
+      
+6)
+for $x in //tweet
+  where $x/corps/hashtags/hashtag/text() = "#I&lt;3XML"
+    return $x
+      
+7)
+let $y := min(//tweet/Date/text())
+    return $y
+      
+let $y := max(//tweet/Date/text())
+  return $y
+
+8)
+for $x in //tweet
+  let $y := /$x/corps/hashtags
+    return ($x, $y)
+
+9)
+for $x in //tweet
+  let $y := /$x/corps/references
+  where $x/corps/references/reference
+    return ($x, $y)
+
+10)
+declare function local:aReponduAuTweet($t as element(tweet)){
+  let $tw := $t/utilisateur[@id = //tweet[corps/reponse/@idref="t42"]/auteur/@idref]
+};
