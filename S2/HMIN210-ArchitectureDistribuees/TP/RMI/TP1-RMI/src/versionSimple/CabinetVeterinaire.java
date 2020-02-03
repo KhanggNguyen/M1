@@ -23,10 +23,6 @@ public class CabinetVeterinaire extends UnicastRemoteObject implements ICabinetV
 		this.listeAnimaux.add(a);
 	}
 
-	public void creationAnimal(String nom, String nomMaitre, Espece espece, String race) throws RemoteException{
-		this.addAnimal(new Animal(nom, nomMaitre, espece, race));
-	}
-
 	@Override
 	public Animal recherche(String nom) throws RemoteException {
 		// TODO Auto-generated method stub

@@ -1,9 +1,6 @@
 package versionSimple;
 
-import java.io.*;
-import java.rmi.Remote;
-
-public class Espece implements Remote, Serializable{
+public class Espece implements Cloneable {
 	private String nom;
 	private Integer dureeDeVie;
 	
@@ -12,6 +9,11 @@ public class Espece implements Remote, Serializable{
 		this.nom = nom;
 		this.dureeDeVie = dureeDeVie;
 	}
+	
+	public Object clone() throws CloneNotSupportedException 
+	{ 
+		return super.clone(); 
+	} 
 	
 	public String getNom() {
 		return nom;

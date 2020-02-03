@@ -18,6 +18,8 @@ public class Animal extends UnicastRemoteObject implements IAnimal{
 		this.dossier = new DossierSuivi();
 	}
 	
+	
+	
 	public String getNom() {
 		return nom;
 	}
@@ -34,8 +36,8 @@ public class Animal extends UnicastRemoteObject implements IAnimal{
 		this.nomMaitre = nomMaitre;
 	}
 	
-	public Espece getEspece(){
-		return espece;
+	public Espece getEspece() throws CloneNotSupportedException {
+		return (Espece) espece.clone();
 	}
 	
 	public void setEspece(Espece espece) {
