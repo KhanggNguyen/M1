@@ -1,4 +1,4 @@
-; Khang Nguyen, BenBrahim Sabri
+; Khang Nguyen, BenBrahim Sabri, TRAN Thi Tra My
 
 (defun make-vm (name taille)
 	(setMemoireSize name taille)

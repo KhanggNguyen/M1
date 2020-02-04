@@ -4,4 +4,4 @@
 		(if (= 1 n)
 			1
 			(+ (fibo (- n 1))(fibo (- n 2))))))
-(fibo 7)
+(fibo 2)

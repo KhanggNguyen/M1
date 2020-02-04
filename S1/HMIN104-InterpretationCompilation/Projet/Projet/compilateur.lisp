@@ -1,4 +1,4 @@
-; Khang Nguyen, BenBrahim Sabri
+; Khang Nguyen, BenBrahim Sabri, TRAN Thi Tra My
 
 (setf indexIf 0)
 (setf indexComp 0)
@@ -11,7 +11,7 @@
 		(close fichier)
 		;(print (append code '((HALT))))
 		(setf bytecode (compil-liste (append code '((HALT)))))
-		(affichage bytecode)
+		;(affichage bytecode)
 		(if (not (null dest))
 			(with-open-file (str (string-concat "./" dest)
                      :direction :output
