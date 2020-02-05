@@ -1,10 +1,11 @@
-Pour charger les fonctions de compilateur : (load "compilateur")
-Pour charger les fonctions de la machine virtuel  : (load "vm")
+Pour charger les fonctions de compilateur : (load "fonction-compilateur")
 
-Pour compiler un fonction : (compil-fichier "nomFichier.lisp" "nomFichierDestination.lisp")
+Pour charger les fonctions de la machine virtuel  : (load "fonction-vm")
 
-Pour créer la machine virtuel : (make-vm 'vm taille)
+Pour compiler un fonction : (compil-fichier "nomFichier.lisp" "nomFichierDestination.lisp") //ex : nomFichier = fact.lisp
 
-Pour charger la fonction dans la vm : (lecture_code 'vm "nomFichierCompile.lisp")
+Pour créer la machine virtuel : (make-vm 'vm taille) //taille pourrait être 200000
 
-Pour exécuter la fonction dans la mémoire : (expr_exec 'vm)
+Pour charger la fonction dans la vm : (charger_code 'vm "nomFichierCompile.lisp")
+
+Pour exécuter la fonction dans la mémoire : (exec 'vm)

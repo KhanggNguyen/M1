@@ -22,7 +22,7 @@
 	(setf (get name 'DPP) 0)
 	(setf (get name 'DPG) 0)
 
-	"VM prêt"
+	"Fin création de VM"
 )
 
 (defun getMemoireSize (vm)
@@ -36,7 +36,7 @@
 
 (defun getMemoireAt (vm adr)
 	(if (>= adr (getMemoireSize vm))
-		(error "Erreur Memoire" adr)
+		(error "Depassement de memoire" adr)
 		(let ((value (aref (get vm 'memoire) adr)))
 			(if (null value)
 				0
@@ -50,24 +50,6 @@
 	(if (>= adr (getMemoireSize vm))
 		(error "Erreur Memoire" adr)
 		(setf (aref (get vm 'memoire) adr) src)
-	)
-)
-
-
-
-(defun getRegistre (vm reg)
-	(let ((value (get vm reg)))
-		(if (null value)
-			(error "Erreur Registre" reg)
-			value
-		)
-	)
-)
-
-(defun setRegistre (vm reg value)
-	(if (null (get vm reg))
-		(error "Erreur Registre" reg)
-		(setf (get vm reg) value)
 	)
 )
 
@@ -103,6 +85,21 @@
 	(if (getReferenceNR vm ref)
 		t
 		nil
+	)
+)
+(defun getRegistre (vm reg)
+	(let ((value (get vm reg)))
+		(if (null value)
+			(error "Impossible de récuperer le registre" reg)
+			value
+		)
+	)
+)
+
+(defun setRegistre (vm reg value)
+	(if (null (get vm reg))
+		(error "Impossible d'initialiser le registre" reg)
+		(setf (get vm reg) value)
 	)
 )
 
@@ -166,7 +163,7 @@
 	(if (isLIT arg1)
 		(setRegistre vm arg2 (/ (getRegistre vm arg2) (cadr arg1)))
 		(if (= 0 (getRegistre arg1))
-			(error "expr_div division par 0 impossible")
+			(error "Impossible de diviser par 0 !")
 			(setRegistre vm arg2 (/ (getRegistre vm arg2) (getRegistre vm arg1)))
 		)
 	)
@@ -175,7 +172,7 @@
 (defun expr_push (vm arg)
 	;(print (getRegistre vm 'SP))
 	(if (> (getRegistre vm 'SP) (getRegistre vm 'maxStack))
-		(error "expr_push depassement de pile")
+		(error "depassement de pile")
 		(progn
 			(if (isLIT arg)
 				(setMemoireAt vm (getRegistre vm 'SP) (cadr arg))
@@ -232,37 +229,36 @@
 
 (defun expr_jpg (vm etiq)
 	(if (= (getRegistre vm 'DPG) 1)
-		(expr_jmp vm etiq)
+		(expression_jump vm etiq)
 	)
 )
 
 (defun expr_jeq (vm etiq)
 	(if (= (getRegistre vm 'DEQ) 1)
-		(expr_jmp vm etiq)
+		(expression_jump vm etiq)
 	)
 )
 (defun expr_jpp (vm etiq)
 	(if (= (getRegistre vm 'DPP) 1)
-		(expr_jmp vm etiq)
+		(expression_jump vm etiq)
 	)
 )
 
 (defun expr_jge (vm etiq)
 	(if (or (= (getRegistre vm 'DPG) 1) (= (getRegistre vm 'DEQ) 1))
-		(expr_jmp vm etiq)
+		(expression_jump vm etiq)
 	)
 )
 
 (defun expr_jpe (vm etiq)
 	(if (or (= (getRegistre vm 'DPP) 1) (= (getRegistre vm 'DEQ) 1))
-		(expr_jmp vm etiq)
+		(expression_jump vm etiq)
 	)
 )
 
-(defun expr_jmp (vm etiq)
+(defun expression_jump (vm etiq)
 	(if (integerp etiq)
 		(setRegistre vm 'PC etiq)
-		(error "expr_jmp etiquette n'est pas une adresse : ~s" etiq)
 	)
 	
 )
@@ -270,12 +266,12 @@
 (defun expr_jsr (vm etiq)
 	(setMemoireAt vm (getRegistre vm 'SP) (+ (getRegistre vm 'PC) 1))
 	(setRegistre vm 'SP (+ (getRegistre vm 'SP) 1))
-	(expr_jmp vm etiq)
+	(expression_jump vm etiq)
 )
 
 (defun expr_rtn (vm)
 	(setRegistre vm 'SP (- (getRegistre vm 'SP) 1))
-	(expr_jmp vm (getMemoireAt vm (getRegistre vm 'SP)))
+	(expression_jump vm (getMemoireAt vm (getRegistre vm 'SP)))
 )
 
 (defun expr_nop (vm))
@@ -315,7 +311,7 @@
 		('JPP	 (expr_JPP vm (cadr value)))
 		('JGE	 (expr_JGE vm (cadr value)))
 		('JPE	 (expr_JPE vm (cadr value)))
-		('JMP	 (expr_JMP vm (cadr value)))
+		('JMP	 (expression_jump vm (cadr value)))
 		('JSR	 (expr_JSR vm (cadr value)))
 		('RTN	 (expr_RTN vm))
 		('NOP	 (expr_NOP vm))
@@ -327,31 +323,23 @@
 	)
 )
 
-(defun expr_exec (vm)
+(defun exec (vm)
 	(loop while (= (get vm 'exitVM) 0) do
 		(let* ((pc (getRegistre vm 'PC)) (instr (getMemoireAt vm pc)))
 			(progn
-				;(print instr)
-
 				(execInst vm instr)
 				(if (= (getRegistre vm 'PC) pc)
 					(setRegistre vm 'PC (+ pc 1))
 					nil
 				)
-
-				;(print (getRegistre vm 'R0))
-				;(print (getRegistre vm 'R1))
-				;(print (getRegistre vm 'R2))
-				;(print (getRegistre vm 'SP))
-				;(print (getRegistre vm 'FP))
 			)
 		)	
 	)
-	(print "Resultat de l'appel : ")
+	(print "Resultat : ")
 	(getRegistre vm 'R0)
 )
 
-(defun lecture_code (vm nomfichier &optional (co 100001))
+(defun charger_code (vm nomfichier &optional (co 100001))
 	(let ((fichier (open nomfichier)))
 		(if fichier
 			(prog1 
@@ -360,13 +348,13 @@
 			)
 		)
 	)
-	"Chargement du code termine !"
+	"Fin chargement du code!"
 )
 
-(defun expr_chargeur (vm fichier &optional (co 100001))
+(defun expr_chargeur (vm nomFichier &optional (co 100001))
 	;(print fichier)
-	(loop while (not (null fichier)) do
-		(let ((instr (car fichier)))
+	(loop while (not (null nomFichier)) do
+		(let ((instr (car nomFichier)))
 			;(print instr)
 
 			(if (null instr)
@@ -380,7 +368,7 @@
 				)
 			)
 		)
-		(setf fichier (cdr fichier))
+		(setf nomFichier (cdr nomFichier))
 	)
 )
 
@@ -399,7 +387,7 @@
 
 		(if (isLABEL (cadr instr))
 			(if (isSymboleSet vm (cadadr instr))
-				(cons (car instr) (list (getSymbole vm (cadadr instr)))) ; met l'adresse comme integer directement ex : JSR 100152
+				(cons (car instr) (list (getSymbole vm (cadadr instr))))
 				(progn
 					(setReferenceNR vm (cadadr instr) co)
 					instr
@@ -413,7 +401,7 @@
 
 (defun expr_charger_symb (vm symb co)
 	(if (isSymboleSet vm symb)
-		(error "expr_chargeur_symb symbole existe deja")
+		(error "Symbole est dejà existé")
 		(progn
 			(setSymbole vm symb co)
 			(expr_resoudre_refNR vm symb)

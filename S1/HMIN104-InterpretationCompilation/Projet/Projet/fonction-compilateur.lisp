@@ -3,17 +3,15 @@
 (setf indexIf 0)
 (setf indexComp 0)
 
-(defun compil-fichier (nomFichier &optional dest)
-	(let ((fichier (open nomFichier)) (code '()) (bytecode '()))
+(defun compiler (nom_fichier_source &optional nom_fichier_destination)
+	(let ((fichier (open nom_fichier_source)) (code '()) (bytecode '()))
 		(loop for expr = (read fichier nil) while expr do
 			(setf code (append code (list expr)))
 		)
 		(close fichier)
-		;(print (append code '((HALT))))
-		(setf bytecode (compil-liste (append code '((HALT)))))
-		;(affichage bytecode)
-		(if (not (null dest))
-			(with-open-file (str (string-concat "./" dest)
+		(setf bytecode (compiler-liste (append code '((HALT)))))
+		(if (not (null nom_fichier_destination))
+			(with-open-file (str (string-concat "./" nom_fichier_destination)
                      :direction :output
                      :if-exists :supersede
                      :if-does-not-exist :create)
@@ -23,61 +21,51 @@
 	)
 )
 
-(defun compil-liste (liste)
+(defun compiler-liste (liste)
   (if (null liste)
     NIL
     (append
       (expression (car liste))
-      (compil-liste (cdr liste)))))
-
-(defun affichage (code)
-  (affichage-ligne code 1))
-
-(defun affichage-ligne (code ligne)
-  (if (null code)
-    NIL
-    (progn
-      (print (string-concat (write-to-string ligne) " : " (write-to-string (car code))))
-      (affichage-ligne (cdr code) (+ 1 ligne)))))
+      (compiler-liste (cdr liste)))))
 
 (defun expression (expr &optional env)
   (cond 
   	((consp expr)
   		(case (car expr)
-  			('if (compil-if expr env))
-  			('defun (compil-defun expr env))
+  			('if (compiler-condition-if expr env))
+  			('defun (compiler-fonction expr env))
 			('halt `((HALT)))
 			('nop `((NOP)))
-  			(t (compil-appel expr env))))
+  			(t (compiler-appel-fonction expr env))))
   	
-  	((constantp expr) (compil-constant expr))
+  	((constantp expr) (compiler-constant expr))
   	
-  	((symbolp expr) (compil-var expr env))
+  	((symbolp expr) (compiler-var expr env))
   	
   	(t (error "Erreur d'Expression" expr))))
 
 
-(defun compil-constant (constant)
+(defun compiler-constant (constant)
 	`((MOVE (LIT ,constant) R0)))
 
-(defun compil-if (code  &optional env)
+(defun compiler-condition-if (code  &optional env)
 	(setf indexIf (+ indexIf 1))
 	(let ((sinon (intern (string-concat (string "SINON") (write-to-string indexIf))))
-		 (finSi (intern (string-concat (string "FINSI") (write-to-string indexIf)))))
+		 (fin (intern (string-concat (string "FIN") (write-to-string indexIf)))))
 		(append 
 			(expression (cadr code) env)
 			`((CMP (LIT 0) R0))
 			`((JEQ (LABEL ,sinon)))
 			(expression (caddr code) env)
-			`((JMP (LABEL ,finSi)))
+			`((JMP (LABEL ,fin)))
 			`((LABEL ,sinon))
 			(expression (cadddr code) env)
-			`((LABEL ,finSi))
+			`((LABEL ,fin))
 		)
 	)
 )
 
-(defun compil-var (var  &optional env)
+(defun compiler-var (var  &optional env)
 	(let ((lib (assoc var env)))
 		(if lib
 			(append
@@ -90,7 +78,7 @@
 	)
 )
 
-(defun compil-defun (code &optional env) 
+(defun compiler-fonction (code &optional env) 
 	(let ((positionPile 0))
 		(progn
 			(map
@@ -121,7 +109,7 @@
 	)
 )
 
-(defun compil-appel (code  &optional env)
+(defun compiler-appel-fonction (code  &optional env)
 	(append 
 		(apply 
 			'append 
