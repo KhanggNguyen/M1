@@ -347,7 +347,7 @@
 			)
 		)	
 	)
-	(print "Resultat de l'appel : ")
+	(print "Resultat : ")
 	(getRegistre vm 'R0)
 )
 
