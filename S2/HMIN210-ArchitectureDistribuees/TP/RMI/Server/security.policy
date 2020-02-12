@@ -1,0 +1,11 @@
+grant
+{
+	permission java.net.SocketPermission "*:1024-65535","connect,accept";
+	permission java.net.SocketPermission ":80","connect";
+	permission java.security.AllPermission;
+};
+grant codeBase "file:/home/e20150004923/Documents/M1/M1-AIGLE/S2/HMIN210-ArchitectureDistribuees/TP/RMI/versionSimple/" {
+	permission java.security.AllPermission;
+};
+
+grant codeBase "file:.${/}versionSimple/" { permission java.io.FilePermission "..${/}*", "read" ; }; 
