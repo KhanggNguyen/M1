@@ -323,7 +323,7 @@
 	)
 )
 
-(defun expr_exec (vm)
+(defun exec (vm)
 	(loop while (= (get vm 'exitVM) 0) do
 		(let* ((pc (getRegistre vm 'PC)) (instr (getMemoireAt vm pc)))
 			(progn

@@ -1,0 +1,55 @@
+, : PONCTSEG
+. : PONCTFIN
+a : VRB, AUX, NOMC
+à : PREP
+ai : VRB, AUX
+aie : VRB, AUX
+ais : VRB, AUX
+ait : VRB
+autre : ADJ, NOMC, ATT
+autres : ADJ, NOMC, ATT
+bien : ADJ, NOMC, ADV, ATT
+biens : NOMC
+bien des : DET
+bien que : SUB
+bien qu' : SUB
+Ce : DET
+C' : PRNUSUJ
+Ce que : PRNREL
+De : PREP
+Des : DET
+Du : DET
+Est : NOMC, ADJ, VRB, AUX
+Fait : VRB, NOMC, PPAS
+Faite : VRB, PPAS
+Faire : VRB
+Font : NOMC, VRB
+Gens : NOMC
+je : PRNSUJ
+j' : PRNSUJ
+tu : PRNSUJ
+Il : PRNSUJ, NOMC
+Elle : PRNSUJ, PRNPNM
+nous : PRNSUJ
+vous : PRNSUJ
+ils : PRNSUJ, NOMC
+l' : DET, PRNOBJ
+le : DET, PRNOBJ
+la : DET, PRNOBJ, NOMC
+les : DET, PRNOBJ
+ne : ADV
+ne pas : ADV
+mal : ADV, NOMC, NOMC
+ont : VRB, AUX
+pas : ADV, NOMC
+Qu' : ADV, PRNSUJ, PRNREL, SUB
+Que : ADV, PRNSUJ, PRNREL, SUB
+Peu : ADV
+Peu de : DET
+Le peu de : DET	
+Un peu de : DET
+Bien peu de : DET 
+Un : DET, ADJ, ATT
+Un des : DEt
+Uns : DET, NOMC
+Une : DET, NOMC, ATT 
