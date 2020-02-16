@@ -21,4 +21,9 @@ public class DossierSuivi extends UnicastRemoteObject implements IDossierSuivi{
 	public void setTexte(String texte) throws RemoteException {
 		this.texte = texte;
 	}
+
+	@Override
+	public String toString(){
+		return this.texte;
+	}
 }

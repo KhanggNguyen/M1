@@ -26,7 +26,7 @@ public class Animal extends UnicastRemoteObject implements IAnimal{
 		this.nom = nom;
 	}
 	
-	public String getNomMaitre() {
+	public String getNomMaitre() throws RemoteException{
 		return nomMaitre;
 	}
 	
@@ -34,7 +34,7 @@ public class Animal extends UnicastRemoteObject implements IAnimal{
 		this.nomMaitre = nomMaitre;
 	}
 	
-	public Espece getEspece(){
+	public Espece getEspece() throws RemoteException{
 		return espece;
 	}
 	
@@ -50,7 +50,7 @@ public class Animal extends UnicastRemoteObject implements IAnimal{
 		this.race = race;
 	}
 	
-	public DossierSuivi getDossier(){
+	public DossierSuivi getDossier() throws RemoteException{
 		return dossier;
 	}
 	
