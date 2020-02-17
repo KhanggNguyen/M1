@@ -4,3 +4,8 @@ grant
 	permission java.net.SocketPermission ":80","connect";
 	permission java.security.AllPermission;
 };
+
+grant codeBase "file:/home//e20150004923//Documents//M1//M1-AIGLE//S2//HMIN210-ArchitectureDistribuees//TP//RMI//Client//share//"
+{
+	permission java.security.AllPermission;
+};

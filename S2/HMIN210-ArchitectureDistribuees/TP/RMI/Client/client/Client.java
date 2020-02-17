@@ -1,6 +1,7 @@
 package client;
 
 import share.*;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -33,6 +34,10 @@ public class Client {
 		sc.nextLine();//eviter le systeme ignore le scanner 
 		String nom_animal = sc.nextLine();
 		IAnimal mon_animal = stub.recherche(nom_animal);
+		if( mon_animal == null){
+			System.out.println("Il n'y a pas de patient correspond à ce nom");
+			return;
+		}
 		System.out.println("1 - récupérer ses informations");
 		System.out.println("2 - récupérer son dossier");
 		System.out.println("3 - récupérer son espèce");
@@ -92,16 +97,24 @@ public class Client {
 		if(System.getSecurityManager() == null){
 			System.setSecurityManager(new SecurityManager());
 		}
+
 		Scanner sc = new Scanner(System.in);
 
 		try {
 			Registry registry = LocateRegistry.getRegistry(host);
+			//EspeceS especeS = new EspeceS();
+			//registry.bind("especeS", (Remote) especeS);
+
 			ICabinetVeterinaire stub = (ICabinetVeterinaire) registry.lookup("CabinetVeterinaire");
+			
 			int opt = affichage_menu(sc);
+			
 			while(opt != 3){
 				switch(opt){
 					case 1 :
 					createAnimal(stub, sc);
+					//IVeterinaire veto = new Veterinaire();
+					//stub.register(veto);
 					opt = affichage_menu(sc);
 
 					case 2 :
@@ -113,7 +126,6 @@ public class Client {
 
 				}
 			}
-			
 		} catch (Exception e) {
 			System.err.println("Client exception: " + e.toString());
 			e.printStackTrace();

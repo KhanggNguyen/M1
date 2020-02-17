@@ -3,12 +3,11 @@ package share;
 import java.io.*;
 import java.rmi.Remote;
 
-public class Espece implements Remote, Serializable{
+public class Espece implements Serializable{
 	private String nom;
 	private Integer dureeDeVie;
 	
 	public Espece(String nom, Integer dureeDeVie) {
-		super();
 		this.nom = nom;
 		this.dureeDeVie = dureeDeVie;
 	}
