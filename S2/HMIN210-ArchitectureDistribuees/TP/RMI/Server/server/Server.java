@@ -1,3 +1,5 @@
+//Participants : TRAN Thi Tra My - NGUYEN Huu Khang
+
 package server;
 
 import java.util.HashMap;
@@ -16,7 +18,7 @@ public class Server {
 		System.out.println("Début de RMI");
 
 		System.setProperty("java.security.policy", "security.policy");
-		System.setProperty( "java.rmi.server.codebase", "file:/home//e20150004923//Documents//M1//M1-AIGLE//S2//HMIN210-ArchitectureDistribuees//TP//RMI//Client//share//");
+		System.setProperty("java.rmi.server.codebase", "file:/home//e20150004923//Documents//M1//M1-AIGLE//S2//HMIN210-ArchitectureDistribuees//TP//RMI//Client//");
 
 		if(System.getSecurityManager() == null){
 			System.setSecurityManager(new SecurityManager());

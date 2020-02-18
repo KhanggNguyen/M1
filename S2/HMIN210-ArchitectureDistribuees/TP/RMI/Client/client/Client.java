@@ -1,3 +1,5 @@
+//Participants : TRAN Thi Tra My - NGUYEN Huu Khang
+
 package client;
 
 import share.*;
@@ -26,7 +28,18 @@ public class Client {
 		String nom_maitre = sc.nextLine();
 		System.out.print("Veuillez saisir son race : ");
 		String race = sc.nextLine();
-		stub.creationAnimal(nom_animal, nom_maitre, new Espece(nom_espece, duree_de_vie), race);
+		stub.creationAnimal(nom_animal, nom_maitre, new EspeceS(nom_espece, duree_de_vie), race);
+	}
+
+	public static void ajouter_dix_animal(ICabinetVeterinaire stub) throws RemoteException{
+		for(int i=0; i<10 ; i++){
+			String nom_animal = "toto"+i;
+			String nom_maitre = "toto"+i;
+			String nom_espece = "toto";
+			int duree_de_vie = 10;
+			String race = "alaska";
+			stub.creationAnimal(nom_animal, nom_maitre, new EspeceS(nom_espece, duree_de_vie), race);
+		}
 	}
 
 	public static void rechercher(ICabinetVeterinaire stub, Scanner sc) throws RemoteException{
@@ -83,7 +96,8 @@ public class Client {
 	public static int affichage_menu(Scanner sc){
 		System.out.println("1 - Ajouter un animal");
 		System.out.println("2 - Rechercher un animal par leur nom");
-		System.out.println("3 - Quitter");
+		System.out.println("3 - Déclencher l'ajout automatiquement 10 animaux");
+		System.out.println("4 - Quitter");
 		System.out.print("Veuillez choisir par leur numérotation des options suivants : ");
 		int opt = sc.nextInt();
 		return opt;
@@ -102,19 +116,18 @@ public class Client {
 
 		try {
 			Registry registry = LocateRegistry.getRegistry(host);
-			//EspeceS especeS = new EspeceS();
-			//registry.bind("especeS", (Remote) especeS);
-
+			
+			//creation un proxy veto et enregistre au server
 			ICabinetVeterinaire stub = (ICabinetVeterinaire) registry.lookup("CabinetVeterinaire");
-			
+			Veterinaire veto = new Veterinaire();
+			stub.register(veto);
+
 			int opt = affichage_menu(sc);
-			
-			while(opt != 3){
+
+			while(opt != 4){
 				switch(opt){
 					case 1 :
 					createAnimal(stub, sc);
-					//IVeterinaire veto = new Veterinaire();
-					//stub.register(veto);
 					opt = affichage_menu(sc);
 
 					case 2 :
@@ -122,10 +135,18 @@ public class Client {
 					opt = affichage_menu(sc);
 
 					case 3 : 
-					break;
+					ajouter_dix_animal(stub);
+					opt = affichage_menu(sc);
 
+					case 4 : 
+					break;
+					
+					default :
+					break;
 				}
 			}
+			stub.deconnecter(veto);
+			System.exit(0);
 		} catch (Exception e) {
 			System.err.println("Client exception: " + e.toString());
 			e.printStackTrace();

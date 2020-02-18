@@ -1,3 +1,5 @@
+//Participants : TRAN Thi Tra My - NGUYEN Huu Khang
+
 package share;
 
 import java.rmi.RemoteException;
@@ -25,12 +27,12 @@ public class CabinetVeterinaire extends UnicastRemoteObject implements ICabinetV
 	}
 
 	public void creationAnimal(String nom, String nomMaitre, Espece espece, String race) throws RemoteException{
-		if(vetosConnectes.size() > 10){
+		if(listeAnimaux.size() > 10){
 			alerterTous();
 		}
 
 		this.addAnimal(new Animal(nom, nomMaitre, espece, race));
-		System.out.println("Un patient a été ajouté à la base de données");
+		System.out.println("Un patient a été ajouté à la base de données. Taille actuellement : " + listeAnimaux.size() );
 	}
 
 	@Override
@@ -41,14 +43,27 @@ public class CabinetVeterinaire extends UnicastRemoteObject implements ICabinetV
 		}
 		return null;
 	}
+
+	public void afficherTousPatients() throws RemoteException{
+		if(!listeAnimaux.isEmpty())
+			for(IAnimal a : listeAnimaux){
+				System.out.println(a.getInfos());
+			}
+	}
 	
-	public void register(IVeterinaire v){
+	public void register(IVeterinaire v) throws RemoteException {
 		vetosConnectes.add(v);
+		System.out.println("Un vétérinaire est connecté");
 	}
 
-	public void alerterTous(){
+	public void deconnecter (IVeterinaire v) throws RemoteException {
+		vetosConnectes.remove(v);
+		System.out.println("Un vétérinaire s'est déconnecté");
+	}
+
+	public void alerterTous() {
 		for(IVeterinaire veto : vetosConnectes){
-			veto.alert("Total des patient actuellement" + vetosConnectes.size());
+			veto.alert("Attention : Total des patients actuellement" + listeAnimaux.size() + "!!!!!");
 		}
 	}
 	
