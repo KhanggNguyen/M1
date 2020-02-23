@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">HelloWorld</string>
+    <string name="nom_key">Nom</string>
+    <string name="prenom_key">Prénom</string>
+    <string name="age_key">Age</string>
+    <string name="competences_key">Domaine de compétences</string>
+    <string name="telephone_key">Téléphone</string>
+    <string name="bouton_key">Envoyer</string>
+    <string name="Confirmation_message_key">Êtes-vous sûr ?</string>
+
+    <string-array name="language_option">
+        <item>Français</item>
+        <item>English</item>
+    </string-array>
+    <string name="yes_key">Oui</string>
+    <string name="no_key">Non</string>
+    <string name="back_key">Retour</string>
+    <string name="ok_key">Valider</string>
+    <string name="appeler_key">Appeler</string>
+</resources>

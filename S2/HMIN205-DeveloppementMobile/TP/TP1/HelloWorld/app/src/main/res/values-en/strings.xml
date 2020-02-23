@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HelloWorld</string>
+    <string name="age_key">Age</string>
+    <string name="bouton_key">Send</string>
+    <string name="competences_key">Skills</string>
+    <string name="nom_key">First name</string>
+    <string name="prenom_key">Last name</string>
+    <string name="telephone_key">Phone number</string>
+    <string name="Confirmation_message_key">Are you sure ?</string>
+    <string name="yes_key">Yes</string>
+    <string name="no_key">No</string>
+    <string name="back_key">Back</string>
+    <string name="ok_key">Valid</string>
+    <string name="appeler_key">Call</string>
+</resources>

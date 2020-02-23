@@ -1,0 +1,19 @@
+Ex 3 :
+
+On définit une activité Liste directement à la place de définir une layout Liste. Donc le layout est déjà prédéfini.
+
+On constate que l'on n'a pas besoin de faire une setContentView car layout est créé automatiquement
+
+On constate qu'on a une setListAdapter => on crée directement ListeAdapter à la place setListAdapter.
+
+Ensuite, on associe une listener à chaque élément de la liste. On redéfinie la méthode onItemClick dans le corps de la méthode Listener. On met dans le parametre l'adapteur view parent. 
+
+Cela va créer une text via l'objet Toast et on affiche dans le view récuperé dans le paramètre.
+
+Ex 4 : 
+
+methode getView() -> redéfinition : Ici quand on appuye sur qqch ça va envoyer l'endroit où il se trouve, comment on peut convertir et sur quel couche (de parent).
+
+infalter donne vie à une service. Ici on récupere le context et on récupère une rowView. A partir de rowView, on récupère les éléments comme dans l'exemple. On modifie les éléments récuperés et renvoie rowView. Ici on change le nom de l'icone et sa photo.
+
+Ex 5 :
