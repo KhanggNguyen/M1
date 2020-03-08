@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TPex1</string>
+    <string name="nom_key">Nom</string>
+    <string name="prenom_key">Prénom</string>
+    <string name="telephone_key">Téléphone</string>
+    <string name="bouton_key">Envoyer</string>
+    <string name="ok_key">Modifier</string>
+    <string name="back_key">Retour</string>
+</resources>
