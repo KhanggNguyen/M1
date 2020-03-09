@@ -113,7 +113,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return cursor.getCount();
+    }
 
+    public boolean isExist(String nom, String telephone){
+        Boolean res = false;
+        String verifyQuery = "SELECT * FROM " + TABLE_CONTACTS + " WHERE " + KEY_PHONE + " = " + telephone + "; ";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(verifyQuery, null);
+        res = cursor.getCount() > 0;
+        cursor.close();
+
+        return res;
     }
 
 }

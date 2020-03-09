@@ -4,27 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.accounts.AccountManager;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.OperationApplicationException;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -39,14 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListeInfosActivity extends AppCompatActivity {
-    String FILE_NAME = "myContact.txt";
+    static String FILE_NAME = "myContact.txt";
     String nom, prenom, telephone;
     String COUNTER;
-    TextView textViewNom, textViewPrenom, textViewTelephone;
+    TextView textViewNom, textViewTelephone;
     ListView listView_Android_Contacts;
     DatabaseHelper db;
-
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +50,14 @@ public class ListeInfosActivity extends AppCompatActivity {
         prenom = intent.getStringExtra("text_prenom");
         telephone = intent.getStringExtra("text_telephone");
 
-
-
         //ouvrir un fichier et ecrire dessus
         FileOutputStream fos = null;
         try {
-            fos = openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
-            Toast.makeText(this, "Fichier créé à " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_SHORT).show();
+            fos = openFileOutput(FILE_NAME, Context.MODE_APPEND);
+            Toast.makeText(this, "Fichier créé à " + getBaseContext().getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_SHORT).show();
             System.out.println("Fichier créé à " + getFilesDir() + "/" + FILE_NAME);
-            fos.write((nom + "\n").getBytes());
-            fos.write((prenom + "\n").getBytes());
+            fos.write((nom + " - ").getBytes());
+            fos.write((prenom + " - ").getBytes());
             fos.write((telephone + "\n").getBytes());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -92,14 +78,18 @@ public class ListeInfosActivity extends AppCompatActivity {
         Android_Contact new_contact = new Android_Contact(nom+ " " + prenom, telephone);
         long res = db.addContact(new_contact);
         if(res == -1){
-            Toast.makeText(this, "Ce numéro a été déjà ajouté!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Ce numéro a été déjà ajouté dans la bdd!!", Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(this, "Ajouté succès!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Ajouté succès dans la bdd!", Toast.LENGTH_SHORT).show();
         }
 
         //creer liste contact
         listView_Android_Contacts = findViewById(R.id.listview_Android_Contacts);
         get_Android_Contact();
+
+        //demarrer service
+        Intent intentService = new Intent(this, MyService.class);
+        startService(intentService);
 
         //récupérer les objets boutons
         Button mButtonOk = findViewById(R.id.buttonOk);
@@ -193,9 +183,9 @@ public class ListeInfosActivity extends AppCompatActivity {
                 long res;
                 res = db.addContact(contact);
                 if( res == -1){
-                    Toast.makeText(ListeInfosActivity.this, "Numéro existé", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListeInfosActivity.this, "Numéro a été déjà enregistré dans la bdd", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(ListeInfosActivity.this, "Ajouté", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListeInfosActivity.this, "Ajouté dans la bdd", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -246,6 +236,5 @@ public class ListeInfosActivity extends AppCompatActivity {
             return view;
         }
     }
-
 
 }
