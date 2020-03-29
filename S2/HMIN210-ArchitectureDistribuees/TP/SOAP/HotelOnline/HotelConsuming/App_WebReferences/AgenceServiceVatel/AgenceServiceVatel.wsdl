@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="AuthenticationUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SoapHeader" type="tns:SecuredTokenWebService" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SecuredTokenWebService">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Identifiant" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mdp" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Token" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="agences" type="tns:ArrayOfAgence" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAgence">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Agence" nillable="true" type="tns:Agence" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Agence">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="identifiant" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="motdepasse" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="nomAgence" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="tarifPropre" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AuthenticationUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AuthenticationUserResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SecuredTokenWebService" type="tns:SecuredTokenWebService" />
+      <s:element name="CheckAvailabilityByAgencies">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="date_db" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="date_fin" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="nb_personne" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckAvailabilityByAgenciesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckAvailabilityByAgenciesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Booking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idOffre" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="nom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="prenom" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="BookingResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Annulation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idReservation" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AnnulationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AnnulationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AuthenticationUserSoapIn">
+    <wsdl:part name="parameters" element="tns:AuthenticationUser" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticationUserSoapOut">
+    <wsdl:part name="parameters" element="tns:AuthenticationUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticationUserSecuredTokenWebService">
+    <wsdl:part name="SecuredTokenWebService" element="tns:SecuredTokenWebService" />
+  </wsdl:message>
+  <wsdl:message name="CheckAvailabilityByAgenciesSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckAvailabilityByAgencies" />
+  </wsdl:message>
+  <wsdl:message name="CheckAvailabilityByAgenciesSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckAvailabilityByAgenciesResponse" />
+  </wsdl:message>
+  <wsdl:message name="BookingSoapIn">
+    <wsdl:part name="parameters" element="tns:Booking" />
+  </wsdl:message>
+  <wsdl:message name="BookingSoapOut">
+    <wsdl:part name="parameters" element="tns:BookingResponse" />
+  </wsdl:message>
+  <wsdl:message name="AnnulationSoapIn">
+    <wsdl:part name="parameters" element="tns:Annulation" />
+  </wsdl:message>
+  <wsdl:message name="AnnulationSoapOut">
+    <wsdl:part name="parameters" element="tns:AnnulationResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AgenceServiceVatelSoap">
+    <wsdl:operation name="AuthenticationUser">
+      <wsdl:input message="tns:AuthenticationUserSoapIn" />
+      <wsdl:output message="tns:AuthenticationUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckAvailabilityByAgencies">
+      <wsdl:input message="tns:CheckAvailabilityByAgenciesSoapIn" />
+      <wsdl:output message="tns:CheckAvailabilityByAgenciesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Booking">
+      <wsdl:input message="tns:BookingSoapIn" />
+      <wsdl:output message="tns:BookingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Annulation">
+      <wsdl:input message="tns:AnnulationSoapIn" />
+      <wsdl:output message="tns:AnnulationSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AgenceServiceVatelSoap" type="tns:AgenceServiceVatelSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AuthenticationUser">
+      <soap:operation soapAction="http://tempuri.org/AuthenticationUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:AuthenticationUserSecuredTokenWebService" part="SecuredTokenWebService" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckAvailabilityByAgencies">
+      <soap:operation soapAction="http://tempuri.org/CheckAvailabilityByAgencies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Booking">
+      <soap:operation soapAction="http://tempuri.org/Booking" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Annulation">
+      <soap:operation soapAction="http://tempuri.org/Annulation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AgenceServiceVatelSoap12" type="tns:AgenceServiceVatelSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AuthenticationUser">
+      <soap12:operation soapAction="http://tempuri.org/AuthenticationUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:AuthenticationUserSecuredTokenWebService" part="SecuredTokenWebService" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckAvailabilityByAgencies">
+      <soap12:operation soapAction="http://tempuri.org/CheckAvailabilityByAgencies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Booking">
+      <soap12:operation soapAction="http://tempuri.org/Booking" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Annulation">
+      <soap12:operation soapAction="http://tempuri.org/Annulation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AgenceServiceVatel">
+    <wsdl:port name="AgenceServiceVatelSoap" binding="tns:AgenceServiceVatelSoap">
+      <soap:address location="http://localhost:11444/AgenceServiceVatel.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AgenceServiceVatelSoap12" binding="tns:AgenceServiceVatelSoap12">
+      <soap12:address location="http://localhost:11444/AgenceServiceVatel.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
