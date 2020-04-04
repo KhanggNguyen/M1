@@ -1,0 +1,17 @@
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\RESTClient.exe
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.csprojAssemblyReference.cache
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.AssemblyInfoInputs.cache
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.AssemblyInfo.cs
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.csproj.CopyComplete
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\RESTClient.deps.json
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\RESTClient.runtimeconfig.json
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\RESTClient.runtimeconfig.dev.json
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\RESTClient.dll
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\RESTClient.pdb
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.csproj.CoreCompileInputs.cache
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.dll
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.pdb
+D:\VisualStudio2019\Projects\RESTClient\RESTClient\obj\Debug\netcoreapp3.1\RESTClient.genruntimeconfig.cache
