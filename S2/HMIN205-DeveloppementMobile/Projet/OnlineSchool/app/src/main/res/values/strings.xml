@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Ecole en ligne</string>
+    <string name="title_activity_login">Authentification</string>
+    <string name="prompt_email">Adresse mail</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="welcome">"Bienvenue ! "</string>
+    <string name="invalid_username">Le pseudo n\'est pas validé.</string>
+    <string name="invalid_password">Le mot de passe doit être supérieur à 5 caractères.</string>
+    <string name="login_failed">Login failedEchec de connexion.</string>
+    <string name="prompt_username">Pseudo</string>
+    <string name="action_register">S\'enregistrer</string>
+    <string name="prompt_age">Âge</string>
+    <string name="prompt_name">Nom de l\'utilisateur</string>
+    <string name="rg_parent">Parent</string>
+    <string name="rg_student">Elève</string>
+    <string name="messageRegisterRole">Veuillez cocher la case.</string>
+    <string name="messageRegisterFailed">Inscription échoué !</string>
+    <string name="messageRegisterRetry">Réessayer!</string>
+    <string name="prompt_address">Adresse</string>
+    <string name="messageRegisterFillError">Veuillez remplir ce champ.</string>
+    <string name="LoginHereLink">Se connecter</string>
+    <string name="messageErrorPasswordLength">Le mdp doit contenir >= 6 charactères.</string>
+    <string name="CreatedUser">Utilisateur créé. Veuillez vérifier votre adresse mail pour activer le compte.</string>
+    <string name="CreatedUserError">Erreur :</string>
+    <string name="logout">Se déconnecter</string>
+    <string name="LoginUserSuccessful">Connecté</string>
+
+    <string name="LoginUserNotVerified">Veuillez vérifier votre adresse mél.</string>
+    <string name="RegisterHere">S\'inscrire</string>
+    <string name="ResetPassword">Réinitialiser le mdp</string>
+    <string name="ModifyProfile">Modifier</string>
+    <string name="AddStudent">Ajouter élève</string>
+    <string name="bSchoolYears">Choisir les années scolaires concernées.</string>
+
+    <string-array name="grade_item">
+        <item>Sixième</item>
+        <item>Cinquième</item>
+        <item>Quatrième</item>
+        <item>Troisième</item>
+        <item>Seconde</item>
+        <item>Première</item>
+        <item>Terminale</item>
+    </string-array>
+    <string name="bCancel">Annuler</string>
+    <string name="bClearAll">Ràz</string>
+    <string name="hello_blank_fragment">hello</string>
+</resources>
