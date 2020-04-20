@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LfhbfgDWyS9yPBgi31aRmLrnSLMdMYxle5FxpmfkF7BEkh5TeebynUzhuU+uX4wt3d6k/gTsPqh2OEJWMnIq1w==",
+  "dgSpecHash": "7uzCexOL3WFYi5K6asgsXIeO8jruR4uSf91LYYc++GGjMDER3WkUBtS/2j0BqAqA5k3Xw+MMdjmu0ClQPb+2vg==",
   "success": true,
-  "projectFilePath": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\RESTServer\\RESTServer.csproj",
+  "projectFilePath": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\Ex3\\RESTServer\\RESTServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin123\\.nuget\\packages\\bouncycastle.netcore\\1.8.3\\bouncycastle.netcore.1.8.3.nupkg.sha512",
     "C:\\Users\\Admin123\\.nuget\\packages\\google.protobuf\\3.6.1\\google.protobuf.3.6.1.nupkg.sha512",

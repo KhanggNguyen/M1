@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\RESTServer\\RESTServer.csproj": {}
+    "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\Ex3\\RESTServer\\RESTServer.csproj": {}
   },
   "projects": {
-    "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\RESTServer\\RESTServer.csproj": {
+    "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\Ex3\\RESTServer\\RESTServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\RESTServer\\RESTServer.csproj",
+        "projectUniqueName": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\Ex3\\RESTServer\\RESTServer.csproj",
         "projectName": "RESTServer",
-        "projectPath": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\RESTServer\\RESTServer.csproj",
+        "projectPath": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\Ex3\\RESTServer\\RESTServer.csproj",
         "packagesPath": "C:\\Users\\Admin123\\.nuget\\packages\\",
-        "outputPath": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\RESTServer\\obj\\",
+        "outputPath": "D:\\Master\\master-aigle\\M1-AIGLE\\S2\\HMIN210-ArchitectureDistribuees\\TP\\REST\\TP\\RESTServer\\Ex3\\RESTServer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin123\\AppData\\Roaming\\NuGet\\NuGet.Config",
