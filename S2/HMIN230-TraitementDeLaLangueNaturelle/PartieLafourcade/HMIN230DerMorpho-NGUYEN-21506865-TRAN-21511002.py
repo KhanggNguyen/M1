@@ -1,6 +1,11 @@
+#Participants : 
+#NGUYEN Huu Khang - 21506865 
+
+#TRAN Thi Tra My - 21511002
+
 import os,sys,re
 
-word = input("Veuillez saisir une verbe : " ).lower()
+word = input("Veuillez saisir un terme : " ).lower()
 
 #open file data r_pos
 file_r_pos = open('Dataset/r_pos.txt', encoding="latin1")
