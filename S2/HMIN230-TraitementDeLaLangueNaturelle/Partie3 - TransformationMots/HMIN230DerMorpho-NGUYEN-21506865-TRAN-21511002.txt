@@ -1,0 +1,37 @@
+Participants : 
+NGUYEN Huu Khang - 21506865 
+
+TRAN Thi Tra My - 21511002
+
+//SETUP 
+- Il est nécessaire d'installer le python. Pour l'installation du python voici un tutoriel : https://realpython.com/installing-python/
+
+- Il est nécessaire de télécharger le fichier r_pos(id=4) et le nommer r_pos.txt. 
+
+- Ensuite, vous devez mettre le fichier r_pos.txt dans le dossier appelé "Dataset"
+
+- url du fichier r_pos : http://www.jeuxdemots.org/JDM-LEXICALNET-FR/01212020-LEXICALNET-JEUXDEMOTS-R4.txt
+
+//Conception
+On peut trouver la nature du mot via le fichier r_pos(id=4) trouvé sur le site Jeuxdemots.org
+
+Tout d'abord quand l'utilisateur saisi le terme. Le script va vérifier si le terme existe. Si le terme n'existe pas le script va s'arrêter
+
+Ensuite, si le terme existe, le script va transformer le terme en fonction de son type (par ex: Verbe, Nom, Adj, Adv). Pour chaque terme transformé, le script va vérifier l'existence du terme via l'url suivant "http://www.jeuxdemots.org/rezo-dump.php".
+
+Enfin, le script va enregistrer tous les types trouvés dans le fichier r_pos.txt pour chaque terme transformé dans le fichier "regles.txt" et afficher le terme transformé dans le terminal.
+
+Vous pouvez voir un exemple d'un résultat dans le fichier exemple.txt
+
+//Exécution
+1 - Commande exécution : python script.py <Mot>
+
+Exemple d'une commande : python script.py finir 
+
+2 - Vous allez saisir ensuite un terme. Le script peut prendre quelques minutes car il doit vérifier l'existance d'un mot pour chaque mot dérivé du mot d'origine. 
+
+3 - Les règles pour chaque terme se trouve dans le fichier "regles.txt" du dossier Dataset. Le fichier "regles_2.txt" contient les reglès possible utilisé pour chaque mots. 
+
+Il est de type suivant : 
+
+mot_origine; mot_dérivé; motif_trouvé; motif_remplaçant; sémantique possible

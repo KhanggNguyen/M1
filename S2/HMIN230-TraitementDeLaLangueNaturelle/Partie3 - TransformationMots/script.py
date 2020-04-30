@@ -3,6 +3,8 @@
 
 #TRAN Thi Tra My - 21511002
 
+# importing the requests library 
+import requests 
 import os,sys,re
 
 word = input("Veuillez saisir un terme : " ).lower()
@@ -12,7 +14,8 @@ file_r_pos = open('Dataset/r_pos.txt', encoding="latin1")
 lines = file_r_pos.readlines()
 
 #open file rule
-file_rule = open('Dataset/regles.txt', 'w', encoding="latin1")
+file_rule = open('Dataset/regles.txt', 'a', encoding="utf-8")
+file_rule_2 = open('Dataset/regles_2.txt', 'a', encoding="utf-8")
 
 #Type of input word via r_pos
 wordTypes = []
@@ -22,19 +25,35 @@ for line in lines :
         wordTypes.append(line)
         file_rule.write(line)
 
+# defining the URL  
+URL = "http://www.jeuxdemots.org/rezo-dump.php"
+
 ########################
 #Verify if word exists and its form
-
 def checkIfWordExist(word) :
     exist = False
+    
+    # defining params
+    PARAMS = {
+        'gotermsubmit' : 'Chercher',
+        'gotermrel' : word,
+        'rel' : 4
+    }
 
-    for line in lines :
-        lineToArray = line.split(';')
+    # sending get request and saving the response as response object 
+    r = requests.get(url = URL, params = PARAMS)
 
-        if((word == lineToArray[0].strip()) and (int(lineToArray[2]) > 0)):
-            file_rule.write(line)
+    # extracting data in text format 
+    data = r.text
+
+    if (data.find(';\'' + word + '\';') > 0):
+        for line in lines :
             exist = True
+            lineToArray = line.split(';')
 
+            if((word == lineToArray[0].strip()) and (int(lineToArray[2]) > 0)):
+                file_rule.write(line)
+                exist = True
     return exist
 
 #return True if word is a Ver:Inf
@@ -58,7 +77,7 @@ def isADJ(word) :
     for line in wordTypes : 
         lineToArray = line.split(';')
         form = lineToArray[1]
-        if(form == 'Adj:') :
+        if(form =='Adj:') :
             return True
     return False
 
@@ -69,6 +88,10 @@ def isADV(word) :
         if(form == 'Adv:') :
             return True
     return False
+
+#Write to rule file
+def __writeToRuleFile (word_origine, word_derived, motif_found, motif_replaced, semantique_origine, semantique_derived ) :
+    file_rule_2.write(word_origine + ';' + word_derived + ';' + motif_found + ';' + motif_replaced + ';' + semantique_origine + '=>' + semantique_derived + '\n')
 
 ##################################################################
 
@@ -86,107 +109,129 @@ def transformVer_Inf(word) :
         myListWord.pop()
         #ER -> AGE
         if(checkIfWordExist(''.join(__generateWordAGE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordAGE(myListWord)), 'ER', 'AGE', 'Ver', 'Nom')
             print(''.join(__generateWordAGE(myListWord)))
 
         #ER -> ABLE 
         if(checkIfWordExist(''.join(__generateWordABLE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordABLE(myListWord)), 'ER', 'AGE', 'Ver', 'Nom')
             print(''.join(__generateWordABLE(myListWord)))
 
         #ER -> EMENT
         if(checkIfWordExist(''.join(__generateWordEMENT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEMENT(myListWord)), 'ER', 'AGE', 'Ver', 'Nom')
             print(''.join(__generateWordEMENT(myListWord)))
         
         #ER -> EUR
         if(checkIfWordExist(''.join(__generateWordEUR(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEUR(myListWord)), 'ER', 'EUR', 'Ver', 'Adj')
             print(''.join(__generateWordEUR(myListWord)))
 
         #ER -> EUSE
         if(checkIfWordExist(''.join(__generateWordEUSE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEUSE(myListWord)), 'ER', 'EUSE', 'Ver', 'Adj')
             print(''.join(__generateWordEUSE(myListWord)))
         
         #ER -> OIR (egoutter -> egouttoir)
         if(checkIfWordExist(''.join(__generateWordOIR(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordOIR(myListWord)), 'ER', 'OIR', 'Ver', 'Nom')
             print(''.join(__generateWordOIR(myListWord)))
 
         #ER -> OIRE (patiner -> patinoire)
         if(checkIfWordExist(''.join(__generateWordOIRE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordOIRE(myListWord)), 'ER', 'OIRE', 'Ver', 'Nom')
             print(''.join(__generateWordOIRE(myListWord)))
 
         #ER -> ANT
         if(checkIfWordExist(''.join(__generateWordANT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordANT(myListWord)), 'ER', 'ANT', 'Ver', 'Nom')
             print(''.join(__generateWordANT(myListWord)))
         
         #ER -> ETTE
         if(checkIfWordExist(''.join(__generateWordETTE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordETTE(myListWord)), 'ER', 'ETTE', 'Ver', 'Nom')
             print(''.join(__generateWordETTE(myListWord)))
 
         #ER -> E
         if(checkIfWordExist(''.join(__generateWordE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordE(myListWord)), 'ER', 'E', 'Ver', 'Ver')
             print(''.join(__generateWordE(myListWord)))
 
         #ER -> ATION
         if(checkIfWordExist(''.join(__generateWordATION(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordATION(myListWord)), 'ER', 'ATION', 'Ver', 'Nom')
             print(''.join(__generateWordATION(myListWord)))
         
         #ER -> AISON
         if(checkIfWordExist(''.join(__generateWordAISON(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordAISON(myListWord)), 'ER', 'AISON', 'Ver', 'Nom')
             print(''.join(__generateWordAISON(myListWord)))
         
         #ER -> ILLER
         if(checkIfWordExist(''.join(__generateWordILLER(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordILLER(myListWord)), 'ER', 'ILLER', 'Ver', 'Nom')
             print(''.join(__generateWordILLER(myListWord)))
 
         #ER -> AILLE (retrouver -> retrouvaille)
         if(checkIfWordExist(''.join(__generateWordAILLE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordAILLE(myListWord)), 'ER', 'AILLE', 'Ver', 'Nom')
             print(''.join(__generateWordAILLE(myListWord)))
 
         #ER -> AIL 
         if(checkIfWordExist(''.join(__generateWordAIL(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordAIL(myListWord)), 'ER', 'AIL', 'Ver', 'Nom')
             print(''.join(__generateWordAIL(myListWord)))
 
         #ER -> URE (geler -> gelure)
         if(checkIfWordExist(''.join(__generateWordURE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordURE(myListWord)), 'ER', 'URE', 'Ver', 'Nom')
             print(''.join(__generateWordURE(myListWord)))
 
         #ER -> IEN
         if(checkIfWordExist(''.join(__generateWordIEN(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordIEN(myListWord)), 'ER', 'IEN', 'Ver', 'Nom')
             print(''.join(__generateWordIEN(myListWord)))
 
         #ER -> IBLE
         if(checkIfWordExist(''.join(__generateWordIBLE(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordIBLE(myListWord)), 'ER', 'IBLE', 'Ver', 'Nom')
             print(''.join(__generateWordIBLE(myListWord)))
 
     
     #IF SER
-    if(myListWord[len(myListWord)-1] == 's') :
-        
+    if(myListWord[len(myListWord)-1] == 's') :   
         #SER -> SATION (Utiliser -> utilisation)
         if(checkIfWordExist(''.join(__generateWordSATION(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordSATION(myListWord)), 'SER', 'SATION', 'Ver', 'Nom')
             print(''.join(__generateWordSATION(myListWord)))
 
     #if GER
     if(myListWord[len(myListWord)-1] == 'g') :
-        
         #GER -> GEOIRE (manger -> mangeoire)
         if(checkIfWordExist(''.join(__generateWordEOIRE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEOIRE(myListWord)), 'GER', 'EOIRE', 'Ver', 'Nom')
             print(''.join(__generateWordEOIRE(myListWord)))
 
         #GER -> GEABLE (manger -> mangeable)
         if(checkIfWordExist(''.join(__generateWordEABLE(myListWord)))) : 
+            __writeToRuleFile(word, ''.join(__generateWordEABLE(myListWord)), 'GER', 'EABLE', 'Ver', 'Adj')
             print(''.join(__generateWordEABLE(myListWord)))
         
         #GER -> GEANT (manger -> mangeant)
         if(checkIfWordExist(''.join(__generateWordEANT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEANT(myListWord)), 'GER', 'EANT', 'Ver', 'Adv')
             print(''.join(__generateWordEANT(myListWord)))
 
     #IF NER
     if(myListWord[len(myListWord)-1] == 'n') :      
         #NER -> NIER (janidier -> jardinier)
         if(checkIfWordExist(''.join(__generateWordNIER(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordNIER(myListWord)), 'NER', 'NIER', 'Ver', 'Nom')
             print(''.join(__generateWordNIER(myListWord)))
 
         #NER -> NAISON
         if(checkIfWordExist(''.join(__generateWordNAISION(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordNAISION(myListWord)), 'NER', 'NAISON', 'Ver', 'Adv')
             print(''.join(__generateWordNAISION(myListWord)))
 
     #IF QUER
@@ -194,14 +239,17 @@ def transformVer_Inf(word) :
         
         #QUER -> CATION (fabriquer -> fabrication)
         if(checkIfWordExist(''.join(__generateWordCATION(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordCATION(myListWord)), 'QUER', 'CATION', 'Ver', 'Nom')
             print(''.join(__generateWordCATION(myListWord)))
 
         #QUER -> CABLE 
         if(checkIfWordExist(''.join(__generateWordCABLE(myListWord)))):
+            __writeToRuleFile(word, ''.join(__generateWordEANT(myListWord)), 'QUER', 'CABLE', 'Ver', 'Adj')
             print(''.join(__generateWordCABLE(myListWord)))
 
         #QUER -> CANT
         if(checkIfWordExist(''.join(__generateWordCANT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordCANT(myListWord)), 'QUER', 'CANT', 'Ver', 'Adj')
             print(''.join(__generateWordCANT(myListWord)))
 
     #IF IR 
@@ -211,26 +259,32 @@ def transformVer_Inf(word) :
 
         #IR -> ISSERIE
         if(checkIfWordExist(''.join(__generateWordISSERIE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordISSERIE(myListWord)), 'IR', 'ISSERIE', 'Ver', 'Nom')
             print(''.join(__generateWordISSERIE(myListWord)))
 
         #IR -> ISSEMENT
         if(checkIfWordExist(''.join(__generateWordSSEMENT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordSSEMENT(myListWord)), 'IR', 'ISSEMENT', 'Ver', 'Nom')
             print(''.join(__generateWordSSEMENT(myListWord)))
 
         #IR -> ISSEUR
         if(checkIfWordExist(''.join(__generateWordSSEUR(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordSSEUR(myListWord)), 'IR', 'ISSEUR', 'Ver', 'Nom')
             print(''.join(__generateWordSSEUR(myListWord)))
 
         #IR -> ISSEUSE
         if(checkIfWordExist(''.join(__generateWordSSEUSE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordSSEUSE(myListWord)), 'IR', 'ISSEUSE', 'Ver', 'Nom')
             print(''.join(__generateWordSSEUSE(myListWord)))
 
         #IR -> ISSANT
         if(checkIfWordExist(''.join(__generateWordSSANT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordSSANT(myListWord)), 'IR', 'ISSANT', 'Ver', 'Nom')
             print(''.join(__generateWordSSANT(myListWord)))
 
         #IR -> ITION
         if(checkIfWordExist(''.join(__generateWordITION(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordITION(myListWord)), 'IR', 'ITION', 'Ver', 'Nom')
             print(''.join(__generateWordITION(myListWord)))
 
     #IF RE 
@@ -238,12 +292,13 @@ def transformVer_Inf(word) :
     if(myListWord[len(myListWord)-2 == 'r'] 
         and myListWord[len(myListWord)-1 == 'e']) :
 
-        ##remove NDRE
+        ##remove RE
         myListWord.pop()
         myListWord.pop()
 
         #RE -> ENTIF
         if(checkIfWordExist(''.join(__generateWordENTIF(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordENTIF(myListWord)), 'RE', 'ENTIF', 'Ver', 'Adj')
             print(''.join(__generateWordENTIF(myListWord)))
 
     #IF DRE 
@@ -260,6 +315,7 @@ def transformVer_Inf(word) :
 
         #DRE -> NABLE
         if(checkIfWordExist(''.join(__generateWordNABLE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordNABLE(myListWord)), 'DRE', 'NABLE', 'Ver', 'Adj')
             print(''.join(__generateWordNABLE(myListWord)))
           
 
@@ -278,14 +334,17 @@ def transformVer_Inf(word) :
 
         #UIRE -> UCTION
         if(checkIfWordExist(''.join(__generateWordUCTION(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordUCTION(myListWord)), 'UIRE', 'UCTION', 'Ver', 'Nom')
             print(''.join(__generateWordUCTION(myListWord)))
 
         #UIRE -> UCTEUR
         if(checkIfWordExist(''.join(__generateWordUCTEUR(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordUCTEUR(myListWord)), 'UIRE', 'UCTEUR', 'Ver', 'Nom')
             print(''.join(__generateWordUCTEUR(myListWord)))
 
         #UIRE -> UCTRICE
         if(checkIfWordExist(''.join(__generateWordUCTRICE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordUCTRICE(myListWord)), 'UIRE', 'UCTRICE', 'Ver', 'Nom')
             print(''.join(__generateWordUCTRICE(myListWord)))
 
 
@@ -299,16 +358,19 @@ def transformVer_Inf(word) :
 
         #ISTER -> ISTANCE
         if(checkIfWordExist(''.join(__generateWordISTANCE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordISTANCE(myListWord)), 'ISTER', 'ISTANCE', 'Ver', 'Nom')
             print(''.join(__generateWordISTANCE(myListWord)))
 
     #try add random suffixe
     myListWord = list(word)
     # * -> ATEUR
     if(checkIfWordExist(''.join(__generateWordATEUR(myListWord)))) :
+        __writeToRuleFile(word, ''.join(__generateWordATEUR(myListWord)), '*', 'ATEUR', 'Ver', 'Nom')
         print(''.join(__generateWordATEUR(myListWord)))
 
     # * -> ITEUR
     if(checkIfWordExist(''.join(__generateWordITEUR(myListWord)))) :
+        __writeToRuleFile(word, ''.join(__generateWordITEUR(myListWord)), '*', 'ITEUR', 'Ver', 'Nom')
         print(''.join(__generateWordITEUR(myListWord)))
 
 #METHOD GENERATE VERB
@@ -585,199 +647,365 @@ def transformNom(word):
     if (myListWord[lenOfList-1] == "e") :
         #E -> ON 
         if(checkIfWordExist(''.join(__generateWordON(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordON(myListWord)), 'E', 'On', 'Nom', 'Nom')
             print(''.join(__generateWordON(myListWord)))
+
+        #E -> ER 
+        if(checkIfWordExist(''.join(__generateWordER_1(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordAIRE(myListWord)), 'E', 'ER', 'Nom', 'Ver')
+            print(''.join(__generateWordER_1(myListWord)))
 
         #E -> AIRE 
         if(checkIfWordExist(''.join(__generateWordAIRE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordAIRE(myListWord)), 'E', 'AIRE', 'Nom', 'Adj')
             print(''.join(__generateWordAIRE(myListWord)))
 
         #E -> IF 
         if(checkIfWordExist(''.join(__generateWordIF(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordIF(myListWord)), 'E', 'IF', 'Nom', 'Adj')
             print(''.join(__generateWordIF(myListWord)))
 
         #E -> EUX 
         if(checkIfWordExist(''.join(__generateWordEUX(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEUX(myListWord)), 'E', 'EUX', 'Nom', 'Adj')
             print(''.join(__generateWordEUX(myListWord)))
 
         #E -> IE 
         if(checkIfWordExist(''.join(__generateWordIE_BIS(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordIE_BIS(myListWord)), 'E', 'IE', 'Nom', 'Nom')
             print(''.join(__generateWordIE_BIS(myListWord)))
 
     #IF ER
     if (myListWord[lenOfList-2] == "e" and myListWord[lenOfList-1] == "r") :
         # ER -> ANCE
         if(checkIfWordExist(''.join(__generateWordANCE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordANCE(myListWord)), 'ER', 'ANCE', 'Nom', 'Nom')
             print(''.join(__generateWordANCE(myListWord)))
+
+    #IF EMENT
+    if (myListWord[lenOfList-5] == "e" and myListWord[lenOfList-4] == "m" and myListWord[lenOfList-3] == "e" and myListWord[lenOfList-2] == "n" and myListWord[lenOfList-1] == "t") :
+        # EMENT -> ER
+        if(checkIfWordExist(''.join(__generateWordER_5(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_5(myListWord)), 'EMENT', 'ER', 'Nom', 'Ver')
+            print(''.join(__generateWordER_5(myListWord)))
 
     #IF EUR
     if (myListWord[lenOfList-3] == "e" and myListWord[lenOfList-2] == "u" and myListWord[lenOfList-1] == "r") :
         # EUR -> EUSE
         if(checkIfWordExist(''.join(__generateWordEUSE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEUSE(myListWord)), 'EUR', 'EUSE', 'Nom', 'Nom')
             print(''.join(__generateWordEUSE(myListWord)))
+
+        # EUR -> ER
+        if(checkIfWordExist(''.join(__generateWordER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), 'EUR', 'ER', 'Nom', 'Ver')
+            print(''.join(__generateWordER(myListWord)))
+
+    #IF EUSE
+    if (myListWord[lenOfList-4] == "e" and myListWord[lenOfList-3] == "u" and myListWord[lenOfList-2] == "s" and myListWord[lenOfList-1] == "e") :
+        # EUSE -> ER
+        if(checkIfWordExist(''.join(__generateWordER_4(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_4(myListWord)), 'EUSE', 'ER', 'Nom', 'Ver')
+            print(''.join(__generateWordER_4(myListWord)))
+
+    #IF ETTE
+    if (myListWord[lenOfList-4] == "e" and myListWord[lenOfList-3] == "t" and myListWord[lenOfList-2] == "t" and myListWord[lenOfList-1] == "e" ) :
+        #ETTE -> ER
+        if(checkIfWordExist(''.join(__generateWordER_4(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_4(myListWord)), 'ETTE', 'ER', 'Nom', 'Ver')
+            print(''.join(__generateWordER_4(myListWord)))
+
 
     #if AL/EL
     if ((myListWord[lenOfList-2] == "e" or myListWord[lenOfList-2] == "a") and myListWord[lenOfList-1] == "l" ) :
         #EL/AL -> ALISER (Mondial -> mondialiser)
         if(checkIfWordExist(''.join(__generateWordALISER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordALISER(myListWord)), 'AL/EL', 'ALISER', 'Nom', 'Ver')
             print(''.join(__generateWordALISER(myListWord)))
 
         #EL/AL -> ALISATION
         if(checkIfWordExist(''.join(__generateWordALISATION(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordALISATION(myListWord)), 'AL/EL', 'ALISATION', 'Nom', 'Nom')
             print(''.join(__generateWordALISATION(myListWord)))
 
         #AL -> AUX
         if(checkIfWordExist(''.join(__generateWordAUX(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordAUX(myListWord)), 'AL/EL', 'AUX', 'Nom', 'Nom:Plu')
             print(''.join(__generateWordAUX(myListWord)))
 
     #if ALE
     if (myListWord[lenOfList-3] == "a" and myListWord[lenOfList-2] == "l" and myListWord[lenOfList-1] == "e" ) :
         #ALE -> ALES
         if(checkIfWordExist(''.join(__generateWordALES(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordALES(myListWord)), 'AL/EL', 'ALES', 'Nom', 'Nom:Plu')
             print(''.join(__generateWordALES(myListWord)))
+
+    #if AISON
+    if (myListWord[lenOfList-5] == "a" and myListWord[lenOfList-4] == "i" and myListWord[lenOfList-3] == "s" and myListWord[lenOfList-2] == "o" and myListWord[lenOfList-1] == "n" ) :
+        #AISON -> ER
+        if(checkIfWordExist(''.join(__generateWordER_5(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_5(myListWord)), 'AISON', 'ER', 'Nom', 'Ver')
+            print(''.join(__generateWordER_5(myListWord)))
+
+    #if AGE
+    if (myListWord[lenOfList-3] == "a" and myListWord[lenOfList-2] == "g" and myListWord[lenOfList-1] == "e" ) :
+        #AGE -> ER
+        if(checkIfWordExist(''.join(__generateWordER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), 'AGE', 'ER', 'Nom', 'Ver')
+            print(''.join(__generateWordER(myListWord)))
+
+        #AGE -> IER
+        if(checkIfWordExist(''.join(__generateWordIER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordIER(myListWord)), 'AGE', 'IER', 'Nom', 'Nom')
+            print(''.join(__generateWordIER(myListWord)))
+
+    #if AIL
+    if (myListWord[lenOfList-3] == "a" and myListWord[lenOfList-2] == "i" and myListWord[lenOfList-1] == "l" ) :
+        #AIL -> ER
+        if(checkIfWordExist(''.join(__generateWordER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), 'AIL', 'ER', 'Nom', 'Nom')
+            print(''.join(__generateWordER(myListWord)))
+
+    #if AILLE
+    if (myListWord[lenOfList-5] == "a" and myListWord[lenOfList-4] == "i" and myListWord[lenOfList-3] == "l" and myListWord[lenOfList-2] == "l" and myListWord[lenOfList-1] == "e" ) :
+        #AILLE -> ER
+        if(checkIfWordExist(''.join(__generateWordER_5(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), 'AILLE', 'IER', 'Nom', 'Nom')
+            print(''.join(__generateWordER_5(myListWord)))
+
+    #if ABLE
+    if (myListWord[lenOfList-4] == "a" and myListWord[lenOfList-3] == "b" and myListWord[lenOfList-2] == "l" and myListWord[lenOfList-1] == "e" ) :
+        #ABLE -> ER
+        if(checkIfWordExist(''.join(__generateWordER_4(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_4(myListWord)), 'ABLE', 'ER', 'Nom', 'Nom')
+            print(''.join(__generateWordER_4(myListWord)))
+
 
     #IF IER
     if (myListWord[len(myListWord)-3] == "i" and myListWord[len(myListWord)-2] == "e" and myListWord[len(myListWord)-1] == "r") : 
         #IER -> IANT (mendier -> mendiant)
         if(checkIfWordExist(''.join(__generateWordIANT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordIANT(myListWord)), 'IER', 'IANT', 'Nom', 'Nom')
             print(''.join(__generateWordIANT(myListWord)))
+
+        #IER -> ER 
+        if(checkIfWordExist(''.join(__generateWordER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), 'IER', 'ER', 'Nom', 'Nom')
+            print(''.join(__generateWordER(myListWord)))
+
+        #IER -> AGE
+        if(checkIfWordExist(''.join(__generateWordAGE_BIS(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordAGE_BIS(myListWord)), 'IER', 'AGE', 'Nom', 'Nom')
+            print(''.join(__generateWordAGE_BIS(myListWord)))
 
         #IER -> ERAIE (mendier -> mendiant)
         if(checkIfWordExist(''.join(__generateWordERAIE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordERAIE(myListWord)), 'IER', 'ERAIE', 'Nom', 'Nom')
             print(''.join(__generateWordERAIE(myListWord)))
 
+    #IF EOIRE
+    if (myListWord[lenOfList-5] == "o" and myListWord[lenOfList-4] == "o" and myListWord[lenOfList-3] == "i" and myListWord[lenOfList-2] == "r" and myListWord[lenOfList-1] == "e" ) :
+        #EOIRE -> ER
+        if(checkIfWordExist(''.join(__generateWordER_5(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_5(myListWord)), 'EOIRE', 'ER', 'Nom', 'Nom')
+            print(''.join(__generateWordER_5(myListWord)))
+
     #IF OIRE
-    if (myListWord[lenOfList-3] == "o" and myListWord[lenOfList-3] == "i" and myListWord[lenOfList-2] == "r" and myListWord[lenOfList-1] == "e" ) :
+    if (myListWord[lenOfList-4] == "o" and myListWord[lenOfList-3] == "i" and myListWord[lenOfList-2] == "r" and myListWord[lenOfList-1] == "e" ) :
         #OIRE -> ORIQUE
         if(checkIfWordExist(''.join(__generateWordORIQUE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordORIQUE(myListWord)), 'OIRE', 'ORIQUE', 'Nom', 'Nom')
             print(''.join(__generateWordORIQUE(myListWord)))
+
+        #OIRE -> ER
+        if(checkIfWordExist(''.join(__generateWordER_4(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_4(myListWord)), 'OIRE', 'ER', 'Nom', 'Nom')
+            print(''.join(__generateWordER_4(myListWord)))
+
+    #IF OIR
+    if (myListWord[lenOfList-3] == "o" and myListWord[lenOfList-2] == "i" and myListWord[lenOfList-1] == "r" ) :
+        #OIR -> ER
+        if(checkIfWordExist(''.join(__generateWordER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), 'OIR', 'ER', 'Nom', 'Nom')
+            print(''.join(__generateWordER(myListWord)))
 
     # IF ère
     if (myListWord[lenOfList-3] == "è" and myListWord[lenOfList-2] == "r" and myListWord[lenOfList-1] == "e" ) :
         #ère -> EREAU
         if(checkIfWordExist(''.join(__generateWordEREAU(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEREAU(myListWord)), 'ERE', 'EREAU', 'Nom', 'Nom')
             print(''.join(__generateWordEREAU(myListWord)))
 
     #IF IN
     if (myListWord[lenOfList-2] == "i" and myListWord[lenOfList-1] == "n" ) :
         # in -> EREAU 
         if(checkIfWordExist(''.join(__generateWordEREAU_BIS(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordEREAU_BIS(myListWord)), 'IN', 'EREAU', 'Nom', 'Nom')
             print(''.join(__generateWordEREAU_BIS(myListWord)))
 
     #IF RE 
     if (myListWord[lenOfList-2] == "r" and myListWord[lenOfList-1] == "e" ) :
         #RE -> USTE 
-        if(checkIfWordExist(''.join(__generateWordUSTE(myListWord)))) :
-            print(''.join(__generateWordUSTE(myListWord)))
+        if(checkIfWordExist(''.join(__generateWordUSTRE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordUSTRE(myListWord)), 'RE', 'USTRE', 'Nom', 'Nom')
+            print(''.join(__generateWordUSTRE(myListWord)))
+
+    #IF UCTEUR
+    if (myListWord[lenOfList-6] == "u" and myListWord[lenOfList-5] == "c" and myListWord[lenOfList-4] == "t" and myListWord[lenOfList-3] == "e" and myListWord[lenOfList-2] == "u" and myListWord[lenOfList-1] == "r") :
+        # UCTEUR -> UIRE
+        if(checkIfWordExist(''.join(__generateWordUIRE_6(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordUIRE_6(myListWord)), 'UCTEUR', 'UIRE', 'Nom', 'Ver')
+            print(''.join(__generateWordUIRE_6(myListWord)))
+
+    #IF UCTION
+    if (myListWord[lenOfList-6] == "u" and myListWord[lenOfList-5] == "c" and myListWord[lenOfList-4] == "t" and myListWord[lenOfList-3] == "i" and myListWord[lenOfList-2] == "o" and myListWord[lenOfList-1] == "n") :
+        # UCTEUR -> UIRE
+        if(checkIfWordExist(''.join(__generateWordUIRE_6(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordUIRE_6(myListWord)), 'UCTION', 'UIRE', 'Nom', 'Ver')
+            print(''.join(__generateWordUIRE_6(myListWord)))
+
+    #IF UCTRICE
+    if (myListWord[lenOfList-7] == "u" and myListWord[lenOfList-6] == "c" and myListWord[lenOfList-5] == "t" and myListWord[lenOfList-4] == "r" and myListWord[lenOfList-3] == "i" and myListWord[lenOfList-2] == "c" and myListWord[lenOfList-1] == "e") :
+        # UCTRICE -> UIRE
+        if(checkIfWordExist(''.join(__generateWordUIRE_7(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordUIRE_7(myListWord)), 'UCTRICE', 'UIRE', 'Nom', 'Ver')
+            print(''.join(__generateWordUIRE_7(myListWord)))
+
 
     #IF UE
     if (myListWord[lenOfList-2] == "u" and myListWord[lenOfList-1] == "e" ) :
         #UE -> IE 
         if(checkIfWordExist(''.join(__generateWordIE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordIE(myListWord)), 'UE', 'IE', 'Nom', 'Nom')
             print(''.join(__generateWordIE(myListWord)))
 
     #without condition, try anyway if exists
     #add ER 
     if(checkIfWordExist(''.join(__generateWordER(myListWord)))) :
-            print(''.join(__generateWordER(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), '*', 'ER', 'Nom', 'Ver')
+        print(''.join(__generateWordER(myListWord)))
 
     #add ON 
     if(checkIfWordExist(''.join(__generateWordON_BIS(myListWord)))) :
-            print(''.join(__generateWordON_BIS(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordON_BIS(myListWord)), '*', 'ON', 'Nom', 'Nom')
+        print(''.join(__generateWordON_BIS(myListWord)))
 
     #add ELLE 
     if(checkIfWordExist(''.join(__generateWordELLE(myListWord)))) :
-            print(''.join(__generateWordELLE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordELLE(myListWord)), '*', 'ELLE', 'Nom', 'Nom')
+        print(''.join(__generateWordELLE(myListWord)))
 
     #add ABLE #call to verb's method
     if(checkIfWordExist(''.join(__generateWordABLE(myListWord)))) :
-            print(''.join(__generateWordABLE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordABLE(myListWord)), '*', 'ABLE', 'Nom', 'Adj')
+        print(''.join(__generateWordABLE(myListWord)))
 
     #add NETTE 
     if(checkIfWordExist(''.join(__generateWordNETTE(myListWord)))) :
-            print(''.join(__generateWordNETTE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordNETTE(myListWord)), '*', 'NETTE', 'Nom', 'Nom')
+        print(''.join(__generateWordNETTE(myListWord)))
 
     #add é 
     if(checkIfWordExist(''.join(__generateWordE(myListWord)))) :
-            print(''.join(__generateWordE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordE(myListWord)), '*', 'E', 'Nom', 'Ver')
+        print(''.join(__generateWordE(myListWord)))
 
     #add acé 
     if(checkIfWordExist(''.join(__generateWordACE(myListWord)))) :
-            print(''.join(__generateWordACE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordACE(myListWord)), '*', 'ACE', 'Nom', 'Adj')
+        print(''.join(__generateWordACE(myListWord)))
 
     #add an
     if(checkIfWordExist(''.join(__generateWordAN(myListWord)))) :
-            print(''.join(__generateWordAN(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAN(myListWord)), '*', 'AN', 'Nom', 'Adj')
+        print(''.join(__generateWordAN(myListWord)))
 
     #add ANE
     if(checkIfWordExist(''.join(__generateWordANE(myListWord)))) :
-            print(''.join(__generateWordANE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordANE(myListWord)), '*', 'ANE', 'Nom', 'Adj')
+        print(''.join(__generateWordANE(myListWord)))
 
     #add al 
     if(checkIfWordExist(''.join(__generateWordAL(myListWord)))) :
-            print(''.join(__generateWordAL(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAL(myListWord)), '*', 'AL', 'Nom', 'Nom')
+        print(''.join(__generateWordAL(myListWord)))
 
     #add GRAMME 
     if(checkIfWordExist(''.join(__generateWordGRAMME(myListWord)))) :
-            print(''.join(__generateWordGRAMME(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordGRAMME(myListWord)), '*', 'GRAMME', 'Nom', 'Nom')
+        print(''.join(__generateWordGRAMME(myListWord)))
         
     #add ISME 
     if(checkIfWordExist(''.join(__generateWordISME(myListWord)))) :
-            print(''.join(__generateWordISME(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordISME(myListWord)), '*', 'ISME', 'Nom', 'Nom')
+        print(''.join(__generateWordISME(myListWord)))
 
     #add ISTE
     if(checkIfWordExist(''.join(__generateWordISTE(myListWord)))) :
-            print(''.join(__generateWordISTE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordISTE(myListWord)), '*', 'ISTE', 'Nom', 'Nom')
+        print(''.join(__generateWordISTE(myListWord)))
 
     #add IR
     if(checkIfWordExist(''.join(__generateWordIR(myListWord)))) :
-            print(''.join(__generateWordIR(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordIR(myListWord)), '*', 'IR', 'Nom', 'Ver')
+        print(''.join(__generateWordIR(myListWord)))
 
     #add AGE #call to ver's method
     if(checkIfWordExist(''.join(__generateWordAGE(myListWord)))) :
-            print(''.join(__generateWordAGE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAGE(myListWord)), '*', 'AGE', 'Nom', 'Nom')
+        print(''.join(__generateWordAGE(myListWord)))
 
     #add ANTE #call to ver's method
     if(checkIfWordExist(''.join(__generateWordANTE(myListWord)))) :
-            print(''.join(__generateWordANTE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordACE(myListWord)), '*', 'ANTE', 'Nom', 'Nom')
+        print(''.join(__generateWordANTE(myListWord)))
 
     #add AIRE
     if(checkIfWordExist(''.join(__generateWordAIRE_BIS(myListWord)))) :
-            print(''.join(__generateWordAIRE_BIS(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAIRE_BIS(myListWord)), '*', 'AIRE', 'Nom', 'Nom')
+        print(''.join(__generateWordAIRE_BIS(myListWord)))
 
     #add IAIRE
     if(checkIfWordExist(''.join(__generateWordIAIRE(myListWord)))) :
-            print(''.join(__generateWordIAIRE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAIRE(myListWord)), '*', 'IAIRE', 'Nom', 'Nom')
+        print(''.join(__generateWordIAIRE(myListWord)))
 
     #add ALE
     if(checkIfWordExist(''.join(__generateWordALE(myListWord)))) :
-            print(''.join(__generateWordALE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordALE(myListWord)), '*', 'ALE', 'Nom', 'Nom')
+        print(''.join(__generateWordALE(myListWord)))
 
     #add AL
     if(checkIfWordExist(''.join(__generateWordAL(myListWord)))) :
-            print(''.join(__generateWordAL(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAL(myListWord)), '*', 'AL', 'Nom', 'Nom')
+        print(''.join(__generateWordAL(myListWord)))
 
     #add AIN
     if(checkIfWordExist(''.join(__generateWordAIN(myListWord)))) :
-            print(''.join(__generateWordAIN(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAIN(myListWord)), '*', 'AIN', 'Nom', 'Adj')
+        print(''.join(__generateWordAIN(myListWord)))
 
     #add AINE
     if(checkIfWordExist(''.join(__generateWordAINE(myListWord)))) :
-            print(''.join(__generateWordAINE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordAINE(myListWord)), '*', 'AINE', 'Nom', 'Adj')
+        print(''.join(__generateWordAINE(myListWord)))
 
     #add ARD
     if(checkIfWordExist(''.join(__generateWordARD(myListWord)))) :
-            print(''.join(__generateWordARD(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordARD(myListWord)), '*', 'ARD', 'Nom', 'Nom')
+        print(''.join(__generateWordARD(myListWord)))
 
     #add ARDE
     if(checkIfWordExist(''.join(__generateWordARDE(myListWord)))) :
-            print(''.join(__generateWordARDE(myListWord)))
+        __writeToRuleFile(word, ''.join(__generateWordARDE(myListWord)), '*', 'ARDE', 'Nom', 'Nom')
+        print(''.join(__generateWordARDE(myListWord)))
 
 
 
 #METHOD GENERATE NOM
 
 #RE -> USTE
-def __generateWordUSTE (listWord) :
+def __generateWordUSTRE (listWord) :
     myListWordTempo = listWord.copy()
     
     #remove el
@@ -785,7 +1013,7 @@ def __generateWordUSTE (listWord) :
     myListWordTempo.pop()
 
     #add aliser
-    myListWordTempo.append('uste')
+    myListWordTempo.append('ustre')
     return myListWordTempo
 
 #EL/AL -> ALISER (Mondial -> mondialiser)
@@ -810,6 +1038,32 @@ def __generateWordALISATION (listWord) :
 
     #add alisation
     myListWordTempo.append('alisation')
+    return myListWordTempo
+
+#E -> ER
+def __generateWordER_1 (listWord) :
+    myListWordTempo = listWord.copy()
+    
+    #remove E
+    myListWordTempo.pop()
+
+    #add er
+    myListWordTempo.append('er')
+    return myListWordTempo
+
+#EMENT -> ER
+def __generateWordER_5 (listWord) :
+    myListWordTempo = listWord.copy()
+    
+    #remove EMENT
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+
+    #add er
+    myListWordTempo.append('er')
     return myListWordTempo
 
 #AL -> AUX
@@ -929,6 +1183,18 @@ def __generateWordANCE(listWord) :
     myListWordTempo.append('ance')
     return myListWordTempo
 
+#IER -> AGE
+def __generateWordAGE_BIS (listWord) :
+    myListWordTempo = listWord.copy()
+
+    #REMOVE IER 
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+
+    myListWordTempo.append('age')
+    return myListWordTempo
+
 #IER -> IANT
 def __generateWordIANT (listWord) :
     myListWordTempo = listWord.copy()
@@ -953,6 +1219,30 @@ def __generateWordERAIE (listWord) :
     myListWordTempo.append('eraie')
     return myListWordTempo
 
+#IER -> ER
+def __generateWordER (listWord) :
+    myListWordTempo = listWord.copy()
+
+    #REMOVE IER 
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+
+    myListWordTempo.append('er')
+    return myListWordTempo
+
+#AGE -> IER
+def __generateWordIER (listWord) :
+    myListWordTempo = listWord.copy()
+
+    #REMOVE IER 
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+
+    myListWordTempo.append('ier')
+    return myListWordTempo
+
 #EUR -> EUSE
 def __generateWordEUSE(listWord) :
     myListWordTempo = listWord.copy()
@@ -963,6 +1253,19 @@ def __generateWordEUSE(listWord) :
 
     #add euse
     myListWordTempo.append('euse')
+    return myListWordTempo
+
+#EUSE -> ER
+def __generateWordER_4(listWord) :
+    myListWordTempo = listWord.copy()
+    #remove EUR
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+
+    #add er
+    myListWordTempo.append('er')
     return myListWordTempo
 
 #OIRE -> ORIQUE
@@ -976,6 +1279,37 @@ def __generateWordORIQUE(listWord) :
 
     #add orique
     myListWordTempo.append('orique')
+    return myListWordTempo
+
+#UCTEUR -> UIRE
+def __generateWordUIRE_6(listWord) :
+    myListWordTempo = listWord.copy()
+    #remove UCTEUR
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+
+    #add UIRE
+    myListWordTempo.append('uire')
+    return myListWordTempo
+
+#UCTRICE -> UIRE
+def __generateWordUIRE_7(listWord) :
+    myListWordTempo = listWord.copy()
+    #remove UCTRICE
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+    myListWordTempo.pop()
+
+    #add UIRE
+    myListWordTempo.append('uire')
     return myListWordTempo
 
 #* -> ELLE
@@ -1184,41 +1518,62 @@ def transformADJ(word) :
     if (myListWord[lenOfList-1] == "e" ) :
         #E -> ISER (econome -> economiser)
         if(checkIfWordExist(''.join(__generateWordISER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordISER(myListWord)), 'E', 'ISER', 'Adj', 'Ver')
             print(''.join(__generateWordISER(myListWord)))
 
         #E -> ITE 
         if(checkIfWordExist(''.join(__generateWordITE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordITE(myListWord)), 'E', 'ITE', 'Adj', 'Adj')
             print(''.join(__generateWordITE(myListWord)))
 
         #E -> ESSE 
         if(checkIfWordExist(''.join(__generateWordESSE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordESSE(myListWord)), 'E', 'ESSE', 'Adj', 'Nom')
             print(''.join(__generateWordESSE(myListWord)))
 
         #E -> IE 
         if(checkIfWordExist(''.join(__generateWordIE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordIE(myListWord)), 'E', 'IE', 'Adj', 'Nom')
             print(''.join(__generateWordIE(myListWord)))
 
     #IF TIF 
     if (myListWord[lenOfList-3] == "t" and myListWord[lenOfList-2] == "i" and myListWord[lenOfList-1] == "f" ) :
         #TIF -> TIVITE
         if(checkIfWordExist(''.join(__generateWordTIVITE(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordESSE(myListWord)), 'E', 'TIVITE', 'Adj', 'Nom')
             print(''.join(__generateWordTIVITE(myListWord)))
 
     #IF ENT/ANT
     if ((myListWord[lenOfList-3] == "e" or myListWord[lenOfList-3] == "a") and myListWord[lenOfList-2] == "n" and myListWord[lenOfList-1] == "t" ) :
         #ENT/ANT -> MMENT
         if(checkIfWordExist(''.join(__generateWordMMENT(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordESSE(myListWord)), 'ENT/ANT', 'MMENT', 'Adj', 'Adv')
             print(''.join(__generateWordMMENT(myListWord)))
+
+        #ENT/ANT -> ER
+        if(checkIfWordExist(''.join(__generateWordER(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER(myListWord)), 'ENT/ANT', 'ER', 'Adj', 'Ver')
+            print(''.join(__generateWordER(myListWord)))
+
 
     #IF ENTE/ANTE
     if ((myListWord[lenOfList-4] == "e" or myListWord[lenOfList-4] == "a") and myListWord[lenOfList-3] == "n" and myListWord[lenOfList-2] == "t" and myListWord[lenOfList-1] == "e" ) :
         #ENTE/ANTE -> MMENT
         if(checkIfWordExist(''.join(__generateWordMMENT_BIS(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordMMENT_BIS(myListWord)), 'ENTE/ANTE', 'MMENT', 'Adj', 'Adv')
             print(''.join(__generateWordMMENT_BIS(myListWord)))
+
+    #IF IBLE
+    if (myListWord[lenOfList-4] == "i" and myListWord[lenOfList-3] == "b" and myListWord[lenOfList-2] == "l" and myListWord[lenOfList-1] == "e" ) :
+        #IBLE -> ER
+        if(checkIfWordExist(''.join(__generateWordER_4(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordER_4(myListWord)), 'IBLE', 'ER', 'Adj', 'Ver')
+            print(''.join(__generateWordER_4(myListWord)))
 
     #Try without condition
     #* -> EMENT (rapide -> rapidement)
     if(checkIfWordExist(''.join(__generateWordMENT(myListWord)))) :
+        __writeToRuleFile(word, ''.join(__generateWordESSE(myListWord)), '*', 'EMENT', 'Adj', 'Nom')
         print(''.join(__generateWordMENT(myListWord)))
 
 #METHOD GENERATE ADJ
@@ -1307,11 +1662,13 @@ def transformADV(word) :
     if (myListWord[lenOfList-3] == "a" and myListWord[lenOfList-2] == "n" and myListWord[lenOfList-1] == "t" ) :
         #ANT -> ANCE
         if(checkIfWordExist(''.join(__generateWordANCE_BIS(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordESSE(myListWord)), 'ANT', 'ANCE', 'Adv', 'Nom')
             print(''.join(__generateWordANCE_BIS(myListWord)))
 
     if (myListWord[lenOfList-4] == "a" and myListWord[lenOfList-3] == "n" and myListWord[lenOfList-2] == "t" and myListWord[lenOfList-1] == "e") :
         #ANTE -> ANCE
         if(checkIfWordExist(''.join(__generateWordANCE_BIS(myListWord)))) :
+            __writeToRuleFile(word, ''.join(__generateWordESSE(myListWord)), 'ANTE', 'ANCE', 'Adj', 'Nom')
             print(''.join(__generateWordANCE_BIS(myListWord)))
 
 #METHOD GENERATE VERB ADV
@@ -1332,11 +1689,12 @@ def __generateWordANCE_BIS(listWord) :
     #add ANCE
     myListWordTempo.append('ance')
     return myListWordTempo
-#
-#
+    
+##############
+##############
 #main()
-#
-#
+##############
+##########v###
 def __generateWord(word) :
     myListWord = list(word)
     lenOfList = len(myListWord)

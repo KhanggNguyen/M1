@@ -1,0 +1,16 @@
+rapide;Adj:InvGen+SG;59;
+rapide;Nom:Fem+SG;52;
+rapide;Nom:;78;
+rapide;Adj:;49;
+rapide;Adj:Fem+SG;27;
+rapide;Adj:Mas+SG;31;
+rapide;Nom:Mas+SG;35;
+rapide;Gender:Fem;45;
+rapide;Gender:Inv;45;
+rapide;Number:Sing;45;
+rapide;Gender:Mas;45;
+rapidité;Nom:Fem+SG;55;
+rapidité;Nom:;78;
+rapidité;Gender:Fem;45;
+rapidité;Number:Sing;45;
+rapidement;Adv:;64;
