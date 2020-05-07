@@ -1,6 +1,6 @@
 #Participants : 
 #NGUYEN Huu Khang - 21506865 
-
+#NGUYEN Tran Tuan Nam - 21914400
 #TRAN Thi Tra My - 21511002
 
 # importing the requests library 
@@ -618,7 +618,7 @@ def __generateWordISTANCE (listWord) :
 #-----------V-DRE
 def __generateWordNABLE (listWord) :
     myListWordTempo = listWord.copy()
-    myListWordTempo.append('able')
+    myListWordTempo.append('nable')
     return myListWordTempo
 
 # * -> ATEUR
