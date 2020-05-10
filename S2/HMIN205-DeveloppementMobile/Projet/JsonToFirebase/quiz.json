@@ -1,0 +1,497 @@
+{
+    "quiz": 
+    [   
+        {
+            "sheetRef" : "courses_sheet/6YIC6b2e6eWCvBggYEPi",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Dans le nombre décimal 492687,153 quel est le chiffre des dizaines de mille ? ?",
+                    "Option1" : "4",
+                    "Option2" : "2",
+                    "Option3" : "49",
+                    "Option4" : "9",
+                    "answer" : "49"
+                },
+                {
+            
+                    "Question" : "Parmi ces nombres, lequel n'est pas un nombre décimal ?",
+                    "Option1" : "9,8",
+                    "Option2" : "65/5",
+                    "Option3" : "35/100",
+                    "Option4" : "7/3",
+                    "answer" : "9,8"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/FDVnHim5uWhh1CuGC7GU",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Effectuez de tête le calcul suivant : 568,9 - 320,7 = ",
+                    "Option1" : "240,2",
+                    "Option2" : "248,02",
+                    "Option3" : "889,6",
+                    "Option4" : "248,2",
+                    "answer" : "248,2"
+                },
+            
+                {
+            
+                    "Question" : "Posez le calcul suivant et donnez le résultat : 8 x 15,2 = ",
+                    "Option1" : "121,6",
+                    "Option2" : "120,16",
+                    "Option3" : "136",
+                    "Option4" : "1 216",
+                    "answer" : "120,16"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/QSq6SFkrwiRI7f7IMK8Z",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Comment s’appelle le quartier d’affaires de Paris ?",
+                    "Option1" : "La City",
+                    "Option2" : "La Défense",
+                    "Option3" : "La Victoire",
+                    "Option4" : "Montparnasse",
+                    "answer" : "La Défense"
+                },
+            
+                {
+            
+                    "Question" : "Que signifie urbs en latin ?",
+                    "Option1" : "La ville",
+                    "Option2" : "La maison",
+                    "Option3" : "La cité",
+                    "Option4" : "Les habitants",
+                    "answer" : "La ville"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/3tXPCLV4ZMJX2pRBrJD8",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Qu’est-ce qu’une station balnéaire ?",
+                    "Option1" : "Une ville touristique située en bord de mer",
+                    "Option2" : "Une ville touristique située dans la montagne",
+                    "Option3" : "Une ville touristique située près d'un lac",
+                    "Option4" : "Une ville touristique située dans la campagne",
+                    "answer" : "Une ville touristique située en bord de mer"
+                },
+            
+                  {
+            
+                    "Question" : "Qu’est-ce qu’une criée ?",
+                    "Option1" : "Une filet de pêche",
+                    "Option2" : "Un marché de poissons",
+                    "Option3" : "Un bateau de pêche",
+                    "Option4" : "Un port de pêche",
+                    "answer" : "Un marché de poissons"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/WShr10F3xpQ5CNTrlEkT",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Qu’est-ce que la densité de population ?",
+                    "Option1" : "Le nombre d’habitants par pays",
+                    "Option2" : "Le nombre d’habitants au km²",
+                    "Option3" : "Le nombre d’habitants dans une ville",
+                    "Option4" : "Le nombre d’habitants par continent",
+                    "answer" : "Le nombre d’habitants au km"
+                },
+            
+                {
+            
+                    "Question" : "Qu’est-ce qu’un foyer de peuplement ?",
+                    "Option1" : "Un espace très peuplé depuis peu de siècles",
+                    "Option2" : "Un espace peu peuplé depuis plusieurs siècles",
+                    "Option3" : "Un espace très peuplé depuis plusieurs siècles",
+                    "Option4" : "Un espace peu peuplé depuis peu de siècles",
+                    "answer" : "Un espace très peuplé depuis plusieurs siècles"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/YWz0P5h8Ji1pUSuzCp1N",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Un rectangle a pour largeur 17 cm et pour périmètre 74 cm. Quelle est la longueur de ce rectangle ?",
+                    "Option1" : "10 cm",
+                    "Option2" : "40 cm",
+                    "Option3" : "57 cm",
+                    "Option4" : "20 cm",
+                    "answer" : "20 cm"
+                },
+            
+                {
+            
+                    "Question" : "Quel est le périmètre d'un triangle équilatéral de côté 5 cm ?",
+                    "Option1" : "10 cm",
+                    "Option2" : "15 cm ",
+                    "Option3" : "20 cm",
+                    "Option4" : "25 cm",
+                    "answer" : "15 cm"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/ZRb35F5thGmxZuRykWCA",
+            "Questions" : 
+            [
+                {
+                    "Question" : "Quel pourcentage de la biodiversité mondiale abritent les forêts du bassin du Congo ?",
+                    "Option1" : "5%",
+                    "Option2" : "3%",
+                    "Option3" : "10%",
+                    "Option4" : "8%",
+                    "answer" : "10%"
+                },
+            
+                  {
+            
+                    "Question" : "Combien de parcs nationaux la république du Congo a-t-elle créé depuis 1935 ?",
+                    "Option1" : "Aucun",
+                    "Option2" : "3",
+                    "Option3" : "16",
+                    "Option4" : "10",
+                    "answer" : "3"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/ebRgp8dzc2KJagkOG3Gg",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Qu’est-ce que la mixité sociale ?",
+                    "Option1" : "Le mélange de types d’habitat",
+                    "Option2" : "Le mélange de personnes de langues différentes",
+                    "Option3" : "Le mélange de personnes aux revenus différents",
+                    "Option4" : "Le mélange de personnes de cultures différentes",
+                    "answer" : "Le mélange de personnes aux revenus différents"
+                },
+            
+                {
+            
+                    "Question" : "Qu’est-ce que le recyclage des déchets ?",
+                    "Option1" : "La transformation des déchets en vue de les réutiliser",
+                    "Option2" : "Le tri des déchets",
+                    "Option3" : "La destruction des déchets",
+                    "Option4" : "Le ramassage des déchets",
+                    "answer" : "La transformation des déchets en vue de les réutiliser"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/fF6vMyWHnWFffFncCRB0",
+            "Questions" : 
+            [
+                 {
+            
+                    "Question" : "Axel a commencé à jouer à un jeu vidéo à 13h45 et a joué pendant 1 h 35 min. À quelle heure a-t-il arrêté de jouer ?",
+                    "Option1" : "14h20",
+                    "Option2" : "16h20",
+                    "Option3" : "15h20",
+                    "Option4" : "12h20",
+                    "answer" : "15h20"
+                },
+            
+                {
+            
+                    "Question" : "Une émission télévisée commence à 15 h 40 et finit à 17 h 15. Quelle est sa durée ?",
+                    "Option1" : "1h35min",
+                    "Option2" : "1h25min",
+                    "Option3" : "35min",
+                    "Option4" : "2h35min",
+                    "answer" : "des individus qui peuvent se reproduire entre eux, et dont la descendance peut aussi se reproduire"
+                } 
+            ]
+        },
+        {
+            "sheetRef": "courses_sheet/ozvqYv8sp3vPgxPGLaUX",
+            "Questions" : 
+            [
+                 {
+            
+                    "Question" : "Que sont les néo-ruraux ?",
+                    "Option1" : "Les habitants qui quittent un village pour s’installer dans un autre",
+                    "Option2" : "Les habitants qui quittent une ville pour s’installer dans une autre",
+                    "Option3" : "Les habitants qui quittent la campagne pour s’installer en ville",
+                    "Option4" : "Les nouveaux habitants des campagnes venus de la ville",
+                    "answer" : "Les habitants qui quittent un village pour s’installer dans un autre"
+                },
+            
+                  {
+            
+                    "Question" : "Qu’est-ce que la périurbanisation ?",
+                    "Option1" : "La réduction des espaces urbains",
+                    "Option2" : "Le développement du type de vie nomade",
+                    "Option3" : "L’extension des campagnes",
+                    "Option4" : "L’extension de la ville dans les espaces ruraux environnants",
+                    "answer" : "La réduction des espaces urbains"
+                } 
+            ]
+        },
+        {
+            "sheetRef": "courses_sheet/v0YTzTzcZG4dlNlq9VJx",
+            "Questions" : 
+            [
+                 {
+            
+                    "Question" : "Dans les métropoles des pays en développement, les inégalités sociales sont …",
+                    "Option1" : "Plus fortes que dans les métropoles des pays développés",
+                    "Option2" : "Inexistantes",
+                    "Option3" : "Aussi fortes que dans les métropoles des pays développés",
+                    "Option4" : "Rares",
+                    "answer" : "Plus fortes que dans les métropoles des pays développés"
+                },
+            
+                  {
+            
+                    "Question" : "Combien d’habitants compte Lagos, la capitale du Nigéria ?",
+                    "Option1" : "13 millions",
+                    "Option2" : "25 millions",
+                    "Option3" : "17 millions",
+                    "Option4" : "7 millions",
+                    "answer" : "13 millions"
+                } 
+            ]
+        },
+        {
+            "sheetRef": "courses_sheet/xIcFad3xYYykJazYwhIk",
+            "Questions" : 
+            [
+                 {
+            
+                    "Question" : "Qu’est-ce qu’une contrainte naturelle ?",
+                    "Option1" : "Un élément naturel qui gêne l’installation des hommes",
+                    "Option2" : "Un élément naturel qui empêche l’installation des hommes",
+                    "Option3" : "Un élément naturel qui interdit l’installation des hommes",
+                    "Option4" : "Un élément naturel qui favorise l’installation des hommes",
+                    "answer" : "Un élément naturel qui gêne l’installation des hommes"
+                },
+            
+                  {
+            
+                    "Question" : "Laquelle de ces propositions ne désigne pas une contrainte naturelle ?",
+                    "Option1" : "La pollution atmosphérique",
+                    "Option2" : "Le relief",
+                    "Option3" : "Le climat",
+                    "Option4" : "L’isolement",
+                    "answer" : "La pollution atmosphérique"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/nVM5kIbQhDTw5ds6O2ce",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Comment t'appelles-tu ?",
+                    "Option1" : "Wie heißt du?",
+                    "Option2" : "Wann heißt du?",
+                    "Option3" : "Wo heißt du?",
+                    "Option4" : "Wer heißt du?",
+                    "answer" : "Wie heißt du?"
+                },
+                {
+            
+                    "Question" : "Où est ta montre ?",
+                    "Option1" : "Wo ist deine Uhr?",
+                    "Option2" : "Wie ist deine Uhr?",
+                    "Option3" : "Wann ist deine Uhr?",
+                    "Option4" : "Wer ist deine Uhr?",
+                    "answer" : "Wo ist deine Uhr?"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/icyVWaXA5B8qLHPNcs1t",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Que veut dire gracias ?",
+                    "Option1" : "Merci",
+                    "Option2" : "De rien",
+                    "Option3" : "Bonjour",
+                    "Option4" : "Au revoir",
+                    "answer" : "Merci"
+                },
+                {
+            
+                    "Question" : "Que veut dire 'soy' ?",
+                    "Option1" : "Nous sommes ",
+                    "Option2" : "Vous êtes",
+                    "Option3" : "Il est",
+                    "Option4" : "Je suis",
+                    "answer" : "Je suis"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/tAkFpEagAKjJCId4tz4l",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Qui est cet homme? = ___ is this man?",
+                    "Option1" : "WHAT",
+                    "Option2" : "WHO",
+                    "Option3" : "HOW",
+                    "Option4" : "WHICH",
+                    "answer" : "WHO"
+                },
+                {
+            
+                    "Question" : "Qu'est-ce que c'est? = ___ is it?",
+                    "Option1" : "WHAT",
+                    "Option2" : "WHO",
+                    "Option3" : "HOW",
+                    "Option4" : "WHICH",
+                    "answer" : "WHAT"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/pgIyPHBrKFGAX20bAu3V",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "L'environnement c'est : ",
+                    "Option1" : "l'ensemble des animaux seulement",
+                    "Option2" : "l'ensemble des plantes seulement",
+                    "Option3" : "l'eau, l'air , les roches seulement",
+                    "Option4" : "tout ce qui nous entoure",
+                    "answer" : "tout ce qui nous entoure"
+                },
+                {
+            
+                    "Question" : "Une espèce regroupe sous le même nom :",
+                    "Option1" : "des individus qui peuvent se reproduire entre eux, et dont la descendance peut aussi se reproduire",
+                    "Option2" : "l'ensemble des plantes seulement",
+                    "Option3" : "l'eau, l'air , les roches seulement",
+                    "Option4" : "tout ce qui nous entoure",
+                    "answer" : "des individus qui peuvent se reproduire entre eux, et dont la descendance peut aussi se reproduire"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/jYmim2rSUiKOhl9UwZGT",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Où peut-on trouver de la matière ?",
+                    "Option1" : "Seulement dans l’eau",
+                    "Option2" : "Seulement sur Terre",
+                    "Option3" : "Partout",
+                    "Option4" : "Seulement dans l’espace",
+                    "answer" : "Partout"
+                },
+                {
+            
+                    "Question" : "Le mélange d’eau et de sucre est-il un alliage ?",
+                    "Option1" : "Oui, car c’est un mélange",
+                    "Option2" : "Oui, car il y a toujours de l’eau dans un alliage",
+                    "Option3" : "Non",
+                    "Option4" : "Oui, car il comporte un métal",
+                    "answer" : "Oui, car c’est un mélange"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/QDWkIxrtUOrnLNkF44EO",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Quel est notre plus ancien ancêtre connu ?",
+                    "Option1" : "Lucy",
+                    "Option2" : "Florès",
+                    "Option3" : "Toumaï",
+                    "Option4" : "Orrorin",
+                    "answer" : "Toumaï"
+                },
+                {
+            
+                    "Question" : "Lucy et Toumaï ont-ils pu se croiser durant leur existence ?",
+                    "Option1" : "Oui, ils se sont croisés",
+                    "Option2" : "Oui car ils ont vécu à la même époque",
+                    "Option3" : "Non car ils n’ont pas vécu à la même époque",
+                    "Option4" : "Oui, ils étaient mariés",
+                    "answer" : "Non car ils n’ont pas vécu à la même époque"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/1vMJyechrBz29GYqDnIP",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Qu’est-ce que la banquise ?",
+                    "Option1" : "Une zone boisée",
+                    "Option2" : "De la Terre",
+                    "Option3" : "Une zone de déforestation",
+                    "Option4" : "Une vaste couche de glace recouvrant les lacs et la mer",
+                    "answer" : "Une vaste couche de glace recouvrant les lacs et la mer"
+                },
+                {
+            
+                    "Question" : "Vers quelle période les hommes préhistoriques inventent-ils l’art ?",
+                    "Option1" : "Environ 80 000 ans avant notre ère",
+                    "Option2" : "Environ 70 000 ans avant notre ère",
+                    "Option3" : "Environ 30 000 ans avant notre ère",
+                    "Option4" : "Environ 50 000 ans avant notre ère",
+                    "answer" : "Environ 80 000 ans avant notre ère"
+                } 
+            ]
+        },
+        {
+            "sheetRef" : "courses_sheet/FDVnHim5uWhh1CuGC7GU",
+            "Questions" : 
+            [
+                {
+            
+                    "Question" : "Donnez un ordre de grandeur que l'on peut utiliser pour vérifier le résultat de l'addition suivante : 78,6+32,5",
+                    "Option1" : "120",
+                    "Option2" : "100",
+                    "Option3" : "1100",
+                    "Option4" : "110",
+                    "answer" : "110"
+                },
+                {
+            
+                    "Question" : "Calculez de tête le produit suivant : 51,2 × 0,1=",
+                    "Option1" : "51,2",
+                    "Option2" : "5,12",
+                    "Option3" : "0,512",
+                    "Option4" : "512",
+                    "answer" : "5,12"
+                } 
+            ]
+        }
+        
+    ]
+
+}
