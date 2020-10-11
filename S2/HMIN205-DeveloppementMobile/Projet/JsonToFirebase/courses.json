@@ -1,0 +1,35 @@
+{
+    "courses": 
+    [   
+        {
+            "chapitre" : "1",
+            "gradeRef" : "/grade/2",
+            "subjectRef" : "/subjects/3",
+            "title" : "La question démographique et l'inégal développement"
+        },
+        {
+            "chapitre" : "2",
+            "gradeRef" : "/grade/2",
+            "subjectRef" : "/subjects/3",
+            "title" : "Des ressources limitées, à gérer et à renouveler"
+        },
+        {
+            "chapitre" : "1",
+            "gradeRef" : "/grade/2",
+            "subjectRef" : "/subjects/10",
+            "title" : "Se chercher, se construire - Le voyage et l'aventure : pourquoi aller vers l'inconnu ?"
+        },
+        {
+            "chapitre" : "2",
+            "gradeRef" : "/grade/2",
+            "subjectRef" : "/subjects/10",
+            "title" : "Vivre en société, participer à la société - Avec autrui : famille, amis, réseaux"
+        },
+        {
+            "chapitre" : "1",
+            "gradeRef" : "/grade/2",
+            "subjectRef" : "/subjects/2",
+            "title" : "Chrétientés et islam (VIe-XIIIe siècles), des mondes en contact"
+        }
+    ]
+}
