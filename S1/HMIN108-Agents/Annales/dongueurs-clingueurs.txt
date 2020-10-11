@@ -1,0 +1,132 @@
+breed [ dongueurs dongeur ]
+breed [ clingueurs clingueur ]
+
+patches-own [
+  dong cling
+]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;setup;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to setup
+  clear-all
+  set-default-shape dongueurs "beef"
+  create-dongueurs nbr-dongueurs[
+    setxy random-xcor random-ycor
+    set color brown
+    set btask "marche_aleatoire"
+    set-size 1
+    ]
+  
+  set-default-shape clingueurs "wolf"
+  create-clingueurs nbr-clingueurs[
+    setxy random-xcor random-ycor
+    set color brown
+    set btask "marche_aleatoire"
+    set-size 1
+    ]
+  
+  reset-ticks
+end
+
+to go
+   ask patches[
+    evaporate
+  ]
+  ask dongueurs[
+    do-dongueurs
+    run btask
+  ]
+  ask clingueurs[
+    do-clingueurs
+    run ctask
+  ]
+  tick
+end
+
+to evaporate 
+  set dong dong - ( dong * taux-evaporate )
+  set cling cling - (cling * taux-evaporate )
+end
+
+to vadrouille 
+  lt random 50
+  rt random 50
+  fd vitesse
+end
+
+to do-dongueurs
+  depose-dong
+  fuir-clingueurs
+end
+
+to do-clingueurs 
+  depose-cling
+  cherche-dongueurs
+end
+
+to depose-dong
+  set dong dong + dong-max
+end
+
+to depose-cling
+  set cling cling + cling-max
+end
+  
+to-report son-dong? 
+  report dong > 1
+end
+
+to-report son-cling?
+  report cling > 1
+end
+
+to suivre-son
+  let p max-one-of neighbors dong
+end
+
+to fuir-son
+  let p max-one-of neighbors cling
+end
+
+to garde-espace-vitale-cling
+  let p min-one-of other breed in-radius espace-vitale [distance myself]
+  if p != nobody [ ; un lapins est dans mon espace vital
+    let temp heading
+    set heading towards p
+    bk espace-vitale - distance p ;move forward if negative
+    set heading temp
+  ]
+end
+
+to garde-espace-vitale-dong
+  let p min-one-of other breed in-radius espace-vitale [distance myself]
+  if p != nobody [ ; un lapins est dans mon espace vital
+    let temp heading
+    set heading towards p
+    bk distance p - espace-vitale; move backward if positive
+    set heading temp
+  ]
+end
+
+;clingueurs suivent les dongueurs si ils sentent les dongueurs
+to cherche-dongueurs
+  ifelse son-dong? [
+    suivre-son
+    garde-espace-vitale-cling
+  ][
+    vadrouille
+    garde-espace-vitale-cling
+  ]
+end
+
+;dongueurs fuient les clingueus si il trouve le clingueur dans le rayon 
+to fuir-clingueurs
+  ifelse son-cling?[
+    fuir-son
+    garde-espace-vitale-dong
+  ][
+    vadrouille
+    garde-espace-vitale-dong
+  ]
+end

@@ -1,0 +1,46 @@
+explorers-own[ticks_since_here p my-explorers-list]
+
+to-report explorer-action
+	while [not empty? incoming-queue] [
+		let msg get-message
+    ;reçu une message attack de la base et pas en recherche de la nourriture
+    if (get-performative msg) = "attackBase" and ctask != "search-food" [ 
+      broadcast-message get-rocket-launchers "recruite" [] 
+    	set ticks_since_here ticks
+      set p 0
+      set my-explorers-list []
+      set ctask "cfp"
+    ]
+    ;explorers répondent
+    if msg = "proposal" [ set p p + 1 ]
+    ;base demande retraite
+    if msg = "retreat" [ broadcast-message get-rocket-launchers "retreat" [] ] 
+    
+    ;cas tours depasse tmax et p < pmin, on libère
+    if ticks - ticks_since_here >= tmax and p < pmin [
+      foreach my-rocket-launchers-list [ rocket-launcher -> send-message rocket-launcher "free" [] ]
+      set ctask "search-food"
+    ]
+    ;cas p atteint, on demande rocket-launchers attack
+    if p >= pmin [
+      foreach my-rocket-launchers-list [ rocket-launcher -> send-message rocket-launcher "attack" [] ]
+      send-message get-bases "enAttaqueBase" []
+    	set ctask "attack"
+    ]
+    ;verifier si ennemie base est détruite
+    let enemy-base one-of percepts with [is-base? self and is-my-enemy? myself]
+    if enemy-base isDestroyed [ 
+      foreach my-rocket-launchers-list [ rocket-launcher -> send-message rocket-launcher "mission-complete" [] ]
+      send-message get-bases "mission-complete" []
+      set ctask "search-food"
+    ]
+	]
+  if ctask = "initial-state" [set ctask "search-food"]
+  let r runresult ctask
+  if (blocked? and hitting-north-wall? self) or (blocked? and hitting-south-wall? self) or (blocked? and hitting-east-wall? self) or (blocked? and hitting-west-wall? self)  [ set-random-heading ] 
+  if blocked [
+    set-random-heading
+  ]
+  report r
+  
+end
