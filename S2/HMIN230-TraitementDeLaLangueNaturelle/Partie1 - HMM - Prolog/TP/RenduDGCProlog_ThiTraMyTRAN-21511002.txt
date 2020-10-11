@@ -1,0 +1,65 @@
+1) CFG
+s-> 	gn gv.
+gn->	det nbar.
+gv->	vi, vt gn.
+nbar->	nom [qui] gv.
+
+
+det->	un, Un, le, Le, une, Une, la, La, des, Des, les, Les. 
+nom->	chien, renard, cigogne, chiens, renards, cigognes.
+vt-> 	regarde, poursuit, fuit, regardent, poursuivent, fuient.
+vi->	court, se_cache, courent, se_cachent.
+
+2) DCG 1
+
+s--> 	gn,gv.
+gn-->	det, nbar.
+gv-->	vi; vt, gn.
+nbar-->	nom, [qui], gv.
+
+det-->	[un]; ['Un']; [le]; ['Le']; [une]; ['Une']; [la]; ['La']; [des]; ['Des']; [les]; ['Les']. 
+nom-->	[chien]; [renard]; [cigogne]; [chiens]; [renards]; [cigognes].
+vt--> 	[regarde]; [poursuit]; [fuit]; [regardent]; [poursuivent]; [fuient].
+vi-->	[court]; [se_cache]; [courent]; [se_cachent].
+
+
+3) DCG 2
+
+s--> 		gn, gv;
+    		gn_plu, gv_plu.
+gn--> 		det_m, nbar_m; 
+    		det_f, nbar_f.
+gn_plu-->	det_plu, nbar_plu.
+gv--> 		vi;
+    		vt, gn;
+    		vt, gn_plu.
+gv_plu--> 	vi_plu;
+    		vt_plu, gn;
+		vt_plu, gn_plu.
+nbar_m--> 	nom_m, [qui], gv.
+nbar_f-->	nom_f, [qui], gv.
+nbar_plu--> 	nom_plu, [qui], gv_plu.
+
+det_m--> 	[un]; [le]; ['Un']; ['Le'].
+det_f--> 	[une]; [la]; ['Une']; ['La'].
+det_plu--> 	[des]; [les]; ['Des']; ['Les'].
+
+vt--> 		[regarde]; [poursuit]; [fuit].
+vt_plu--> 	[regardent]; [poursuivent]; [fuient].
+vi--> 		[court]; [se_cache].
+vi_plu--> 	[courent]; [se_cachent].
+nom_m--> 	[chien]; [renard].
+nom_f--> 	[cigogne].
+nom_plu--> 	[chiens]; [renards]; [cigognes].
+
+
+/** examples de sujet
+?- s([un,renard,qui,fuit,les,chiens,qui,courent, regarde, les, cigognes, 'qui', se_cachent],[]).
+
+?- s([un,renard,qui,fuient,les,chiens,qui,courent, regarde, les, cigognes, qui, se_cachent],[]).
+
+?- s(['Un',renard,qui,fuit,les,chiens,qui,courent,regardent,les,cigognes,qui,se_cachent],[]).
+
+?- s(['Une',renards,qui,fuit,les,chiens,qui,courent,regarde,un,cigognes,qui,se_cachent],[]).
+*/
+

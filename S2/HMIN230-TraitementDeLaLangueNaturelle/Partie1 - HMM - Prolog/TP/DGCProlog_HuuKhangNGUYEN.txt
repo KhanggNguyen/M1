@@ -1,0 +1,55 @@
+1)
+
+s-> 	gn gv.
+gn->	det nbar.
+gv->	vi, vt gn.
+nbar->	nom [qui] gv.
+
+
+det->	un, Un, le, Le, une, Une, la, La, des, Des, les, Les. 
+nom->	chien, chat, cigogne, chiens, chats, cigognes.
+vt-> 	regarde, poursuit, fuit, regardent, poursuivent, fuient.
+vi->	court, se_cache, courent, se_cachent.
+
+
+2)
+s--> 	gn,gv.
+gn-->	det, nbar.
+gv-->	vi; vt, gn.
+nbar-->	nom, [qui], gv.
+
+det-->	[un]; ['Un']; [le]; ['Le']; [une]; ['Une']; [la]; ['La']; [des]; ['Des']; [les]; ['Les']. 
+nom-->	[chien]; [renard]; [cigogne]; [chiens]; [renards]; [cigognes].
+vt--> 	[regarde]; [poursuit]; [fuit]; [regardent]; [poursuivent]; [fuient].
+vi-->	[court]; [se_cache]; [courent]; [se_cachent].
+
+3)
+
+s--> gn, gv; gn_pluriel, gv_pluriel.
+gn--> 		det_m, nbar_m; det_f, nbar_f.
+gn_pluriel-->	det_pluriel, nbar_pluriel.
+gv--> 		vi; vt, gn; vt, gn_pluriel.
+gv_pluriel--> 	vi_pluriel; vt_pluriel, gn; vt_pluriel, gn_pluriel.
+nbar_m--> nom_m, [qui], gv.
+nbar_f--> nom_f, [qui], gv.
+nbar_pluriel--> nom_pluriel, [qui], gv_pluriel.
+det_m--> 	[un]; ['Un']; [le]; ['Le'].
+det_f--> 	[une]; ['Une']; [la]; ['La'].
+det_pluriel--> 	[des]; ['Des']; [les]; ['Les'].
+vt--> [regarde]; [poursuit]; [fuit].
+vt_pluriel--> 	[regardent]; [poursuivent]; [fuient].
+vi--> 		[court]; [se_cache].
+vi_pluriel--> 	[courent]; [se_cachent].
+nom_m--> 	[chien]; [chat].
+nom_f--> 	[cigogne].
+nom_pluriel--> 	[chiens]; [chats]; [cigognes].
+
+/** exemples
+?- s([un,chat,qui,fuit,les,chiens,qui,courent, regarde, les, cigognes, 'qui', se_cachent],[]).
+
+?- s([un,chat,qui,fuient,les,chiens,qui,courent, regarde, les, cigognes, qui, se_cachent],[]).
+
+?- s(['Un',chat,qui,fuit,les,chiens,qui,courent,regardent,les,cigognes,qui,se_cachent],[]).
+
+?- s(['Une',chats,qui,fuit,les,chiens,qui,courent,regarde,un,cigognes,qui,se_cachent],[]).
+*/
